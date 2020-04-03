@@ -1,7 +1,15 @@
+import re
 from tornado.web import RequestHandler
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 from base.django_handler_mixin import DjangoHandlerMixin
 from allauth.socialaccount.models import SocialToken
+
+
+ALLOWED_PATHS = [
+    re.compile(r'^repos/\w*/\w*/contents/$'),
+    re.compile(r'^repos/\w*/\w*/contents/book\.epub$'),
+    re.compile(r'^user/repos$')
+]
 
 
 class Proxy(DjangoHandlerMixin, RequestHandler):
@@ -12,6 +20,7 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
             account__provider='github'
         ).first()
         if (
+            not any(regex.match(path) for regex in ALLOWED_PATHS) or
             not social_token or
             not user.is_authenticated
         ):
@@ -44,6 +53,7 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
             account__provider='github'
         ).first()
         if (
+            not any(regex.match(path) for regex in ALLOWED_PATHS) or
             not social_token or
             not user.is_authenticated
         ):

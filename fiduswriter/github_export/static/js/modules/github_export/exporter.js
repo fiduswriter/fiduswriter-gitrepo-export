@@ -63,7 +63,13 @@ export class GithubExporter {
                 credentials: 'include',
                 body: JSON.stringify(commitData)
             }).then(
-                () => addAlert('info', gettext('Book published to Github successfully!'))
+                response => {
+                    if (response.ok) {
+                        addAlert('info', gettext('Book published to Github successfully!'))
+                    } else {
+                        addAlert('error', gettext('Could not publish book to Github.'))
+                    }
+                }
             )
         }).catch(
             () => addAlert('error', gettext('Could not publish book to Github.'))
