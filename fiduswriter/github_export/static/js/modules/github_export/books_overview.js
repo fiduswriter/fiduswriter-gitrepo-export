@@ -1,7 +1,6 @@
 import {getJson, post} from "../common"
 import {repoSelectorTemplate} from "./templates"
-
-import {GithubExporter} from "./exporter"
+import {GithubBookProcessor} from "./book_processor"
 
 export class GithubExporterBooksOverview {
     constructor(booksOverview) {
@@ -66,7 +65,12 @@ export class GithubExporterBooksOverview {
             action: overview => {
                 const ids = overview.getSelected()
                 if (ids.length) {
-                    const exporter = new GithubExporter(overview.app, this.booksOverview, this, overview.bookList.filter(book => ids.includes(book.id)))
+                    const exporter = new GithubBookProcessor(
+                        overview.app,
+                        this.booksOverview,
+                        this,
+                        overview.bookList.filter(book => ids.includes(book.id))
+                    )
                     exporter.init()
                 }
             },
