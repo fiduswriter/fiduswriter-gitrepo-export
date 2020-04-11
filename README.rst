@@ -1,6 +1,6 @@
-*****
+*************************
 fiduswriter-github-export
-*****
+*************************
 A plugin to export books to github
 
 **This plugin is currently in early-stage development. It has not reached production level quality yet. Please do not use it anywhere except for testing.**
