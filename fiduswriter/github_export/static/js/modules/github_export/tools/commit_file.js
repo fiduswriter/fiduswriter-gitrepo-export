@@ -1,7 +1,7 @@
-import {getJson} from "../common"
+import {getJson} from "../../common"
 
 export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache = {}) {
-    const dirUrl = `/proxy/github_export/repos/${repo}/contents${parentDir}`
+    const dirUrl = `/proxy/github_export/repos/${repo}/contents${parentDir}`.replace(/\/\//, '/')
     const getDirJsonPromise = repoDirCache[dirUrl] ?
         Promise.resolve(repoDirCache[dirUrl]) :
         getJson(dirUrl).then(
@@ -10,7 +10,15 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
                 return Promise.resolve(json)
             }
         )
-    return Promise.resolve(getDirJsonPromise).then(json => {
+    return Promise.resolve(getDirJsonPromise).catch(
+        response => {
+            console.log({response})
+            if (response.status === 404) {
+                return Promise.resolve([])
+            }
+            throw response
+        }
+    ).then(json => {
         const fileEntry = Array.isArray(json) ? json.find(entry => entry.name === filename) : false
         const commitData = {
             message: gettext('Update from Fidus Writer'),
@@ -50,9 +58,9 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
 
     }).then(commitData => {
         if (!commitData) {
-            return Promise.resolve({status: 304})
+            return Promise.resolve(304)
         }
-        return fetch(`/proxy/github_export/repos/${repo}/contents${parentDir}${filename}`, {
+        return fetch(`/proxy/github_export/repos/${repo}/contents${parentDir}${filename}`.replace(/\/\//, '/'), {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(commitData)
@@ -60,16 +68,16 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
             response => {
                 if (response.ok) {
                     const status = commitData.sha ? 200 : 201
-                    return Promise.resolve({status})
+                    return Promise.resolve(status)
                 } else {
-                    return Promise.resolve({status: 400})
+                    return Promise.resolve(400)
 
                 }
             }
         )
     }).catch(
          _error => {
-             return Promise.resolve({status: 400})
+             return Promise.resolve(400)
          }
     )
 }

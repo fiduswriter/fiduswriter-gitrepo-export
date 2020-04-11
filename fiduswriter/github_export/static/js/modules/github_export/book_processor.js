@@ -1,5 +1,6 @@
 import {addAlert} from "../common"
-import {EpubBookGithubExporter} from "./book_exporters"
+import {EpubBookGithubExporter, UnpackedEpubBookGithubExporter, HTMLBookGithubExporter, LatexBookGithubExporter} from "./book_exporters"
+import {promiseChain} from "./tools"
 
 export class GithubBookProcessor {
     constructor(app, booksOverview, booksOverviewExporter, books) {
@@ -25,16 +26,86 @@ export class GithubBookProcessor {
             return
         }
         addAlert('info', gettext('Book publishing to Github initiated.'))
-        const exporter = new EpubBookGithubExporter(
-            this.booksOverview.schema,
-            this.booksOverview.app.csl,
-            this.booksOverview.styles,
-            book,
-            this.booksOverview.user,
-            this.booksOverview.documentList,
-            new Date(book.updated*1000),
-            userRepo
-        )
-        exporter.init()
+
+        const commitInitiators = []
+
+        if (bookRepo.export_epub) {
+            const epubExporter = new EpubBookGithubExporter(
+                this.booksOverview.schema,
+                this.booksOverview.app.csl,
+                this.booksOverview.styles,
+                book,
+                this.booksOverview.user,
+                this.booksOverview.documentList,
+                new Date(book.updated*1000),
+                userRepo
+            )
+            commitInitiators.push(
+                epubExporter.init()
+            )
+        }
+
+        if (bookRepo.export_unpacked_epub) {
+            const unpackedEpubExporter = new UnpackedEpubBookGithubExporter(
+                this.booksOverview.schema,
+                this.booksOverview.app.csl,
+                this.booksOverview.styles,
+                book,
+                this.booksOverview.user,
+                this.booksOverview.documentList,
+                new Date(book.updated*1000),
+                userRepo
+            )
+            commitInitiators.push(
+                unpackedEpubExporter.init()
+            )
+        }
+
+        if (bookRepo.export_html) {
+            const htmlExporter = new HTMLBookGithubExporter(
+                this.booksOverview.schema,
+                this.booksOverview.app.csl,
+                this.booksOverview.styles,
+                book,
+                this.booksOverview.user,
+                this.booksOverview.documentList,
+                new Date(book.updated*1000),
+                userRepo
+            )
+            commitInitiators.push(
+                htmlExporter.init()
+            )
+        }
+
+        if (bookRepo.export_latex) {
+            const latexExporter = new LatexBookGithubExporter(
+                this.booksOverview.schema,
+                book,
+                this.booksOverview.user,
+                this.booksOverview.documentList,
+                new Date(book.updated*1000),
+                userRepo
+            )
+            commitInitiators.push(
+                latexExporter.init()
+            )
+        }
+
+        return Promise.all(commitInitiators).then(commitFunctions => promiseChain(commitFunctions.flat()).then(
+            responses => {
+                const responseCodes = responses.flat()
+                if (responseCodes.every(code => code === 304)) {
+                    addAlert('info', gettext('Book already up to date in repository.'))
+                } else if (responseCodes.every(code => code === 400)) {
+                    addAlert('error', gettext('Could not publish book to repository.'))
+                } else if (responseCodes.find(code => code === 400)) {
+                    addAlert('error', gettext('Could not publish some parts of book to repository.'))
+                } else if (responseCodes.every(code => code === 201)) {
+                    addAlert('info', gettext('Book published to repository successfully!'))
+                } else {
+                    addAlert('info', gettext('Book updated in repository successfully!'))
+                }
+            }
+        ))
     }
 }

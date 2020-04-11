@@ -6,8 +6,7 @@ from allauth.socialaccount.models import SocialToken
 
 
 ALLOWED_PATHS = [
-    re.compile(r'^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/contents/$'),
-    re.compile(r'^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/contents/book\.epub$'),
+    re.compile(r'^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/contents/'),
     re.compile(r'^user/repos$'),
     re.compile(r'^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/git/blobs/([\w\d]+)$'),
 ]

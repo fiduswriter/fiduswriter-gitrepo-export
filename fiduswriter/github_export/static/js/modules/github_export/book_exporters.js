@@ -1,6 +1,7 @@
 import {EpubBookExporter} from "../books/exporter/epub"
-import {commitFile} from "./commit_file"
-import {addAlert} from "../common"
+import {HTMLBookExporter} from "../books/exporter/html"
+import {LatexBookExporter} from "../books/exporter/latex"
+import {commitFile, commitZipContents} from "./tools"
 
 export class EpubBookGithubExporter extends EpubBookExporter {
     constructor(schema, csl, bookStyles, book, user, docList, updated, repo) {
@@ -9,29 +10,64 @@ export class EpubBookGithubExporter extends EpubBookExporter {
     }
 
     download(blob) {
-        return commitFile(
+        return () => commitFile(
             this.repo,
             blob,
             'book.epub'
         ).then(
-            ({status}) => {
-                switch(status) {
-                    case 200:
-                        addAlert('info', gettext('Book updated successfully!'))
-                        break
-                    case 201:
-                        addAlert('info', gettext('Book published successfully!'))
-                        break
-                    case 304:
-                        addAlert('info', gettext('Book already up to date!'))
-                        break
-                    case 400:
-                        addAlert('error', gettext('Could not publish book to Github.'))
-                        break
-                }
-
-            }
+            response => [response]
         )
+    }
+}
 
+export class UnpackedEpubBookGithubExporter extends EpubBookExporter {
+    constructor(schema, csl, bookStyles, book, user, docList, updated, repo) {
+        super(schema, csl, bookStyles, book, user, docList, updated)
+        this.repo = repo
+    }
+
+    createZip() {
+        return () => commitZipContents(
+            this.repo,
+            this.outputList,
+            this.binaryFiles,
+            this.includeZips,
+            '/epub/'
+        )
+    }
+}
+
+export class HTMLBookGithubExporter extends HTMLBookExporter {
+    constructor(schema, csl, bookStyles, book, user, docList, updated, repo) {
+        super(schema, csl, bookStyles, book, user, docList, updated)
+        this.repo = repo
+    }
+
+    createZip() {
+        return () => commitZipContents(
+            this.repo,
+            this.outputList,
+            this.binaryFiles,
+            this.includeZips,
+            '/html/'
+        )
+    }
+}
+
+export class LatexBookGithubExporter extends LatexBookExporter {
+    constructor(schema, book, user, docList, updated, repo) {
+        console.log({schema, book, user, docList, updated, repo})
+        super(schema, book, user, docList, updated)
+        this.repo = repo
+    }
+
+    createZip() {
+        return () => commitZipContents(
+            this.repo,
+            this.textFiles,
+            this.httpFiles,
+            [],
+            '/latex/'
+        )
     }
 }

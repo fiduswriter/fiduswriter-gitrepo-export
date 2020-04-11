@@ -12,3 +12,7 @@ class BookRepository(models.Model):
     github_repo_full_name = models.CharField(
         max_length=256,
     )
+    export_epub = models.BooleanField()
+    export_unpacked_epub = models.BooleanField()
+    export_html = models.BooleanField()
+    export_latex = models.BooleanField()

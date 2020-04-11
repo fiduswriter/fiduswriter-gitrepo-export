@@ -22,6 +22,10 @@ def get_book_repos(request):
         response['book_repos'][repo.book.id] = {
             'github_repo_id': repo.github_repo_id,
             'github_repo_full_name': repo.github_repo_full_name,
+            'export_epub': repo.export_epub,
+            'export_unpacked_epub': repo.export_unpacked_epub,
+            'export_html': repo.export_html,
+            'export_latex': repo.export_latex
         }
     return JsonResponse(
         response,
@@ -54,7 +58,11 @@ def update_book_repo(request):
         models.BookRepository.objects.create(
             book_id=book_id,
             github_repo_id=github_repo_id,
-            github_repo_full_name=request.POST['github_repo_full_name']
+            github_repo_full_name=request.POST['github_repo_full_name'],
+            export_epub=request.POST['export_epub']=='true',
+            export_unpacked_epub=request.POST['export_unpacked_epub']=='true',
+            export_html=request.POST['export_html']=='true',
+            export_latex=request.POST['export_latex']=='true',
         )
         status = 201
     return HttpResponse(status=status)

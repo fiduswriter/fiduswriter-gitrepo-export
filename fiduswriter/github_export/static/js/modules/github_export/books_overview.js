@@ -22,9 +22,9 @@ export class GithubExporterBooksOverview {
         ]).then(
             () => {
                 this.finishedLoading = true
-                const spinner = document.querySelector('td.github-repository .fa-spinner')
+                const spinner = document.querySelector('tbody.github-repository .fa-spinner')
                 if (spinner) {
-                    document.querySelector('td.github-repository').innerHTML = repoSelectorTemplate({
+                    document.querySelector('tbody.github-repository').innerHTML = repoSelectorTemplate({
                         book: this.openedBook,
                         userRepos: this.userRepos,
                         bookRepos: this.bookRepos
@@ -54,7 +54,9 @@ export class GithubExporterBooksOverview {
 
     getBookRepos() {
         return getJson(`/api/github_export/get_book_repos/`).then(
-            json => this.bookRepos = json['book_repos']
+            json => {
+                this.bookRepos = json['book_repos']
+            }
         )
     }
 
@@ -85,19 +87,12 @@ export class GithubExporterBooksOverview {
             template: ({book}) => {
                 this.openedBook = book
                 return `<table class="fw-dialog-table">
-                    <tbody>
-                        <tr>
-                            <th>
-                                <h4 class="fw-tablerow-title">${gettext("Github repository")}</h4>
-                            </th>
-                            <td class="github-repository">
-                                ${
-                                    this.finishedLoading ?
-                                        repoSelectorTemplate({book, userRepos: this.userRepos, bookRepos: this.bookRepos}) :
-                                        '<i class="fa fa-spinner fa-pulse"></i>'
-                                }
-                            </td>
-                        </tr>
+                    <tbody class="github-repository">
+                    ${
+                        this.finishedLoading ?
+                            repoSelectorTemplate({book, userRepos: this.userRepos, bookRepos: this.bookRepos}) :
+                            '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
+                    }
                     </tbody>
                 </table>`
             }
@@ -108,18 +103,30 @@ export class GithubExporterBooksOverview {
     addDialogSaveMethod() {
         this.booksOverview.mod.actions.onSave.push(
             book => {
-                const repoSelector = document.querySelector('#book-settings-github-repository')
+                const repoSelector = document.querySelector('#book-settings-repository')
                 if (!repoSelector) {
                     // Dialog may have been closed before the repoSelector was loaded
                     return
                 }
-                const githubRepoId = parseInt(repoSelector.value)
+                let githubRepoId = parseInt(repoSelector.value)
+                const exportEpub = document.querySelector('#book-settings-repository-epub').checked
+                const exportUnpackedEpub = document.querySelector('#book-settings-repository-unpacked-epub').checked
+                const exportHtml = document.querySelector('#book-settings-repository-html').checked
+                const exportLatex = document.querySelector('#book-settings-repository-latex').checked
+                if (!exportEpub && !exportUnpackedEpub && !exportHtml && !exportLatex) {
+                    // No export formats selected. Reset repository.
+                    githubRepoId = 0
+                }
                 if (
                     (githubRepoId === 0 && this.bookRepos[book.id]) ||
                     (githubRepoId > 0 &&
                         (
                             !this.bookRepos[book.id] ||
-                            this.bookRepos[book.id].github_repo_id !== githubRepoId
+                            this.bookRepos[book.id].github_repo_id !== githubRepoId ||
+                            this.bookRepos[book.id].export_epub !== exportEpub ||
+                            this.bookRepos[book.id].export_unpacked_epub !== exportUnpackedEpub ||
+                            this.bookRepos[book.id].export_html !== exportHtml ||
+                            this.bookRepos[book.id].export_latex !== exportLatex
                         )
                     )
                 ) {
@@ -129,6 +136,10 @@ export class GithubExporterBooksOverview {
                     }
                     if (githubRepoId > 0) {
                         postData['github_repo_full_name'] = this.userRepos[githubRepoId]
+                        postData['export_epub'] = exportEpub
+                        postData['export_unpacked_epub'] = exportUnpackedEpub
+                        postData['export_html'] = exportHtml
+                        postData['export_latex'] = exportLatex
                     }
                     post('/api/github_export/update_book_repo/', postData).then(
                         () => {
@@ -137,7 +148,11 @@ export class GithubExporterBooksOverview {
                             } else {
                                 this.bookRepos[book.id] = {
                                     github_repo_id: githubRepoId,
-                                    github_repo_full_name: this.userRepos[githubRepoId]
+                                    github_repo_full_name: this.userRepos[githubRepoId],
+                                    export_epub: exportEpub,
+                                    export_unpacked_epub: exportUnpackedEpub,
+                                    export_html: exportHtml,
+                                    export_latex: exportLatex
                                 }
                             }
 
