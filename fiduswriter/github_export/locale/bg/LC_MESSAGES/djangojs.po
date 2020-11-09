@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-02 15:03+0000\n"
+"POT-Creation-Date: 2020-11-09 21:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,50 +17,79 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: github_export/static/js/modules/github_export/books_overview.js:65
-msgid "Export to Github"
-msgstr ""
 
-#: github_export/static/js/modules/github_export/books_overview.js:66
-msgid "Export selected to Github."
-msgstr ""
-
-#: github_export/static/js/modules/github_export/books_overview.js:81
-msgid "Github"
-msgstr ""
-
-#: github_export/static/js/modules/github_export/books_overview.js:82
-msgid "Github related settings"
-msgstr ""
-
-#: github_export/static/js/modules/github_export/books_overview.js:87
-msgid "Github repository"
-msgstr ""
-
-#: github_export/static/js/modules/github_export/exporter.js:28
+#: github_export/static/js/modules/github_export/book_processor.js:20
 msgid "There is no github repository registered for the book:"
 msgstr ""
 
-#: github_export/static/js/modules/github_export/exporter.js:35
+#: github_export/static/js/modules/github_export/book_processor.js:27
 msgid "You do not have access to the repository:"
 msgstr ""
 
-#: github_export/static/js/modules/github_export/exporter.js:39
+#: github_export/static/js/modules/github_export/book_processor.js:31
 msgid "Book publishing to Github initiated."
 msgstr ""
 
-#: github_export/static/js/modules/github_export/exporter.js:48
-msgid "Update from Fidus Writer"
+#: github_export/static/js/modules/github_export/book_processor.js:58
+msgid "Book already up to date in repository."
 msgstr ""
 
-#: github_export/static/js/modules/github_export/exporter.js:69
-msgid "Book published to Github successfully!"
+#: github_export/static/js/modules/github_export/book_processor.js:60
+msgid "Could not publish book to repository."
 msgstr ""
 
-#: github_export/static/js/modules/github_export/exporter.js:70
-msgid "Could not publish book to Github."
+#: github_export/static/js/modules/github_export/book_processor.js:62
+msgid "Could not publish some parts of book to repository."
 msgstr ""
 
-#: github_export/static/js/modules/github_export/templates.js:14
+#: github_export/static/js/modules/github_export/book_processor.js:64
+msgid "Book published to repository successfully!"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/book_processor.js:66
+msgid "Book updated in repository successfully!"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/books_overview.js:57
+msgid "Export to Github"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/books_overview.js:58
+msgid "Export selected to Github."
+msgstr ""
+
+#: github_export/static/js/modules/github_export/books_overview.js:73
+msgid "Github"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/books_overview.js:74
+msgid "Github related settings"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/templates.js:8
+msgid "Github repository"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/templates.js:8
 msgid "Select github repository to export to"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/templates.js:8
+msgid "Export EPUB"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/templates.js:8
+msgid "Export unpacked EPUB"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/templates.js:8
+msgid "Export HTML"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/templates.js:8
+msgid "Export LaTeX"
+msgstr ""
+
+#: github_export/static/js/modules/github_export/tools/commit_file.js:21
+msgid "Update from Fidus Writer"
 msgstr ""
