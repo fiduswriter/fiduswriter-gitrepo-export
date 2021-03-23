@@ -27,7 +27,7 @@ To install:
 
 To use:
 
-1. Login to your Fidus Writer instance using github or with an account that is otherwise connected to a github account.
+1. Login to your Fidus Writer instance using github, or login with a regular account and connect a Github account on the profile page (https://DOMAIN.NAME/user/profile/)
 
 2. Go to the books overview page.
 
