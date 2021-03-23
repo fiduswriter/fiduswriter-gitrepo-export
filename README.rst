@@ -13,7 +13,7 @@ To install:
 
 3. In your configuration.py file, add "github_export" and "allauth.socialaccount.providers.github" to ``INSTALLED_APPS``.
 
-4. Set up github as one of the connected login options. See instructions here: https://django-allauth.readthedocs.io/en/latest/providers.html#github
+4. Set up github as one of the connected login options. See instructions here: https://django-allauth.readthedocs.io/en/latest/providers.html#github . The callback URL will be in the format https://DOMAIN.NAME/api/github/github/login/callback/
 
 5. In your configuration.py file, make sure to add repo rights for the github connector like this::
 
