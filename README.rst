@@ -21,6 +21,7 @@ To install:
         'github': {
             'SCOPE': [
                 'repo',
+                'user:email',
             ],
         }
     }
