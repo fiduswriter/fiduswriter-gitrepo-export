@@ -38,12 +38,18 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
         request = HTTPRequest(
             url,
             'GET',
-            headers
+            headers,
+            request_timeout=0
         )
         http = AsyncHTTPClient()
-        response = await http.fetch(request, raise_error=False)
-        self.set_status(response.code)
-        self.write(response.body)
+        try:
+            response = await http.fetch(request)
+        except Exception as e:
+            self.set_status(500)
+            self.write("Error: %s" % e)
+        else:
+            self.set_status(response.code)
+            self.write(response.body)
         self.finish()
 
     async def put(self, path):
@@ -73,10 +79,15 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
             'PUT',
             headers,
             body=self.request.body,
-            request_timeout=40.0
+            request_timeout=0
         )
         http = AsyncHTTPClient()
-        response = await http.fetch(request, raise_error=False)
-        self.set_status(response.code)
-        self.write(response.body)
+        try:
+            response = await http.fetch(request)
+        except Exception as e:
+            self.set_status(500)
+            self.write("Error: %s" % e)
+        else:
+            self.set_status(response.code)
+            self.write(response.body)
         self.finish()
