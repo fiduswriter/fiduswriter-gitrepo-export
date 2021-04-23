@@ -39,7 +39,7 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
             url,
             'GET',
             headers,
-            request_timeout=0
+            request_timeout=120
         )
         http = AsyncHTTPClient()
         try:
@@ -79,7 +79,7 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
             'PUT',
             headers,
             body=self.request.body,
-            request_timeout=0
+            request_timeout=120
         )
         http = AsyncHTTPClient()
         try:
