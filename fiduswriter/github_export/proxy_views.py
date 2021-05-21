@@ -1,6 +1,6 @@
 import re
 from tornado.web import RequestHandler
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
 from base.django_handler_mixin import DjangoHandlerMixin
 from allauth.socialaccount.models import SocialToken
 
@@ -44,6 +44,9 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
         http = AsyncHTTPClient()
         try:
             response = await http.fetch(request)
+        except HTTPError as e:
+            self.set_status(e.response.code)
+            self.write(e.response.body)
         except Exception as e:
             self.set_status(500)
             self.write("Error: %s" % e)

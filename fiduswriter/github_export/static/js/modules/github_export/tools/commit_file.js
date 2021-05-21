@@ -12,7 +12,6 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
         )
     return Promise.resolve(getDirJsonPromise).catch(
         response => {
-            console.log({response})
             if (response.status === 404) {
                 return Promise.resolve([])
             }
