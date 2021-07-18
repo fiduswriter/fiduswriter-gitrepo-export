@@ -4,10 +4,7 @@ from book.models import Book
 
 
 class BookRepository(models.Model):
-    book = models.ForeignKey(
-        Book,
-        on_delete=models.deletion.CASCADE
-    )
+    book = models.ForeignKey(Book, on_delete=models.deletion.CASCADE)
     github_repo_id = models.IntegerField()
     github_repo_full_name = models.CharField(
         max_length=256,
@@ -16,3 +13,6 @@ class BookRepository(models.Model):
     export_unpacked_epub = models.BooleanField()
     export_html = models.BooleanField()
     export_latex = models.BooleanField()
+
+    class Meta(object):
+        verbose_name_plural = "Book repositories"

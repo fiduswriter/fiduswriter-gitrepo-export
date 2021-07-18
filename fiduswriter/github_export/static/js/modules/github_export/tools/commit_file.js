@@ -75,8 +75,8 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
             }
         )
     }).catch(
-         _error => {
-             return Promise.resolve(400)
-         }
+        _error => {
+            return Promise.resolve(400)
+        }
     )
 }

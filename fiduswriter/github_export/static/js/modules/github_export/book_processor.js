@@ -37,7 +37,7 @@ export class GithubBookProcessor {
                 book,
                 this.booksOverview.user,
                 this.booksOverview.documentList,
-                new Date(book.updated*1000),
+                new Date(book.updated * 1000),
                 userRepo
             )
             commitInitiators.push(
@@ -53,7 +53,7 @@ export class GithubBookProcessor {
                 book,
                 this.booksOverview.user,
                 this.booksOverview.documentList,
-                new Date(book.updated*1000),
+                new Date(book.updated * 1000),
                 userRepo
             )
             commitInitiators.push(
@@ -69,7 +69,7 @@ export class GithubBookProcessor {
                 book,
                 this.booksOverview.user,
                 this.booksOverview.documentList,
-                new Date(book.updated*1000),
+                new Date(book.updated * 1000),
                 userRepo
             )
             commitInitiators.push(
@@ -83,7 +83,7 @@ export class GithubBookProcessor {
                 book,
                 this.booksOverview.user,
                 this.booksOverview.documentList,
-                new Date(book.updated*1000),
+                new Date(book.updated * 1000),
                 userRepo
             )
             commitInitiators.push(

@@ -12,7 +12,7 @@ export class GithubExporterBooksOverview {
     }
 
     init() {
-        const githubAccount = this.booksOverview.app.config.user.socialaccounts.find(account => account.provider==='github')
+        const githubAccount = this.booksOverview.app.config.user.socialaccounts.find(account => account.provider === 'github')
         if (!githubAccount) {
             return
         }
@@ -37,7 +37,7 @@ export class GithubExporterBooksOverview {
         this.addDialogSaveMethod()
     }
 
-    getUserRepos(page=1) {
+    getUserRepos(page = 1) {
         return getJson(
             `/proxy/github_export/user/repos?page=${page}&per_page=100`
         ).then(json => {
@@ -89,10 +89,10 @@ export class GithubExporterBooksOverview {
                 return `<table class="fw-dialog-table">
                     <tbody class="github-repository">
                     ${
-                        this.finishedLoading ?
-                            repoSelectorTemplate({book, userRepos: this.userRepos, bookRepos: this.bookRepos}) :
-                            '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
-                    }
+    this.finishedLoading ?
+        repoSelectorTemplate({book, userRepos: this.userRepos, bookRepos: this.bookRepos}) :
+        '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
+}
                     </tbody>
                 </table>`
             }
