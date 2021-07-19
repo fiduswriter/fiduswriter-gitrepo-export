@@ -1,95 +1,85 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-18 18:44+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Fidus Writer Github Export\n"
+"Language: bg\n"
 
 #: github_export/static/js/modules/github_export/book_processor.js:20
 msgid "There is no github repository registered for the book:"
-msgstr ""
+msgstr "Няма регистрирано хранилище на github за книгата:"
 
 #: github_export/static/js/modules/github_export/book_processor.js:27
 msgid "You do not have access to the repository:"
-msgstr ""
+msgstr "Нямате достъп до хранилището:"
 
 #: github_export/static/js/modules/github_export/book_processor.js:31
 msgid "Book publishing to Github initiated."
-msgstr ""
+msgstr "Инициирано издаване на книги в Github."
 
 #: github_export/static/js/modules/github_export/book_processor.js:58
 msgid "Book already up to date in repository."
-msgstr ""
+msgstr "Резервирайте вече актуално в хранилището."
 
 #: github_export/static/js/modules/github_export/book_processor.js:60
 msgid "Could not publish book to repository."
-msgstr ""
+msgstr "Не можа да публикува книга в хранилището."
 
 #: github_export/static/js/modules/github_export/book_processor.js:62
 msgid "Could not publish some parts of book to repository."
-msgstr ""
+msgstr "Не можах да публикувам някои части от книгата в хранилището."
 
 #: github_export/static/js/modules/github_export/book_processor.js:64
 msgid "Book published to repository successfully!"
-msgstr ""
+msgstr "Книгата е публикувана успешно в хранилището!"
 
 #: github_export/static/js/modules/github_export/book_processor.js:66
 msgid "Book updated in repository successfully!"
-msgstr ""
+msgstr "Книгата е актуализирана в хранилището успешно!"
 
 #: github_export/static/js/modules/github_export/books_overview.js:57
 msgid "Export to Github"
-msgstr ""
+msgstr "Експортирайте в Github"
 
 #: github_export/static/js/modules/github_export/books_overview.js:58
 msgid "Export selected to Github."
-msgstr ""
+msgstr "Експортирането е избрано в Github."
 
 #: github_export/static/js/modules/github_export/books_overview.js:73
 msgid "Github"
-msgstr ""
+msgstr "Github"
 
 #: github_export/static/js/modules/github_export/books_overview.js:74
 msgid "Github related settings"
-msgstr ""
+msgstr "Настройки, свързани с Github"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Github repository"
-msgstr ""
+msgstr "Хранилище на Github"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Select github repository to export to"
-msgstr ""
+msgstr "Изберете хранилището на github, в което да експортирате"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Export EPUB"
-msgstr ""
+msgstr "Експортиране на EPUB"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Export unpacked EPUB"
-msgstr ""
+msgstr "Експортирайте разопакован EPUB"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Export HTML"
-msgstr ""
+msgstr "Експортиране на HTML"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Export LaTeX"
-msgstr ""
+msgstr "Експортирайте LaTeX"
 
 #: github_export/static/js/modules/github_export/tools/commit_file.js:17
 msgid "Update from Fidus Writer"
-msgstr ""
+msgstr "Актуализация от Fidus Writer"
+
