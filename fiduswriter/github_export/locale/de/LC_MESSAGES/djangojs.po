@@ -1,95 +1,85 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-18 18:44+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Fidus Writer Github Export\n"
+"Language: de\n"
 
 #: github_export/static/js/modules/github_export/book_processor.js:20
 msgid "There is no github repository registered for the book:"
-msgstr ""
+msgstr "Für das Buch ist kein Github-Repository registriert:"
 
 #: github_export/static/js/modules/github_export/book_processor.js:27
 msgid "You do not have access to the repository:"
-msgstr ""
+msgstr "Sie haben keinen Zugriff auf das Repository:"
 
 #: github_export/static/js/modules/github_export/book_processor.js:31
 msgid "Book publishing to Github initiated."
-msgstr ""
+msgstr "Buchveröffentlichung auf Github eingeleitet."
 
 #: github_export/static/js/modules/github_export/book_processor.js:58
 msgid "Book already up to date in repository."
-msgstr ""
+msgstr "Buch ist bereits auf dem neuesten Stand im Repository."
 
 #: github_export/static/js/modules/github_export/book_processor.js:60
 msgid "Could not publish book to repository."
-msgstr ""
+msgstr "Buch konnte nicht im Repository veröffentlicht werden."
 
 #: github_export/static/js/modules/github_export/book_processor.js:62
 msgid "Could not publish some parts of book to repository."
-msgstr ""
+msgstr "Einige Teile des Buchs konnten nicht im Repository veröffentlicht werden."
 
 #: github_export/static/js/modules/github_export/book_processor.js:64
 msgid "Book published to repository successfully!"
-msgstr ""
+msgstr "Buch erfolgreich im Repository veröffentlicht!"
 
 #: github_export/static/js/modules/github_export/book_processor.js:66
 msgid "Book updated in repository successfully!"
-msgstr ""
+msgstr "Buch erfolgreich im Repository aktualisiert!"
 
 #: github_export/static/js/modules/github_export/books_overview.js:57
 msgid "Export to Github"
-msgstr ""
+msgstr "Nach Github exportieren"
 
 #: github_export/static/js/modules/github_export/books_overview.js:58
 msgid "Export selected to Github."
-msgstr ""
+msgstr "Ausgewählte nach Github exportieren."
 
 #: github_export/static/js/modules/github_export/books_overview.js:73
 msgid "Github"
-msgstr ""
+msgstr "Github"
 
 #: github_export/static/js/modules/github_export/books_overview.js:74
 msgid "Github related settings"
-msgstr ""
+msgstr "Github-bezogene Einstellungen"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Github repository"
-msgstr ""
+msgstr "Github-Repository"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Select github repository to export to"
-msgstr ""
+msgstr "Wählen Sie das Github-Repository aus, in das exportiert werden soll"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Export EPUB"
-msgstr ""
+msgstr "EPUB exportieren"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Export unpacked EPUB"
-msgstr ""
+msgstr "Entpackte EPUB exportieren"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Export HTML"
-msgstr ""
+msgstr "HTML exportieren"
 
 #: github_export/static/js/modules/github_export/templates.js:8
 msgid "Export LaTeX"
-msgstr ""
+msgstr "LaTeX exportieren"
 
 #: github_export/static/js/modules/github_export/tools/commit_file.js:17
 msgid "Update from Fidus Writer"
-msgstr ""
+msgstr "Update von Fidus Writer"
+
