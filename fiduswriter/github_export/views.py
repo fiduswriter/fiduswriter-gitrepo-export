@@ -15,7 +15,10 @@ def get_book_repos(request):
     status = 200
     book_repos = models.BookRepository.objects.filter(
         Q(book__owner=request.user)
-        | Q(book__bookaccessright__user=request.user)
+        | Q(
+            book__bookaccessright__holder_id=request.user.id,
+            book__bookaccessright__holder_type__model="user",
+        )
     ).distinct()
     response["book_repos"] = {}
     for repo in book_repos:

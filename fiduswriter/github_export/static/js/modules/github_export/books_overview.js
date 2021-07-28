@@ -78,6 +78,23 @@ export class GithubExporterBooksOverview {
             },
             disabled: overview => !overview.getSelected().length
         })
+        this.booksOverview.mod.actions.exportMenu.content.push({
+            title: gettext('Export to Github'),
+            tooltip: gettext('Export book to Github.'),
+            action: ({saveBook, book, overview}) => {
+                saveBook().then(
+                    () => {
+                        const exporter = new GithubBookProcessor(
+                            overview.app,
+                            overview,
+                            this,
+                            [book]
+                        )
+                        exporter.init()
+                    }
+                )
+            },
+        })
     }
 
     addDialogPart() {
