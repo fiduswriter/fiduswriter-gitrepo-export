@@ -56,7 +56,6 @@ export class HTMLBookGithubExporter extends HTMLBookExporter {
 
 export class LatexBookGithubExporter extends LatexBookExporter {
     constructor(schema, book, user, docList, updated, repo) {
-        console.log({schema, book, user, docList, updated, repo})
         super(schema, book, user, docList, updated)
         this.repo = repo
     }
