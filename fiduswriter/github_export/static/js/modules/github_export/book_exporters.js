@@ -1,5 +1,5 @@
 import {EpubBookExporter} from "../books/exporter/epub"
-import {HTMLBookExporter, SingleFileBookExporter} from "../books/exporter/html"
+import {HTMLBookExporter, SingleFileHTMLBookExporter} from "../books/exporter/html"
 import {LatexBookExporter} from "../books/exporter/latex"
 import {commitFile, commitZipContents} from "./tools"
 
