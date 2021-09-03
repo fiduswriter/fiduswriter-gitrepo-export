@@ -1,5 +1,5 @@
 import {addAlert} from "../common"
-import {EpubBookGithubExporter, UnpackedEpubBookGithubExporter, HTMLBookGithubExporter, LatexBookGithubExporter} from "./book_exporters"
+import {EpubBookGithubExporter, UnpackedEpubBookGithubExporter, HTMLBookGithubExporter, LatexBookGithubExporter, SingleFileHTMLBookGithubExporter} from "./book_exporters"
 import {promiseChain} from "./tools"
 
 export class GithubBookProcessor {
@@ -74,6 +74,22 @@ export class GithubBookProcessor {
             )
             commitInitiators.push(
                 htmlExporter.init()
+            )
+        }
+
+        if (bookRepo.export_unified_html) {
+            const unifiedHtmlExporter = new SingleFileHTMLBookGithubExporter(
+                this.booksOverview.schema,
+                this.booksOverview.app.csl,
+                this.booksOverview.styles,
+                book,
+                this.booksOverview.user,
+                this.booksOverview.documentList,
+                new Date(book.updated * 1000),
+                userRepo
+            )
+            commitInitiators.push(
+                unifiedHtmlExporter.init()
             )
         }
 

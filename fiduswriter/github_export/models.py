@@ -12,6 +12,7 @@ class BookRepository(models.Model):
     export_epub = models.BooleanField()
     export_unpacked_epub = models.BooleanField()
     export_html = models.BooleanField()
+    export_unified_html = models.BooleanField()
     export_latex = models.BooleanField()
 
     class Meta(object):

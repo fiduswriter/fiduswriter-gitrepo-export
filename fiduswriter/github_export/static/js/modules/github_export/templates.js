@@ -56,6 +56,14 @@ export const repoSelectorTemplate = ({book, bookRepos, userRepos}) => {
     </tr>
     <tr>
         <th>
+            <h4 class="fw-tablerow-title">${gettext("Export Unified HTML")}</h4>
+        </th>
+        <td>
+            <input type="checkbox" id="book-settings-repository-unified-html" ${bookRepo && bookRepo.export_unified_html ? 'checked' : ''}>
+        </td>
+    </tr>
+    <tr>
+        <th>
             <h4 class="fw-tablerow-title">${gettext("Export LaTeX")}</h4>
         </th>
         <td>

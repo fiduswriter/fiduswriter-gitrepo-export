@@ -129,8 +129,9 @@ export class GithubExporterBooksOverview {
                 const exportEpub = document.querySelector('#book-settings-repository-epub').checked
                 const exportUnpackedEpub = document.querySelector('#book-settings-repository-unpacked-epub').checked
                 const exportHtml = document.querySelector('#book-settings-repository-html').checked
+                const exportUnifiedHtml = document.querySelector('#book-settings-repository-unified-html').checked
                 const exportLatex = document.querySelector('#book-settings-repository-latex').checked
-                if (!exportEpub && !exportUnpackedEpub && !exportHtml && !exportLatex) {
+                if (!exportEpub && !exportUnpackedEpub && !exportHtml && !exportUnifiedHtml && !exportLatex) {
                     // No export formats selected. Reset repository.
                     githubRepoId = 0
                 }
@@ -143,6 +144,7 @@ export class GithubExporterBooksOverview {
                             this.bookRepos[book.id].export_epub !== exportEpub ||
                             this.bookRepos[book.id].export_unpacked_epub !== exportUnpackedEpub ||
                             this.bookRepos[book.id].export_html !== exportHtml ||
+                            this.bookRepos[book.id].export_unified_html !== exportUnifiedHtml ||
                             this.bookRepos[book.id].export_latex !== exportLatex
                         )
                     )
@@ -156,6 +158,7 @@ export class GithubExporterBooksOverview {
                         postData['export_epub'] = exportEpub
                         postData['export_unpacked_epub'] = exportUnpackedEpub
                         postData['export_html'] = exportHtml
+                        postData['export_unified_html'] = exportUnifiedHtml
                         postData['export_latex'] = exportLatex
                     }
                     post('/api/github_export/update_book_repo/', postData).then(
@@ -169,6 +172,7 @@ export class GithubExporterBooksOverview {
                                     export_epub: exportEpub,
                                     export_unpacked_epub: exportUnpackedEpub,
                                     export_html: exportHtml,
+                                    export_unified_html: exportUnifiedHtml,
                                     export_latex: exportLatex
                                 }
                             }

@@ -28,6 +28,7 @@ def get_book_repos(request):
             "export_epub": repo.export_epub,
             "export_unpacked_epub": repo.export_unpacked_epub,
             "export_html": repo.export_html,
+            "export_unified_html": repo.export_unified_html,
             "export_latex": repo.export_latex,
         }
     return JsonResponse(response, status=status)
@@ -59,6 +60,7 @@ def update_book_repo(request):
             export_unpacked_epub=request.POST["export_unpacked_epub"]
             == "true",
             export_html=request.POST["export_html"] == "true",
+            export_unified_html=request.POST["export_unified_html"] == "true",
             export_latex=request.POST["export_latex"] == "true",
         )
         status = 201
