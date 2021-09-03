@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('github_export', '0003_alter_bookrepository_options'),
+        ("github_export", "0003_alter_bookrepository_options"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='bookrepository',
-            name='export_unified_html',
+            model_name="bookrepository",
+            name="export_unified_html",
             field=models.BooleanField(default=False),
             preserve_default=False,
         ),
