@@ -39,8 +39,13 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
         try:
             response = await http.fetch(request)
         except HTTPError as e:
-            self.set_status(e.response.code)
-            self.write(e.response.body)
+            if e.response.code == 404:
+                # We remove the 404 response so it will not show up as an
+                # error in the browser
+                self.write("[]")
+            else:
+                self.set_status(e.response.code)
+                self.write(e.response.body)
         except Exception as e:
             self.set_status(500)
             self.write("Error: %s" % e)

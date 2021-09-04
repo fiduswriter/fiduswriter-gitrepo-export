@@ -10,14 +10,7 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
                 return Promise.resolve(json)
             }
         )
-    return Promise.resolve(getDirJsonPromise).catch(
-        response => {
-            if (response.status === 404) {
-                return Promise.resolve([])
-            }
-            throw response
-        }
-    ).then(json => {
+    return Promise.resolve(getDirJsonPromise).then(json => {
         const fileEntry = Array.isArray(json) ? json.find(entry => entry.name === filename) : false
         const commitData = {
             message: gettext('Update from Fidus Writer'),
@@ -70,7 +63,6 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
                     return Promise.resolve(status)
                 } else {
                     return Promise.resolve(400)
-
                 }
             }
         )

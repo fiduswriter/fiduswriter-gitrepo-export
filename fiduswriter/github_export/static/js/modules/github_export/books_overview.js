@@ -161,7 +161,7 @@ export class GithubExporterBooksOverview {
                         postData['export_unified_html'] = exportUnifiedHtml
                         postData['export_latex'] = exportLatex
                     }
-                    post('/api/github_export/update_book_repo/', postData).then(
+                    return post('/api/github_export/update_book_repo/', postData).then(
                         () => {
                             if (githubRepoId === 0) {
                                 delete this.bookRepos[book.id]
