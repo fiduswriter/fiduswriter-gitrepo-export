@@ -1,6 +1,6 @@
 import {getJson} from "../../common"
 
-export function commitTree(tree, repo) {
+export function commitTree(tree, commitMessage, repo) {
     let branch, parentSha
     return getJson(`/proxy/github_export/repos/${repo}`.replace(/\/\//, '/')).then(
         repoJson => {
@@ -37,7 +37,7 @@ export function commitTree(tree, repo) {
                 body: JSON.stringify({
                     tree: treeJson.sha,
                     parents: [parentSha],
-                    message: "UPDATED WITH FW"
+                    message: commitMessage
                 })
             }
         )
