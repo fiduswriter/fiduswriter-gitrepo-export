@@ -2,7 +2,7 @@ import {commitFile} from "./commit_file"
 import {promiseChain} from "./basic"
 import {get} from "../../common"
 
-export function commitZipContents(repo, outputList, binaryFiles, includeZips, parentDir = '/') {
+export function commitZipContents(repo, outputList, binaryFiles, includeZips, parentDir = '') {
     const repoDirCache = {}
     const textCommitFunctions = outputList.map(file => {
         const blob = new Blob([file.contents])

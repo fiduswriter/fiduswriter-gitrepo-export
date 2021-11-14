@@ -1,6 +1,6 @@
 import {addAlert} from "../common"
 import {EpubBookGithubExporter, UnpackedEpubBookGithubExporter, HTMLBookGithubExporter, LatexBookGithubExporter, SingleFileHTMLBookGithubExporter} from "./book_exporters"
-import {promiseChain} from "./tools"
+import {promiseChain, commitTree} from "./tools"
 
 export class GithubBookProcessor {
     constructor(app, booksOverview, booksOverviewExporter, books) {
@@ -116,10 +116,11 @@ export class GithubBookProcessor {
                     addAlert('error', gettext('Could not publish book to repository.'))
                 } else if (responseCodes.find(code => code === 400)) {
                     addAlert('error', gettext('Could not publish some parts of book to repository.'))
-                } else if (responseCodes.every(code => code === 201)) {
-                    addAlert('info', gettext('Book published to repository successfully!'))
                 } else {
-                    addAlert('info', gettext('Book updated in repository successfully!'))
+                    // The responses looks fine, but we are not done yet.
+                    commitTree(responseCodes.filter(response => typeof(response) === 'object'), userRepo).then(
+                        () => addAlert('info', gettext('Book published to repository successfully!'))
+                    )
                 }
             }
         ))

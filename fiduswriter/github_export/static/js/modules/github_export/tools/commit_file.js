@@ -1,8 +1,8 @@
 import {getJson} from "../../common"
 import {gitHashObject} from "./git_hash_object"
 
-export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache = {}) {
-    const dirUrl = `/proxy/github_export/repos/${repo}/contents${parentDir}`.replace(/\/\//, '/')
+export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = {}) {
+    const dirUrl = `/proxy/github_export/repos/${repo}/contents/${parentDir}`.replace(/\/\//, '/')
     const getDirJsonPromise = repoDirCache[dirUrl] ?
         Promise.resolve(repoDirCache[dirUrl]) :
         getJson(dirUrl).then(
@@ -14,10 +14,7 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
     return Promise.resolve(getDirJsonPromise).then(json => {
         const fileEntry = Array.isArray(json) ? json.find(entry => entry.name === filename) : false
         const commitData = {
-            message: gettext('Update from Fidus Writer'),
-        }
-        if (fileEntry) {
-            commitData.sha = fileEntry.sha
+            encoding: "base64",
         }
         return new Promise(resolve => {
             const reader = new FileReader()
@@ -40,7 +37,7 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
                 ).then(
                     sha => {
                         if (sha === fileEntry.sha) {
-                            return Promise.resolve()
+                            return Promise.resolve(304)
                         } else {
                             return Promise.resolve(commitData)
                         }
@@ -50,18 +47,29 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
         )
 
     }).then(commitData => {
-        if (!commitData) {
+        if (!commitData || commitData === 304) {
             return Promise.resolve(304)
         }
-        return fetch(`/proxy/github_export/repos/${repo}/contents${parentDir}${filename}`.replace(/\/\//, '/'), {
-            method: 'PUT',
+        return fetch(`/proxy/github_export/repos/${repo}/git/blobs`.replace(/\/\//, '/'), {
+            headers: {
+                Accept: "application/vnd.github.v3+json"
+            },
+            method: 'POST',
             credentials: 'include',
             body: JSON.stringify(commitData)
         }).then(
             response => {
                 if (response.ok) {
-                    const status = commitData.sha ? 200 : 201
-                    return Promise.resolve(status)
+                    return response.json().then(
+                        json => {
+                            return {
+                                path: `${parentDir}${filename}`,
+                                sha: json.sha,
+                                mode: "100644",
+                                type: "blob"
+                            }
+                        }
+                    )
                 } else {
                     return Promise.resolve(400)
                 }

@@ -32,7 +32,7 @@ export class UnpackedEpubBookGithubExporter extends EpubBookExporter {
             this.outputList,
             this.binaryFiles,
             this.includeZips,
-            '/epub/'
+            'epub/'
         )
     }
 }
@@ -49,7 +49,7 @@ export class HTMLBookGithubExporter extends HTMLBookExporter {
             this.outputList,
             this.binaryFiles,
             this.includeZips,
-            '/html/'
+            'html/'
         )
     }
 }
@@ -66,7 +66,7 @@ export class SingleFileHTMLBookGithubExporter extends SingleFileHTMLBookExporter
             this.outputList,
             this.binaryFiles,
             this.includeZips,
-            '/uhtml/'
+            'uhtml/'
         )
     }
 }
@@ -83,7 +83,7 @@ export class LatexBookGithubExporter extends LatexBookExporter {
             this.textFiles,
             this.httpFiles,
             [],
-            '/latex/'
+            'latex/'
         )
     }
 }
