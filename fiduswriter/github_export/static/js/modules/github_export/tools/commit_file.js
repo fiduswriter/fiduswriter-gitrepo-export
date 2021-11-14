@@ -1,4 +1,5 @@
 import {getJson} from "../../common"
+import {gitHashObject} from "./git_hash_object"
 
 export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache = {}) {
     const dirUrl = `/proxy/github_export/repos/${repo}/contents${parentDir}`.replace(/\/\//, '/')
@@ -31,20 +32,20 @@ export function commitFile(repo, blob, filename, parentDir = '/', repoDirCache =
                 if (!fileEntry || fileEntry.size !== binaryString.length) {
                     return Promise.resolve(commitData)
                 }
-                // We haven't figured out how to calculate the correct sha1 value, so instead we download the original
-                // file and compare (works up to 100 MB)
-                return getJson(
-                    `/proxy/github_export/repos/${repo}/git/blobs/${fileEntry.sha}`
+                return gitHashObject(
+                    binaryString,
+                    // UTF-8 files seem to have no type set.
+                    // Not sure if this is actually a viable way to distinguish between utf-8 and binary files.
+                    !blob.type.length
                 ).then(
-                    json => {
-                        if (btoa(atob(json.content || '')) === commitData.content) {
+                    sha => {
+                        if (sha === fileEntry.sha) {
                             return Promise.resolve()
                         } else {
                             return Promise.resolve(commitData)
                         }
                     }
                 )
-
             }
         )
 
