@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.conf import settings as django_settings
 from book.models import Book
 
 
@@ -17,3 +17,14 @@ class BookRepository(models.Model):
 
     class Meta(object):
         verbose_name_plural = "Book repositories"
+
+
+class RepoInfo(models.Model):
+    user = models.OneToOneField(
+        django_settings.AUTH_USER_MODEL,
+        on_delete=models.deletion.CASCADE,
+    )
+    content = models.JSONField(default=list, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.readable_name

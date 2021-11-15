@@ -7,3 +7,10 @@ class BookRepositoryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.BookRepository, BookRepositoryAdmin)
+
+
+class RepoInfoAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(models.RepoInfo, RepoInfoAdmin)

@@ -51,9 +51,6 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
             return Promise.resolve(304)
         }
         return fetch(`/proxy/github_export/repos/${repo}/git/blobs`.replace(/\/\//, '/'), {
-            headers: {
-                Accept: "application/vnd.github.v3+json"
-            },
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(commitData)

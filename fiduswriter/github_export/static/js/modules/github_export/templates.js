@@ -28,8 +28,12 @@ export const repoSelectorTemplate = ({book, bookRepos, userRepos}) => {
     ).join('')
 }
             </select>
+            <button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small reload">
+                ${gettext('Reload')}
+            </button>
         </td>
     </tr>
+
     <tr>
         <th>
             <h4 class="fw-tablerow-title">${gettext("Export EPUB")}</h4>

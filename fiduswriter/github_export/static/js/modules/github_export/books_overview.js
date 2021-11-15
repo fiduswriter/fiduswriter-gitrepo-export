@@ -1,4 +1,4 @@
-import {getJson, post} from "../common"
+import {getJson, post, findTarget} from "../common"
 import {repoSelectorTemplate} from "./templates"
 import {GithubBookProcessor} from "./book_processor"
 
@@ -35,20 +35,52 @@ export class GithubExporterBooksOverview {
         this.addButton()
         this.addDialogPart()
         this.addDialogSaveMethod()
+        this.bind()
     }
 
-    getUserRepos(page = 1) {
-        return getJson(
-            `/proxy/github_export/user/repos?page=${page}&per_page=100`
-        ).then(json => {
-            json.forEach(entry => this.userRepos[entry.id] = entry.full_name)
-            if (json.length === 100) {
-                return this.getUserRepos(page + 1)
-            } else {
-                return Promise.resolve()
+    bind() {
+        window.document.body.addEventListener('click', event => {
+            const el = {}
+            switch (true) {
+            case findTarget(event, 'tbody.github-repository .reload', el):
+                this.resetUserRepos()
+                break
+            default:
+                break
             }
+        })
+    }
+
+    resetUserRepos() {
+        this.finishedLoading = false
+        const repoSelector = document.querySelector('tbody.github-repository')
+        if (repoSelector) {
+            repoSelector.innerHTML = '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
         }
 
+        this.getUserRepos(true).then(
+            () => {
+                this.finishedLoading = true
+                const repoSelector = document.querySelector('tbody.github-repository')
+                if (repoSelector) {
+                    repoSelector.innerHTML = repoSelectorTemplate({
+                        book: this.openedBook,
+                        userRepos: this.userRepos,
+                        bookRepos: this.bookRepos
+                    })
+                }
+            }
+        )
+    }
+
+    getUserRepos(reload = false) {
+        if (reload) {
+            this.userRepos = {}
+        }
+        return getJson(
+            `/proxy/github_export/user/repos${reload ? '/reload' : ''}`
+        ).then(
+            json => json.forEach(entry => this.userRepos[entry.id] = entry.full_name)
         )
     }
 
@@ -105,7 +137,7 @@ export class GithubExporterBooksOverview {
                 this.openedBook = book
                 return `<table class="fw-dialog-table">
                     <tbody class="github-repository">
-                    ${
+                            ${
     this.finishedLoading ?
         repoSelectorTemplate({book, userRepos: this.userRepos, bookRepos: this.bookRepos}) :
         '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'

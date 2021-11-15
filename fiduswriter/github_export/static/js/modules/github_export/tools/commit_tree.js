@@ -12,9 +12,6 @@ export function commitTree(tree, commitMessage, repo) {
             return fetch(
                 `/proxy/github_export/repos/${repo}/git/trees`.replace(/\/\//, '/'),
                 {
-                    headers: {
-                        Accept: "application/vnd.github.v3+json"
-                    },
                     method: 'POST',
                     credentials: 'include',
                     body: JSON.stringify({
@@ -29,9 +26,6 @@ export function commitTree(tree, commitMessage, repo) {
         treeJson => fetch(
             `/proxy/github_export/repos/${repo}/git/commits`.replace(/\/\//, '/'),
             {
-                headers: {
-                    Accept: "application/vnd.github.v3+json"
-                },
                 method: 'POST',
                 credentials: 'include',
                 body: JSON.stringify({
@@ -47,9 +41,6 @@ export function commitTree(tree, commitMessage, repo) {
         commitJson => fetch(
             `/proxy/github_export/repos/${repo}/git/refs/heads/${branch}`.replace(/\/\//, '/'),
             {
-                headers: {
-                    Accept: "application/vnd.github.v3+json"
-                },
                 method: 'PATCH',
                 credentials: 'include',
                 body: JSON.stringify({
