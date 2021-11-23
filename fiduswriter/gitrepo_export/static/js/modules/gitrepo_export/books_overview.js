@@ -92,6 +92,20 @@ export class GitrepoExporterBooksOverview {
         )
     }
 
+    getRepos(book) {
+        const bookRepo = this.bookRepos[book.id]
+        if (!bookRepo) {
+            addAlert('error', `${gettext('There is no github repository registered for the book:')} ${book.title}`)
+            return [false, false]
+        }
+        const userRepo = this.userRepos[bookRepo.repo_id]
+        if (!userRepo) {
+            addAlert('error', `${gettext('You do not have access to the repository:')} ${bookRepo.github_repo_full_name}`)
+            return [bookRepo, false]
+        }
+        return [bookRepo, userRepo]
+    }
+
     addButton() {
         this.booksOverview.dtBulkModel.content.push({
             title: gettext('Export to Git Repository'),
@@ -99,13 +113,22 @@ export class GitrepoExporterBooksOverview {
             action: overview => {
                 const ids = overview.getSelected()
                 if (ids.length) {
-                    const exporter = new GithubBookProcessor(
-                        overview.app,
-                        this.booksOverview,
-                        this,
-                        overview.bookList.filter(book => ids.includes(book.id))
+                    overview.bookList.filter(book => ids.includes(book.id)).forEach(
+                        book => {
+                            const [bookRepo, userRepo] = this.getRepos(book)
+                            if (!userRepo) {
+                                return
+                            }
+                            const processor = new GithubBookProcessor(
+                                overview.app,
+                                overview,
+                                book,
+                                bookRepo,
+                                userRepo
+                            )
+                            processor.init()
+                        }
                     )
-                    exporter.init()
                 }
             },
             disabled: overview => !overview.getSelected().length
@@ -116,13 +139,18 @@ export class GitrepoExporterBooksOverview {
             action: ({saveBook, book, overview}) => {
                 saveBook().then(
                     () => {
-                        const exporter = new GithubBookProcessor(
+                        const [bookRepo, userRepo] = this.getRepos(book)
+                        if (!userRepo) {
+                            return
+                        }
+                        const processor = new GithubBookProcessor(
                             overview.app,
                             overview,
-                            this,
-                            [book]
+                            book,
+                            bookRepo,
+                            userRepo
                         )
-                        exporter.init()
+                        processor.init()
                     }
                 )
             },

@@ -3,36 +3,23 @@ import {EpubBookGithubExporter, UnpackedEpubBookGithubExporter, HTMLBookGithubEx
 import {promiseChain, commitTree} from "./tools"
 
 export class GithubBookProcessor {
-    constructor(app, booksOverview, booksOverviewExporter, books) {
+    constructor(app, booksOverview, book, bookRepo, userRepo) {
         this.app = app
         this.booksOverview = booksOverview
-        this.booksOverviewExporter = booksOverviewExporter
-        this.books = books
+        this.book = book
+        this.bookRepo = bookRepo
+        this.userRepo = userRepo
     }
 
     init() {
-        this.books.forEach(book => this.processBook(book))
-    }
-
-    processBook(book) {
-        const bookRepo = this.booksOverviewExporter.bookRepos[book.id]
-        if (!bookRepo) {
-            addAlert('error', `${gettext('There is no github repository registered for the book:')} ${book.title}`)
-            return
-        }
-        const userRepo = this.booksOverviewExporter.userRepos[bookRepo.repo_id]
-        if (!userRepo) {
-            addAlert('error', `${gettext('You do not have access to the repository:')} ${bookRepo.github_repo_full_name}`)
-            return
-        }
-        return this.getCommitMessage(book).then(
-            commitMessage => this.publishBook(book, bookRepo, userRepo, commitMessage)
+        return this.getCommitMessage().then(
+            commitMessage => this.publishBook(commitMessage)
         ).catch(
             () => {}
         )
     }
 
-    getCommitMessage(book) {
+    getCommitMessage() {
         return new Promise((resolve, reject) => {
             const buttons = [
                 {
@@ -57,7 +44,7 @@ export class GithubBookProcessor {
                 title: gettext('Commit message'),
                 height: 150,
                 body: `<p>
-            ${gettext("Updating")}: ${escapeText(book.title)}
+            ${gettext("Updating")}: ${escapeText(this.book.title)}
             <input type="text" class="commit-message" placeholder="${gettext("Enter commit message")}" >
             </p>`,
                 buttons
@@ -66,89 +53,88 @@ export class GithubBookProcessor {
         })
     }
 
-    publishBook(book, bookRepo, userRepo, commitMessage) {
+    publishBook(commitMessage) {
         addAlert('info', gettext('Book publishing to Github initiated.'))
 
         const commitInitiators = []
 
-        if (bookRepo.export_epub) {
+        if (this.bookRepo.export_epub) {
             const epubExporter = new EpubBookGithubExporter(
                 this.booksOverview.schema,
                 this.booksOverview.app.csl,
                 this.booksOverview.styles,
-                book,
+                this.book,
                 this.booksOverview.user,
                 this.booksOverview.documentList,
-                new Date(book.updated * 1000),
-                userRepo
+                new Date(this.book.updated * 1000),
+                this.userRepo
             )
             commitInitiators.push(
                 epubExporter.init()
             )
         }
 
-        if (bookRepo.export_unpacked_epub) {
+        if (this.bookRepo.export_unpacked_epub) {
             const unpackedEpubExporter = new UnpackedEpubBookGithubExporter(
                 this.booksOverview.schema,
                 this.booksOverview.app.csl,
                 this.booksOverview.styles,
-                book,
+                this.book,
                 this.booksOverview.user,
                 this.booksOverview.documentList,
-                new Date(book.updated * 1000),
-                userRepo
+                new Date(this.book.updated * 1000),
+                this.userRepo
             )
             commitInitiators.push(
                 unpackedEpubExporter.init()
             )
         }
 
-        if (bookRepo.export_html) {
+        if (this.bookRepo.export_html) {
             const htmlExporter = new HTMLBookGithubExporter(
                 this.booksOverview.schema,
                 this.booksOverview.app.csl,
                 this.booksOverview.styles,
-                book,
+                this.book,
                 this.booksOverview.user,
                 this.booksOverview.documentList,
-                new Date(book.updated * 1000),
-                userRepo
+                new Date(this.book.updated * 1000),
+                this.userRepo
             )
             commitInitiators.push(
                 htmlExporter.init()
             )
         }
 
-        if (bookRepo.export_unified_html) {
+        if (this.bookRepo.export_unified_html) {
             const unifiedHtmlExporter = new SingleFileHTMLBookGithubExporter(
                 this.booksOverview.schema,
                 this.booksOverview.app.csl,
                 this.booksOverview.styles,
-                book,
+                this.book,
                 this.booksOverview.user,
                 this.booksOverview.documentList,
-                new Date(book.updated * 1000),
-                userRepo
+                new Date(this.book.updated * 1000),
+                this.userRepo
             )
             commitInitiators.push(
                 unifiedHtmlExporter.init()
             )
         }
 
-        if (bookRepo.export_latex) {
+        if (this.bookRepo.export_latex) {
             const latexExporter = new LatexBookGithubExporter(
                 this.booksOverview.schema,
-                book,
+                this.book,
                 this.booksOverview.user,
                 this.booksOverview.documentList,
-                new Date(book.updated * 1000),
+                new Date(this.book.updated * 1000),
                 userRepo
             )
             commitInitiators.push(
                 latexExporter.init()
             )
         }
-
         return Promise.all(commitInitiators).then(commitFunctions => promiseChain(commitFunctions.flat()).then(
             responses => {
                 const responseCodes = responses.flat()
@@ -160,7 +146,7 @@ export class GithubBookProcessor {
                     addAlert('error', gettext('Could not publish some parts of book to repository.'))
                 } else {
                     // The responses looks fine, but we are not done yet.
-                    commitTree(responseCodes.filter(response => typeof(response) === 'object'), commitMessage, userRepo).then(
+                    commitTree(responseCodes.filter(response => typeof(response) === 'object'), commitMessage, this.userRepo).then(
                         () => addAlert('info', gettext('Book published to repository successfully!'))
                     )
                 }
