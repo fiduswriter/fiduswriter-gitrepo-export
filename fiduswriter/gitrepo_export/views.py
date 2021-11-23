@@ -23,8 +23,8 @@ def get_book_repos(request):
     response["book_repos"] = {}
     for repo in book_repos:
         response["book_repos"][repo.book.id] = {
-            "github_repo_id": repo.github_repo_id,
-            "github_repo_full_name": repo.github_repo_full_name,
+            "repo_id": repo.repo_id,
+            "repo_name": repo.repo_name,
             "export_epub": repo.export_epub,
             "export_unpacked_epub": repo.export_unpacked_epub,
             "export_html": repo.export_html,
@@ -48,14 +48,14 @@ def update_book_repo(request):
     ):
         return HttpResponseForbidden()
     models.BookRepository.objects.filter(book_id=book_id).delete()
-    github_repo_id = request.POST["github_repo_id"]
-    if github_repo_id == 0:
+    repo_id = request.POST["repo_id"]
+    if repo_id == 0:
         status = 200
     else:
         models.BookRepository.objects.create(
             book_id=book_id,
-            github_repo_id=github_repo_id,
-            github_repo_full_name=request.POST["github_repo_full_name"],
+            repo_id=repo_id,
+            repo_name=request.POST["repo_name"],
             export_epub=request.POST["export_epub"] == "true",
             export_unpacked_epub=request.POST["export_unpacked_epub"]
             == "true",

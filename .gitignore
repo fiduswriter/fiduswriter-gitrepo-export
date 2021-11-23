@@ -2,8 +2,8 @@
 *~
 dist/
 build/
-fiduswriter_github_export.egg-info/
-fiduswriter_github_export.egg-info/
+fiduswriter_gitrepo_export.egg-info/
+fiduswriter_gitrepo_export.egg-info/
 __pycache__/
 venv/
 fiduswriter/.transpile

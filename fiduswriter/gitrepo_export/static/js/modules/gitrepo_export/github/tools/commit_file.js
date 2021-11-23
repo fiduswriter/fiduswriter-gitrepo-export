@@ -1,8 +1,8 @@
-import {getJson} from "../../common"
-import {gitHashObject} from "./git_hash_object"
+import {getJson} from "../../../common"
+import {gitHashObject} from "../../git_hash_object"
 
 export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = {}) {
-    const dirUrl = `/proxy/github_export/repos/${repo}/contents/${parentDir}`.replace(/\/\//, '/')
+    const dirUrl = `/proxy/gitrepo_export/repos/${repo}/contents/${parentDir}`.replace(/\/\//, '/')
     const getDirJsonPromise = repoDirCache[dirUrl] ?
         Promise.resolve(repoDirCache[dirUrl]) :
         getJson(dirUrl).then(
@@ -50,7 +50,7 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
         if (!commitData || commitData === 304) {
             return Promise.resolve(304)
         }
-        return fetch(`/proxy/github_export/repos/${repo}/git/blobs`.replace(/\/\//, '/'), {
+        return fetch(`/proxy/gitrepo_export/repos/${repo}/git/blobs`.replace(/\/\//, '/'), {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(commitData)

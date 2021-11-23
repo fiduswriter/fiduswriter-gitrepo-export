@@ -1,8 +1,8 @@
 import {getJson, post, findTarget} from "../common"
 import {repoSelectorTemplate} from "./templates"
-import {GithubBookProcessor} from "./book_processor"
+import {GithubBookProcessor} from "./github"
 
-export class GithubExporterBooksOverview {
+export class GitrepoExporterBooksOverview {
     constructor(booksOverview) {
         this.booksOverview = booksOverview
         this.userRepos = {}
@@ -22,9 +22,9 @@ export class GithubExporterBooksOverview {
         ]).then(
             () => {
                 this.finishedLoading = true
-                const spinner = document.querySelector('tbody.github-repository .fa-spinner')
+                const spinner = document.querySelector('tbody.gitrepo-repository .fa-spinner')
                 if (spinner) {
-                    document.querySelector('tbody.github-repository').innerHTML = repoSelectorTemplate({
+                    document.querySelector('tbody.gitrepo-repository').innerHTML = repoSelectorTemplate({
                         book: this.openedBook,
                         userRepos: this.userRepos,
                         bookRepos: this.bookRepos
@@ -42,7 +42,7 @@ export class GithubExporterBooksOverview {
         window.document.body.addEventListener('click', event => {
             const el = {}
             switch (true) {
-            case findTarget(event, 'tbody.github-repository .reload', el):
+            case findTarget(event, 'tbody.gitrepo-repository .reload', el):
                 this.resetUserRepos()
                 break
             default:
@@ -53,7 +53,7 @@ export class GithubExporterBooksOverview {
 
     resetUserRepos() {
         this.finishedLoading = false
-        const repoSelector = document.querySelector('tbody.github-repository')
+        const repoSelector = document.querySelector('tbody.gitrepo-repository')
         if (repoSelector) {
             repoSelector.innerHTML = '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
         }
@@ -61,7 +61,7 @@ export class GithubExporterBooksOverview {
         this.getUserRepos(true).then(
             () => {
                 this.finishedLoading = true
-                const repoSelector = document.querySelector('tbody.github-repository')
+                const repoSelector = document.querySelector('tbody.gitrepo-repository')
                 if (repoSelector) {
                     repoSelector.innerHTML = repoSelectorTemplate({
                         book: this.openedBook,
@@ -78,14 +78,14 @@ export class GithubExporterBooksOverview {
             this.userRepos = {}
         }
         return getJson(
-            `/proxy/github_export/user/repos${reload ? '/reload' : ''}`
+            `/proxy/gitrepo_export/user/repos${reload ? '/reload' : ''}`
         ).then(
-            json => json.forEach(entry => this.userRepos[entry.id] = entry.full_name)
+            json => json.forEach(entry => this.userRepos[entry.id] = entry.name)
         )
     }
 
     getBookRepos() {
-        return getJson(`/api/github_export/get_book_repos/`).then(
+        return getJson(`/api/gitrepo_export/get_book_repos/`).then(
             json => {
                 this.bookRepos = json['book_repos']
             }
@@ -94,8 +94,8 @@ export class GithubExporterBooksOverview {
 
     addButton() {
         this.booksOverview.dtBulkModel.content.push({
-            title: gettext('Export to Github'),
-            tooltip: gettext('Export selected to Github.'),
+            title: gettext('Export to Git Repository'),
+            tooltip: gettext('Export selected to Git repository.'),
             action: overview => {
                 const ids = overview.getSelected()
                 if (ids.length) {
@@ -111,8 +111,8 @@ export class GithubExporterBooksOverview {
             disabled: overview => !overview.getSelected().length
         })
         this.booksOverview.mod.actions.exportMenu.content.push({
-            title: gettext('Export to Github'),
-            tooltip: gettext('Export book to Github.'),
+            title: gettext('Export to Git Repository'),
+            tooltip: gettext('Export book to git repository.'),
             action: ({saveBook, book, overview}) => {
                 saveBook().then(
                     () => {
@@ -131,12 +131,12 @@ export class GithubExporterBooksOverview {
 
     addDialogPart() {
         this.booksOverview.mod.actions.dialogParts.push({
-            title: gettext('Github'),
-            description: gettext('Github related settings'),
+            title: gettext('Git repository'),
+            description: gettext('Git repository related settings'),
             template: ({book}) => {
                 this.openedBook = book
                 return `<table class="fw-dialog-table">
-                    <tbody class="github-repository">
+                    <tbody class="gitrepo-repository">
                             ${
     this.finishedLoading ?
         repoSelectorTemplate({book, userRepos: this.userRepos, bookRepos: this.bookRepos}) :
@@ -157,7 +157,7 @@ export class GithubExporterBooksOverview {
                     // Dialog may have been closed before the repoSelector was loaded
                     return
                 }
-                let githubRepoId = parseInt(repoSelector.value)
+                let repoId = parseInt(repoSelector.value)
                 const exportEpub = document.querySelector('#book-settings-repository-epub').checked
                 const exportUnpackedEpub = document.querySelector('#book-settings-repository-unpacked-epub').checked
                 const exportHtml = document.querySelector('#book-settings-repository-html').checked
@@ -165,14 +165,14 @@ export class GithubExporterBooksOverview {
                 const exportLatex = document.querySelector('#book-settings-repository-latex').checked
                 if (!exportEpub && !exportUnpackedEpub && !exportHtml && !exportUnifiedHtml && !exportLatex) {
                     // No export formats selected. Reset repository.
-                    githubRepoId = 0
+                    repoId = 0
                 }
                 if (
-                    (githubRepoId === 0 && this.bookRepos[book.id]) ||
-                    (githubRepoId > 0 &&
+                    (repoId === 0 && this.bookRepos[book.id]) ||
+                    (repoId > 0 &&
                         (
                             !this.bookRepos[book.id] ||
-                            this.bookRepos[book.id].github_repo_id !== githubRepoId ||
+                            this.bookRepos[book.id].repo_id !== repoId ||
                             this.bookRepos[book.id].export_epub !== exportEpub ||
                             this.bookRepos[book.id].export_unpacked_epub !== exportUnpackedEpub ||
                             this.bookRepos[book.id].export_html !== exportHtml ||
@@ -183,24 +183,24 @@ export class GithubExporterBooksOverview {
                 ) {
                     const postData = {
                         book_id: book.id,
-                        github_repo_id: githubRepoId
+                        repo_id: repoId
                     }
-                    if (githubRepoId > 0) {
-                        postData['github_repo_full_name'] = this.userRepos[githubRepoId]
+                    if (repoId > 0) {
+                        postData['repo_name'] = this.userRepos[repoId]
                         postData['export_epub'] = exportEpub
                         postData['export_unpacked_epub'] = exportUnpackedEpub
                         postData['export_html'] = exportHtml
                         postData['export_unified_html'] = exportUnifiedHtml
                         postData['export_latex'] = exportLatex
                     }
-                    return post('/api/github_export/update_book_repo/', postData).then(
+                    return post('/api/gitrepo_export/update_book_repo/', postData).then(
                         () => {
-                            if (githubRepoId === 0) {
+                            if (repoId === 0) {
                                 delete this.bookRepos[book.id]
                             } else {
                                 this.bookRepos[book.id] = {
-                                    github_repo_id: githubRepoId,
-                                    github_repo_full_name: this.userRepos[githubRepoId],
+                                    repo_id: repoId,
+                                    repo_name: this.userRepos[repoId],
                                     export_epub: exportEpub,
                                     export_unpacked_epub: exportUnpackedEpub,
                                     export_html: exportHtml,

@@ -59,7 +59,7 @@ jobs:
           retry_on: error
           command: |
             cd fiduswriter
-            coverage run $(which fiduswriter) test github_export
+            coverage run $(which fiduswriter) test gitrepo_export
       - name: Coveralls
         run: |
             cd fiduswriter

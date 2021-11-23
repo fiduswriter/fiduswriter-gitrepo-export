@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("github_export", "0003_alter_bookrepository_options"),
+        ("gitrepo_export", "0003_alter_bookrepository_options"),
     ]
 
     operations = [

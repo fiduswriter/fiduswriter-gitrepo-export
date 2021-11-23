@@ -1,6 +1,6 @@
 import {commitFile} from "./commit_file"
-import {promiseChain} from "./basic"
-import {get} from "../../common"
+import {promiseChain} from "./promise_chain"
+import {get} from "../../../common"
 
 export function commitZipContents(repo, outputList, binaryFiles, includeZips, parentDir = '') {
     const repoDirCache = {}

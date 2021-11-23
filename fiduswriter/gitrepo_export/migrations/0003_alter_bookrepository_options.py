@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("github_export", "0002_auto_20200411_2148"),
+        ("gitrepo_export", "0002_auto_20200411_2148"),
     ]
 
     operations = [

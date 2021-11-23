@@ -1,6 +1,6 @@
-import {EpubBookExporter} from "../books/exporter/epub"
-import {HTMLBookExporter, SingleFileHTMLBookExporter} from "../books/exporter/html"
-import {LatexBookExporter} from "../books/exporter/latex"
+import {EpubBookExporter} from "../../books/exporter/epub"
+import {HTMLBookExporter, SingleFileHTMLBookExporter} from "../../books/exporter/html"
+import {LatexBookExporter} from "../../books/exporter/latex"
 import {commitFile, commitZipContents} from "./tools"
 
 export class EpubBookGithubExporter extends EpubBookExporter {

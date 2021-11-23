@@ -1,1 +1,1 @@
-INSTALLED_APPS = ['book', 'github_export']
+INSTALLED_APPS = ['book', 'gitrepo_export']

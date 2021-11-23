@@ -8,7 +8,7 @@ export const repoSelectorTemplate = ({book, bookRepos, userRepos}) => {
         </th>
         <td>
             <select class="entryForm" name="book-settings-repository"
-                title="${gettext("Select github repository to export to")}"
+                title="${gettext("Select git repository to export to")}"
                 id="book-settings-repository"
                 ${
     book.rights === 'read' ?
@@ -18,7 +18,7 @@ export const repoSelectorTemplate = ({book, bookRepos, userRepos}) => {
             >
             ${
     bookRepo ?
-        `<option value="${bookRepo.github_repo_id}" selected>${escapeText(bookRepo.github_repo_full_name)}</option>
+        `<option value="${bookRepo.repo_id}" selected>${escapeText(bookRepo.repo_name)}</option>
                     <option value="0"></option>` :
         '<option value="0" selected></option>'
 }

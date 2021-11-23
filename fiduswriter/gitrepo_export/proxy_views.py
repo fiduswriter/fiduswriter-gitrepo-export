@@ -21,6 +21,14 @@ ALLOWED_PATHS = [
     re.compile(r"^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/git/trees$"),
 ]
 
+def githubrepo2repodata(github_repo):
+    return {
+        'type': 'github',
+        'name': github_repo['full_name'],
+        'id': github_repo['id'],
+        'branch': github_repo['default_branch']
+    }
+
 
 class Proxy(DjangoHandlerMixin, RequestHandler):
     async def get(self, path):
@@ -108,7 +116,7 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
                 return
             else:
                 content = json.loads(response.body)
-                repos += content
+                repos += map(githubrepo2repodata, content)
                 if len(content) == 100:
                     page += 1
                 else:

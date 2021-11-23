@@ -1,4 +1,4 @@
-import {addAlert, Dialog, escapeText} from "../common"
+import {addAlert, Dialog, escapeText} from "../../common"
 import {EpubBookGithubExporter, UnpackedEpubBookGithubExporter, HTMLBookGithubExporter, LatexBookGithubExporter, SingleFileHTMLBookGithubExporter} from "./book_exporters"
 import {promiseChain, commitTree} from "./tools"
 
@@ -20,7 +20,7 @@ export class GithubBookProcessor {
             addAlert('error', `${gettext('There is no github repository registered for the book:')} ${book.title}`)
             return
         }
-        const userRepo = this.booksOverviewExporter.userRepos[bookRepo.github_repo_id]
+        const userRepo = this.booksOverviewExporter.userRepos[bookRepo.repo_id]
         if (!userRepo) {
             addAlert('error', `${gettext('You do not have access to the repository:')} ${bookRepo.github_repo_full_name}`)
             return
