@@ -1,5 +1,5 @@
 import {getJson} from "../../../common"
-import {gitHashObject} from "../../git_hash_object"
+import {gitHashObject} from "../../tools"
 
 export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = {}) {
     const dirUrl = `/proxy/gitrepo_export/repos/${repo}/contents/${parentDir}`.replace(/\/\//, '/')
@@ -25,8 +25,11 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
             }
         }).then(
             commitData => {
+                if (!fileEntry) {
+                    return Promise.resolve(commitData)
+                }
                 const binaryString = atob(commitData.content)
-                if (!fileEntry || fileEntry.size !== binaryString.length) {
+                if (fileEntry.size !== binaryString.length) {
                     return Promise.resolve(commitData)
                 }
                 return gitHashObject(
