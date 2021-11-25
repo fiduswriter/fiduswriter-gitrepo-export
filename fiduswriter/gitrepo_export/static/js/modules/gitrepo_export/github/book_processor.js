@@ -129,7 +129,7 @@ export class GithubBookProcessor {
                 this.booksOverview.user,
                 this.booksOverview.documentList,
                 new Date(this.book.updated * 1000),
-                userRepo
+                this.userRepo
             )
             commitInitiators.push(
                 latexExporter.init()

@@ -2,7 +2,8 @@ import {getJson} from "../../../common"
 import {gitHashObject} from "../../tools"
 
 export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = {}) {
-    const dirUrl = `/proxy/gitrepo_export/repos/${repo}/contents/${parentDir}`.replace(/\/\//, '/')
+    let sha
+    const dirUrl = `/proxy/gitrepo_export/github/repos/${repo}/contents/${parentDir}`.replace(/\/\//, '/')
     const getDirJsonPromise = repoDirCache[dirUrl] ?
         Promise.resolve(repoDirCache[dirUrl]) :
         getJson(dirUrl).then(
@@ -38,7 +39,8 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
                     // Not sure if this is actually a viable way to distinguish between utf-8 and binary files.
                     !blob.type.length
                 ).then(
-                    sha => {
+                    hashSha => {
+                        sha = hashSha
                         if (sha === fileEntry.sha) {
                             return Promise.resolve(304)
                         } else {
@@ -53,7 +55,7 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
         if (!commitData || commitData === 304) {
             return Promise.resolve(304)
         }
-        return fetch(`/proxy/gitrepo_export/repos/${repo}/git/blobs`.replace(/\/\//, '/'), {
+        return fetch(`/proxy/gitrepo_export/github/repos/${repo}/git/blobs`.replace(/\/\//, '/'), {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(commitData)
@@ -62,12 +64,27 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
                 if (response.ok) {
                     return response.json().then(
                         json => {
-                            return {
+                            const treeObject = {
                                 path: `${parentDir}${filename}`,
-                                sha: json.sha,
+                                sha: json.sha || sha,
                                 mode: "100644",
                                 type: "blob"
                             }
+                            if (!treeObject.sha) {
+                                const binaryString = atob(commitData.content)
+                                return gitHashObject(
+                                    binaryString,
+                                    // UTF-8 files seem to have no type set.
+                                    // Not sure if this is actually a viable way to distinguish between utf-8 and binary files.
+                                    !blob.type.length
+                                ).then(
+                                    hashSha => {
+                                        treeObject.sha = hashSha
+                                        return treeObject
+                                    }
+                                )
+                            }
+                            return treeObject
                         }
                     )
                 } else {

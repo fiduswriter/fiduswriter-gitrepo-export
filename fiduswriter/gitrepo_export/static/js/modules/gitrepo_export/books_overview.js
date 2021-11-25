@@ -1,4 +1,4 @@
-import {getJson, post, findTarget} from "../common"
+import {getJson, post, findTarget, addAlert} from "../common"
 import {repoSelectorTemplate} from "./templates"
 import {GithubBookProcessor} from "./github"
 
@@ -78,7 +78,7 @@ export class GitrepoExporterBooksOverview {
             this.userRepos = {}
         }
         return getJson(
-            `/proxy/gitrepo_export/user/repos${reload ? '/reload' : ''}`
+            `/proxy/gitrepo_export/all/repos${reload ? '/reload' : ''}`
         ).then(
             json => json.forEach(entry => this.userRepos[entry.id] = entry.name)
         )
