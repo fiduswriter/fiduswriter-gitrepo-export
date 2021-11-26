@@ -29,8 +29,8 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='fiduswriter-github-export',
-    version='3.10.5',
+    name='fiduswriter-gitrepo-export',
+    version='3.10.7',
     packages=find_namespace_packages(),
     exclude_package_data={
         "": ["configuration.py", "django-admin.py", "build/*"]
@@ -39,10 +39,10 @@ setup(
     license='AGPL License',
     description=(
         'A Fidus Writer plugin to allow publishing of '
-        'books to Github'
+        'books to a Gitlab/Github repository'
     ),
     long_description=README,
-    url='https://www.github.org/fiduswriter/fiduswriter-github-export',
+    url='https://www.github.org/fiduswriter/fiduswriter-gitrepo-export',
     author='Johannes Wilm',
     author_email='johannes@fiduswriter.org',
     classifiers=[

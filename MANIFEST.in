@@ -1,9 +1,9 @@
 include LICENSE
 include README.rst
-recursive-include fiduswriter/github_export/static *
-recursive-include fiduswriter/github_export/fixtures *
-recursive-include fiduswriter/github_export/templates *
-recursive-include fiduswriter/github_export/locale *
+recursive-include fiduswriter/gitrepo_export/static *
+recursive-include fiduswriter/gitrepo_export/fixtures *
+recursive-include fiduswriter/gitrepo_export/templates *
+recursive-include fiduswriter/gitrepo_export/locale *
 prune travis
 prune fiduswriter/venv
 prune venv
