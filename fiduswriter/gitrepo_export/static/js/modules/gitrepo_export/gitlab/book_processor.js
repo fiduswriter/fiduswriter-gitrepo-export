@@ -1,8 +1,8 @@
 import {addAlert, Dialog, escapeText} from "../../common"
-import {EpubBookGithubExporter, UnpackedEpubBookGithubExporter, HTMLBookGithubExporter, LatexBookGithubExporter, SingleFileHTMLBookGithubExporter} from "./book_exporters"
-import {promiseChain, commitTree} from "./tools"
+import {EpubBookGitlabExporter, UnpackedEpubBookGitlabExporter, HTMLBookGitlabExporter, LatexBookGitlabExporter, SingleFileHTMLBookGitlabExporter} from "./book_exporters"
+import {commitFiles} from "./tools"
 
-export class GithubBookProcessor {
+export class GitlabBookProcessor {
     constructor(app, booksOverview, book, bookRepo, userRepo) {
         this.app = app
         this.booksOverview = booksOverview
@@ -10,6 +10,7 @@ export class GithubBookProcessor {
         this.bookRepo = bookRepo
         this.userRepo = userRepo
     }
+
 
     init() {
         return this.getCommitMessage().then(
@@ -54,12 +55,12 @@ export class GithubBookProcessor {
     }
 
     publishBook(commitMessage) {
-        addAlert('info', gettext('Book publishing to GitHub initiated.'))
+        addAlert('info', gettext('Book publishing to GitLab initiated.'))
 
-        const commitInitiators = []
+        const fileGetters = []
 
         if (this.bookRepo.export_epub) {
-            const epubExporter = new EpubBookGithubExporter(
+            const epubExporter = new EpubBookGitlabExporter(
                 this.booksOverview.schema,
                 this.booksOverview.app.csl,
                 this.booksOverview.styles,
@@ -69,13 +70,13 @@ export class GithubBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            commitInitiators.push(
+            fileGetters.push(
                 epubExporter.init()
             )
         }
 
         if (this.bookRepo.export_unpacked_epub) {
-            const unpackedEpubExporter = new UnpackedEpubBookGithubExporter(
+            const unpackedEpubExporter = new UnpackedEpubBookGitlabExporter(
                 this.booksOverview.schema,
                 this.booksOverview.app.csl,
                 this.booksOverview.styles,
@@ -85,13 +86,13 @@ export class GithubBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            commitInitiators.push(
+            fileGetters.push(
                 unpackedEpubExporter.init()
             )
         }
 
         if (this.bookRepo.export_html) {
-            const htmlExporter = new HTMLBookGithubExporter(
+            const htmlExporter = new HTMLBookGitlabExporter(
                 this.booksOverview.schema,
                 this.booksOverview.app.csl,
                 this.booksOverview.styles,
@@ -101,13 +102,13 @@ export class GithubBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            commitInitiators.push(
+            fileGetters.push(
                 htmlExporter.init()
             )
         }
 
         if (this.bookRepo.export_unified_html) {
-            const unifiedHtmlExporter = new SingleFileHTMLBookGithubExporter(
+            const unifiedHtmlExporter = new SingleFileHTMLBookGitlabExporter(
                 this.booksOverview.schema,
                 this.booksOverview.app.csl,
                 this.booksOverview.styles,
@@ -117,13 +118,13 @@ export class GithubBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            commitInitiators.push(
+            fileGetters.push(
                 unifiedHtmlExporter.init()
             )
         }
 
         if (this.bookRepo.export_latex) {
-            const latexExporter = new LatexBookGithubExporter(
+            const latexExporter = new LatexBookGitlabExporter(
                 this.booksOverview.schema,
                 this.book,
                 this.booksOverview.user,
@@ -131,26 +132,27 @@ export class GithubBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            commitInitiators.push(
+            fileGetters.push(
                 latexExporter.init()
             )
         }
-        return Promise.all(commitInitiators).then(commitFunctions => promiseChain(commitFunctions.flat()).then(
-            responses => {
-                const responseCodes = responses.flat()
-                if (responseCodes.every(code => code === 304)) {
+        return Promise.all(fileGetters).then(
+            files => commitFiles(this.userRepo, commitMessage, Object.assign(...files))
+        ).then(
+            returnCode => {
+                switch (returnCode) {
+                case 201:
+                    addAlert('info', gettext('Book published to repository successfully!'))
+                    break
+                case 304:
                     addAlert('info', gettext('Book already up to date in repository.'))
-                } else if (responseCodes.every(code => code === 400)) {
+                    break
+                case 400:
                     addAlert('error', gettext('Could not publish book to repository.'))
-                } else if (responseCodes.find(code => code === 400)) {
-                    addAlert('error', gettext('Could not publish some parts of book to repository.'))
-                } else {
-                    // The responses looks fine, but we are not done yet.
-                    commitTree(responseCodes.filter(response => typeof(response) === 'object'), commitMessage, this.userRepo).then(
-                        () => addAlert('info', gettext('Book published to repository successfully!'))
-                    )
+                    break
                 }
+
             }
-        ))
+        )
     }
 }

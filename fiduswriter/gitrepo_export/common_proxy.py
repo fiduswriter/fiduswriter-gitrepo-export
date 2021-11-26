@@ -2,7 +2,8 @@ import json
 from allauth.socialaccount.models import SocialToken
 
 from . import models
-from .github_proxy import get_github_repos
+from . import github_proxy
+from . import gitlab_proxy
 
 ALLOWED_METHODS = [
     "GET",
@@ -33,7 +34,7 @@ async def get_repos(proxy_connector, path_parts, user):
         ).first(),
     }
 
-    if not social_tokens["github"]:
+    if not social_tokens["github"] and not social_tokens["gitlab"]:
         proxy_connector.set_status(401)
         return
     repo_info = models.RepoInfo.objects.filter(user=user).first()
@@ -46,7 +47,13 @@ async def get_repos(proxy_connector, path_parts, user):
             return
     repos = []
     if social_tokens["github"]:
-        repos += await get_github_repos(proxy_connector, social_tokens["github"])
+        repos += await github_proxy.get_repos(
+            proxy_connector, social_tokens["github"]
+        )
+    if social_tokens["gitlab"]:
+        repos += await gitlab_proxy.get_repos(
+            proxy_connector, social_tokens["gitlab"]
+        )
     repo_info, created = models.RepoInfo.objects.get_or_create(user=user)
     repo_info.content = repos
     repo_info.save()

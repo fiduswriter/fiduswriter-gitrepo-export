@@ -1,8 +1,8 @@
 import {getJson} from "../../../common"
-import {gitHashObject} from "../../tools"
+import {gitHashObject, readBlobPromise} from "../../tools"
 
 export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = {}) {
-    const dirUrl = `/proxy/gitrepo_export/github/repos/${repo}/contents/${parentDir}`.replace(/\/\//, '/')
+    const dirUrl = `/proxy/gitrepo_export/github/repos/${repo.name}/contents/${parentDir}`.replace(/\/\//, '/')
     const getDirJsonPromise = repoDirCache[dirUrl] ?
         Promise.resolve(repoDirCache[dirUrl]) :
         getJson(dirUrl).then(
@@ -16,15 +16,9 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
         const commitData = {
             encoding: "base64",
         }
-        return new Promise(resolve => {
-            const reader = new FileReader()
-            reader.readAsDataURL(blob)
-            reader.onload = function() {
-                commitData.content = reader.result.split('base64,')[1]
-                resolve(commitData)
-            }
-        }).then(
-            commitData => {
+        return readBlobPromise(blob).then(
+            content => {
+                commitData.content = content
                 if (!fileEntry) {
                     return Promise.resolve(commitData)
                 }
@@ -53,7 +47,7 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
         if (!commitData || commitData === 304) {
             return Promise.resolve(304)
         }
-        return fetch(`/proxy/gitrepo_export/github/repos/${repo}/git/blobs`.replace(/\/\//, '/'), {
+        return fetch(`/proxy/gitrepo_export/github/repos/${repo.name}/git/blobs`.replace(/\/\//, '/'), {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(commitData)

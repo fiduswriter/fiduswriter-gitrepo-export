@@ -3,6 +3,7 @@ from base.django_handler_mixin import DjangoHandlerMixin
 
 from . import common_proxy
 from . import github_proxy
+from . import gitlab_proxy
 
 
 class Proxy(DjangoHandlerMixin, RequestHandler):
@@ -14,10 +15,12 @@ class Proxy(DjangoHandlerMixin, RequestHandler):
         path_part = path_parts.pop(0) if len(path_parts) else None
         if not user.is_authenticated:
             self.set_status(401)
-        elif path_part == "github":
-            await github_proxy.prepare(self, path_parts, user)
         elif path_part == "all":
             await common_proxy.prepare(self, path_parts, user)
+        elif path_part == "github":
+            await github_proxy.prepare(self, path_parts, user)
+        elif path_part == "gitlab":
+            await gitlab_proxy.prepare(self, path_parts, user)
         else:
             self.set_status(404)
         self.finish()

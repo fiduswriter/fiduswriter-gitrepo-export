@@ -2,15 +2,15 @@ import {getJson} from "../../../common"
 
 export function commitTree(tree, commitMessage, repo) {
     let branch, parentSha
-    return getJson(`/proxy/gitrepo_export/github/repos/${repo}`.replace(/\/\//, '/')).then(
+    return getJson(`/proxy/gitrepo_export/github/repos/${repo.name}`.replace(/\/\//, '/')).then(
         repoJson => {
             branch = repoJson.default_branch
-            return getJson(`/proxy/gitrepo_export/github/repos/${repo}/git/refs/heads/${branch}`.replace(/\/\//, '/'))
+            return getJson(`/proxy/gitrepo_export/github/repos/${repo.name}/git/refs/heads/${branch}`.replace(/\/\//, '/'))
         }).then(
         refsJson => {
             parentSha = refsJson.object.sha
             return fetch(
-                `/proxy/gitrepo_export/github/repos/${repo}/git/trees`.replace(/\/\//, '/'),
+                `/proxy/gitrepo_export/github/repos/${repo.name}/git/trees`.replace(/\/\//, '/'),
                 {
                     method: 'POST',
                     credentials: 'include',
@@ -24,7 +24,7 @@ export function commitTree(tree, commitMessage, repo) {
         response => response.json()
     ).then(
         treeJson => fetch(
-            `/proxy/gitrepo_export/github/repos/${repo}/git/commits`.replace(/\/\//, '/'),
+            `/proxy/gitrepo_export/github/repos/${repo.name}/git/commits`.replace(/\/\//, '/'),
             {
                 method: 'POST',
                 credentials: 'include',
@@ -39,7 +39,7 @@ export function commitTree(tree, commitMessage, repo) {
         response => response.json()
     ).then(
         commitJson => fetch(
-            `/proxy/gitrepo_export/github/repos/${repo}/git/refs/heads/${branch}`.replace(/\/\//, '/'),
+            `/proxy/gitrepo_export/github/repos/${repo.name}/git/refs/heads/${branch}`.replace(/\/\//, '/'),
             {
                 method: 'PATCH',
                 credentials: 'include',

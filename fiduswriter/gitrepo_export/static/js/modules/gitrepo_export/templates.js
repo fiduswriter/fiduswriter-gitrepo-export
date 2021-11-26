@@ -1,10 +1,23 @@
 import {escapeText} from "../common"
 
-export const repoSelectorTemplate = ({book, bookRepos, userRepos}) => {
+const REPO_TYPES = {
+    github: "GitHub",
+    gitlab: "GitLab"
+}
+
+function repoName(name, type, userReposMultitype) {
+    if (userReposMultitype) {
+        return `${REPO_TYPES[type]}: ${escapeText(name)}`
+    }
+    return escapeText(name)
+}
+
+
+export const repoSelectorTemplate = ({book, bookRepos, userRepos, userReposMultitype}) => {
     const bookRepo = bookRepos[book.id]
     return `<tr>
         <th>
-            <h4 class="fw-tablerow-title">${gettext("Github repository")}</h4>
+            <h4 class="fw-tablerow-title">${gettext("Git repository")}</h4>
         </th>
         <td>
             <select class="entryForm" name="book-settings-repository"
@@ -18,13 +31,13 @@ export const repoSelectorTemplate = ({book, bookRepos, userRepos}) => {
             >
             ${
     bookRepo ?
-        `<option value="${bookRepo.repo_id}" selected>${escapeText(bookRepo.repo_name)}</option>
-                    <option value="0"></option>` :
-        '<option value="0" selected></option>'
+        `<option value="${bookRepo.repo_type}-${bookRepo.repo_id}" selected>${repoName(bookRepo.repo_name, bookRepo.repo_type, userReposMultitype)}</option>
+                    <option value="-0"></option>` :
+        '<option value="-0" selected></option>'
 }
             ${
-    Object.entries(userRepos).sort((a, b) => a[1] > b[1] ? 1 : -1).map(([key, value]) =>
-        `<option value="${key}">${escapeText(value)}</option>`
+    Object.entries(userRepos).sort((a, b) => a[1].name > b[1].name ? 1 : -1).map(([key, repo]) =>
+        `<option value="${key}">${repoName(repo.name, repo.type, userReposMultitype)}</option>`
     ).join('')
 }
             </select>

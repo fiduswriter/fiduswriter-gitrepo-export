@@ -1,11 +1,13 @@
 import {getJson, post, findTarget, addAlert} from "../common"
 import {repoSelectorTemplate} from "./templates"
 import {GithubBookProcessor} from "./github"
+import {GitlabBookProcessor} from "./gitlab"
 
 export class GitrepoExporterBooksOverview {
     constructor(booksOverview) {
         this.booksOverview = booksOverview
         this.userRepos = {}
+        this.userReposMultitype = false
         this.bookRepos = {}
         this.finishedLoading = false
         this.openedBook = false
@@ -13,7 +15,8 @@ export class GitrepoExporterBooksOverview {
 
     init() {
         const githubAccount = this.booksOverview.app.config.user.socialaccounts.find(account => account.provider === 'github')
-        if (!githubAccount) {
+        const gitlabAccount = this.booksOverview.app.config.user.socialaccounts.find(account => account.provider === 'gitlab')
+        if (!githubAccount && !gitlabAccount) {
             return
         }
         Promise.all([
@@ -27,7 +30,8 @@ export class GitrepoExporterBooksOverview {
                     document.querySelector('tbody.gitrepo-repository').innerHTML = repoSelectorTemplate({
                         book: this.openedBook,
                         userRepos: this.userRepos,
-                        bookRepos: this.bookRepos
+                        bookRepos: this.bookRepos,
+                        userReposMultitype: this.userReposMultitype
                     })
                 }
             }
@@ -66,7 +70,8 @@ export class GitrepoExporterBooksOverview {
                     repoSelector.innerHTML = repoSelectorTemplate({
                         book: this.openedBook,
                         userRepos: this.userRepos,
-                        bookRepos: this.bookRepos
+                        bookRepos: this.bookRepos,
+                        userReposMultitype: this.userReposMultitype
                     })
                 }
             }
@@ -76,11 +81,20 @@ export class GitrepoExporterBooksOverview {
     getUserRepos(reload = false) {
         if (reload) {
             this.userRepos = {}
+            this.userReposMultitype = false
         }
         return getJson(
             `/proxy/gitrepo_export/all/repos${reload ? '/reload' : ''}`
         ).then(
-            json => json.forEach(entry => this.userRepos[entry.id] = entry.name)
+            json => {
+                const initialType = json.length ? json[0].type : ''
+                json.forEach(entry => {
+                    this.userRepos[entry.type + "-" + entry.id] = entry
+                    if (entry.type !== initialType) {
+                        this.userReposMultitype = true
+                    }
+                })
+            }
         )
     }
 
@@ -95,10 +109,10 @@ export class GitrepoExporterBooksOverview {
     getRepos(book) {
         const bookRepo = this.bookRepos[book.id]
         if (!bookRepo) {
-            addAlert('error', `${gettext('There is no github repository registered for the book:')} ${book.title}`)
+            addAlert('error', `${gettext('There is no git repository registered for the book:')} ${book.title}`)
             return [false, false]
         }
-        const userRepo = this.userRepos[bookRepo.repo_id]
+        const userRepo = this.userRepos[bookRepo.repo_type + "-" + bookRepo.repo_id]
         if (!userRepo) {
             addAlert('error', `${gettext('You do not have access to the repository:')} ${bookRepo.github_repo_full_name}`)
             return [bookRepo, false]
@@ -119,13 +133,21 @@ export class GitrepoExporterBooksOverview {
                             if (!userRepo) {
                                 return
                             }
-                            const processor = new GithubBookProcessor(
-                                overview.app,
-                                overview,
-                                book,
-                                bookRepo,
-                                userRepo
-                            )
+                            const processor = userRepo.type === "github" ?
+                                new GithubBookProcessor(
+                                    overview.app,
+                                    overview,
+                                    book,
+                                    bookRepo,
+                                    userRepo
+                                ) :
+                                new GitlabBookProcessor(
+                                    overview.app,
+                                    overview,
+                                    book,
+                                    bookRepo,
+                                    userRepo
+                                )
                             processor.init()
                         }
                     )
@@ -143,13 +165,21 @@ export class GitrepoExporterBooksOverview {
                         if (!userRepo) {
                             return
                         }
-                        const processor = new GithubBookProcessor(
-                            overview.app,
-                            overview,
-                            book,
-                            bookRepo,
-                            userRepo
-                        )
+                        const processor = userRepo.type === "github" ?
+                            new GithubBookProcessor(
+                                overview.app,
+                                overview,
+                                book,
+                                bookRepo,
+                                userRepo
+                            ) :
+                            new GitlabBookProcessor(
+                                overview.app,
+                                overview,
+                                book,
+                                bookRepo,
+                                userRepo
+                            )
                         processor.init()
                     }
                 )
@@ -167,7 +197,12 @@ export class GitrepoExporterBooksOverview {
                     <tbody class="gitrepo-repository">
                             ${
     this.finishedLoading ?
-        repoSelectorTemplate({book, userRepos: this.userRepos, bookRepos: this.bookRepos}) :
+        repoSelectorTemplate({
+            book,
+            userRepos: this.userRepos,
+            bookRepos: this.bookRepos,
+            userReposMultitype: this.userReposMultitype
+        }) :
         '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
 }
                     </tbody>
@@ -185,7 +220,9 @@ export class GitrepoExporterBooksOverview {
                     // Dialog may have been closed before the repoSelector was loaded
                     return
                 }
-                let repoId = parseInt(repoSelector.value)
+                const selected = repoSelector.value.split('-')
+                const repoType = selected[0]
+                let repoId = parseInt(selected[1])
                 const exportEpub = document.querySelector('#book-settings-repository-epub').checked
                 const exportUnpackedEpub = document.querySelector('#book-settings-repository-unpacked-epub').checked
                 const exportHtml = document.querySelector('#book-settings-repository-html').checked
@@ -211,10 +248,11 @@ export class GitrepoExporterBooksOverview {
                 ) {
                     const postData = {
                         book_id: book.id,
+                        repo_type: repoType,
                         repo_id: repoId
                     }
                     if (repoId > 0) {
-                        postData['repo_name'] = this.userRepos[repoId]
+                        postData['repo_name'] = this.userRepos[`${repoType}-${repoId}`].name
                         postData['export_epub'] = exportEpub
                         postData['export_unpacked_epub'] = exportUnpackedEpub
                         postData['export_html'] = exportHtml
@@ -228,7 +266,8 @@ export class GitrepoExporterBooksOverview {
                             } else {
                                 this.bookRepos[book.id] = {
                                     repo_id: repoId,
-                                    repo_name: this.userRepos[repoId],
+                                    repo_type: repoType,
+                                    repo_name: this.userRepos[`${repoType}-${repoId}`].name,
                                     export_epub: exportEpub,
                                     export_unpacked_epub: exportUnpackedEpub,
                                     export_html: exportHtml,

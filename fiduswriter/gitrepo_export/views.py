@@ -25,6 +25,7 @@ def get_book_repos(request):
         response["book_repos"][repo.book.id] = {
             "repo_id": repo.repo_id,
             "repo_name": repo.repo_name,
+            "repo_type": repo.repo_type,
             "export_epub": repo.export_epub,
             "export_unpacked_epub": repo.export_unpacked_epub,
             "export_html": repo.export_html,
@@ -56,6 +57,7 @@ def update_book_repo(request):
             book_id=book_id,
             repo_id=repo_id,
             repo_name=request.POST["repo_name"],
+            repo_type=request.POST["repo_type"],
             export_epub=request.POST["export_epub"] == "true",
             export_unpacked_epub=request.POST["export_unpacked_epub"]
             == "true",

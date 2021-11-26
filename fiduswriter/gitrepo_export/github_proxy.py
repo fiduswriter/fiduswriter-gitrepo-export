@@ -82,7 +82,7 @@ def githubrepo2repodata(github_repo):
     }
 
 
-async def get_github_repos(proxy_connector, github_token):
+async def get_repos(proxy_connector, github_token):
     headers = get_headers(github_token)
     repos = []
     page = 1

@@ -2,12 +2,21 @@ from django.db import models
 from django.conf import settings as django_settings
 from book.models import Book
 
+REPO_TYPES = (
+    ("github", "GitHub"),
+    ("gitlab", "GitLab"),
+)
+
 
 class BookRepository(models.Model):
     book = models.ForeignKey(Book, on_delete=models.deletion.CASCADE)
     repo_id = models.IntegerField()
     repo_name = models.CharField(
         max_length=256,
+    )
+    repo_type = models.CharField(
+        max_length=6,
+        choices=REPO_TYPES,
     )
     export_epub = models.BooleanField()
     export_unpacked_epub = models.BooleanField()
