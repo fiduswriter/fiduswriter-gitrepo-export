@@ -1,16 +1,19 @@
 import json
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
 from allauth.socialaccount.models import SocialToken
 
 from . import models
 from .github_proxy import get_github_repos
 
-ALLOWED_METHODS = ['GET',]
+ALLOWED_METHODS = [
+    "GET",
+]
+
 
 async def prepare(proxy_connector, path_parts, user):
     path_part = path_parts.pop(0) if len(path_parts) else None
     if path_part == "repos":
         await get_repos(proxy_connector, path_parts, user)
+
 
 async def get_repos(proxy_connector, path_parts, user):
     if proxy_connector.request.method not in ALLOWED_METHODS:
@@ -27,7 +30,7 @@ async def get_repos(proxy_connector, path_parts, user):
         ).first(),
         "gitlab": SocialToken.objects.filter(
             account__user=user, account__provider="gitlab"
-        ).first()
+        ).first(),
     }
 
     if not social_tokens["github"]:
@@ -43,7 +46,7 @@ async def get_repos(proxy_connector, path_parts, user):
             return
     repos = []
     if social_tokens["github"]:
-        repos += await get_github_repos(social_tokens["github"])
+        repos += await get_github_repos(proxy_connector, social_tokens["github"])
     repo_info, created = models.RepoInfo.objects.get_or_create(user=user)
     repo_info.content = repos
     repo_info.save()

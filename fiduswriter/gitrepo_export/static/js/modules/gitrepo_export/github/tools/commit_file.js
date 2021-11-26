@@ -2,7 +2,6 @@ import {getJson} from "../../../common"
 import {gitHashObject} from "../../tools"
 
 export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = {}) {
-    let sha
     const dirUrl = `/proxy/gitrepo_export/github/repos/${repo}/contents/${parentDir}`.replace(/\/\//, '/')
     const getDirJsonPromise = repoDirCache[dirUrl] ?
         Promise.resolve(repoDirCache[dirUrl]) :
@@ -39,8 +38,7 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
                     // Not sure if this is actually a viable way to distinguish between utf-8 and binary files.
                     !blob.type.length
                 ).then(
-                    hashSha => {
-                        sha = hashSha
+                    sha => {
                         if (sha === fileEntry.sha) {
                             return Promise.resolve(304)
                         } else {
@@ -66,23 +64,9 @@ export function commitFile(repo, blob, filename, parentDir = '', repoDirCache = 
                         json => {
                             const treeObject = {
                                 path: `${parentDir}${filename}`,
-                                sha: json.sha || sha,
+                                sha: json.sha,
                                 mode: "100644",
                                 type: "blob"
-                            }
-                            if (!treeObject.sha) {
-                                const binaryString = atob(commitData.content)
-                                return gitHashObject(
-                                    binaryString,
-                                    // UTF-8 files seem to have no type set.
-                                    // Not sure if this is actually a viable way to distinguish between utf-8 and binary files.
-                                    !blob.type.length
-                                ).then(
-                                    hashSha => {
-                                        treeObject.sha = hashSha
-                                        return treeObject
-                                    }
-                                )
                             }
                             return treeObject
                         }

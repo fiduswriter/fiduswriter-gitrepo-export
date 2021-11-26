@@ -6,11 +6,11 @@ from . import github_proxy
 
 
 class Proxy(DjangoHandlerMixin, RequestHandler):
-    SUPPORTED_METHODS = ['GET', 'POST', 'PATCH']
+    SUPPORTED_METHODS = ["GET", "POST", "PATCH"]
 
     async def prepare(self):
         user = self.get_current_user()
-        path_parts = self.path_args[0].split('/')
+        path_parts = self.path_args[0].split("/")
         path_part = path_parts.pop(0) if len(path_parts) else None
         if not user.is_authenticated:
             self.set_status(401)
