@@ -44,7 +44,9 @@ def update_book_repo(request):
     if not book or (
         book.owner != request.user
         and not book.bookaccessright_set.filter(
-            user=request.user, rights="write"
+            holder_id=request.user.id,
+            holder_type__model="user",
+            rights="write",
         ).exists()
     ):
         return HttpResponseForbidden()
