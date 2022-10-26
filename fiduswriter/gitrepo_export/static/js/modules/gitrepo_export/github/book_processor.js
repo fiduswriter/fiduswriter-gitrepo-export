@@ -23,16 +23,16 @@ export class GithubBookProcessor {
         return new Promise((resolve, reject) => {
             const buttons = [
                 {
-                    text: gettext('Submit'),
+                    text: gettext("Submit"),
                     classes: "fw-dark",
                     click: () => {
-                        const commitMessage = dialog.dialogEl.querySelector('.commit-message').value || gettext('Update from Fidus Writer')
+                        const commitMessage = dialog.dialogEl.querySelector(".commit-message").value || gettext("Update from Fidus Writer")
                         dialog.close()
                         resolve(commitMessage)
                     }
                 },
                 {
-                    type: 'cancel',
+                    type: "cancel",
                     click: () => {
                         dialog.close()
                         reject()
@@ -41,7 +41,7 @@ export class GithubBookProcessor {
             ]
 
             const dialog = new Dialog({
-                title: gettext('Commit message'),
+                title: gettext("Commit message"),
                 height: 150,
                 body: `<p>
             ${gettext("Updating")}: ${escapeText(this.book.title)}
@@ -54,7 +54,7 @@ export class GithubBookProcessor {
     }
 
     publishBook(commitMessage) {
-        addAlert('info', gettext('Book publishing to GitHub initiated.'))
+        addAlert("info", gettext("Book publishing to GitHub initiated."))
 
         const commitInitiators = []
 
@@ -139,15 +139,15 @@ export class GithubBookProcessor {
             responses => {
                 const responseCodes = responses.flat()
                 if (responseCodes.every(code => code === 304)) {
-                    addAlert('info', gettext('Book already up to date in repository.'))
+                    addAlert("info", gettext("Book already up to date in repository."))
                 } else if (responseCodes.every(code => code === 400)) {
-                    addAlert('error', gettext('Could not publish book to repository.'))
+                    addAlert("error", gettext("Could not publish book to repository."))
                 } else if (responseCodes.find(code => code === 400)) {
-                    addAlert('error', gettext('Could not publish some parts of book to repository.'))
+                    addAlert("error", gettext("Could not publish some parts of book to repository."))
                 } else {
                     // The responses looks fine, but we are not done yet.
-                    commitTree(responseCodes.filter(response => typeof(response) === 'object'), commitMessage, this.userRepo).then(
-                        () => addAlert('info', gettext('Book published to repository successfully!'))
+                    commitTree(responseCodes.filter(response => typeof(response) === "object"), commitMessage, this.userRepo).then(
+                        () => addAlert("info", gettext("Book published to repository successfully!"))
                     )
                 }
             }

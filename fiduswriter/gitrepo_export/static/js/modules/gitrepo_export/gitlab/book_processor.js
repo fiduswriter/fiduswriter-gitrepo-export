@@ -24,16 +24,16 @@ export class GitlabBookProcessor {
         return new Promise((resolve, reject) => {
             const buttons = [
                 {
-                    text: gettext('Submit'),
+                    text: gettext("Submit"),
                     classes: "fw-dark",
                     click: () => {
-                        const commitMessage = dialog.dialogEl.querySelector('.commit-message').value || gettext('Update from Fidus Writer')
+                        const commitMessage = dialog.dialogEl.querySelector(".commit-message").value || gettext("Update from Fidus Writer")
                         dialog.close()
                         resolve(commitMessage)
                     }
                 },
                 {
-                    type: 'cancel',
+                    type: "cancel",
                     click: () => {
                         dialog.close()
                         reject()
@@ -42,7 +42,7 @@ export class GitlabBookProcessor {
             ]
 
             const dialog = new Dialog({
-                title: gettext('Commit message'),
+                title: gettext("Commit message"),
                 height: 150,
                 body: `<p>
             ${gettext("Updating")}: ${escapeText(this.book.title)}
@@ -55,7 +55,7 @@ export class GitlabBookProcessor {
     }
 
     publishBook(commitMessage) {
-        addAlert('info', gettext('Book publishing to GitLab initiated.'))
+        addAlert("info", gettext("Book publishing to GitLab initiated."))
 
         const fileGetters = []
 
@@ -142,13 +142,13 @@ export class GitlabBookProcessor {
             returnCode => {
                 switch (returnCode) {
                 case 201:
-                    addAlert('info', gettext('Book published to repository successfully!'))
+                    addAlert("info", gettext("Book published to repository successfully!"))
                     break
                 case 304:
-                    addAlert('info', gettext('Book already up to date in repository.'))
+                    addAlert("info", gettext("Book already up to date in repository."))
                     break
                 case 400:
-                    addAlert('error', gettext('Could not publish book to repository.'))
+                    addAlert("error", gettext("Could not publish book to repository."))
                     break
                 }
 

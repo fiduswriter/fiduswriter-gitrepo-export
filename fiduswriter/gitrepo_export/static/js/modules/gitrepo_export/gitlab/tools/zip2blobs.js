@@ -1,6 +1,6 @@
 import {get} from "../../../common"
 
-export function zipToBlobs(outputList, binaryFiles, includeZips, parentDir = '') {
+export function zipToBlobs(outputList, binaryFiles, includeZips, parentDir = "") {
     const outputFiles = {}
     outputList.forEach(file => {
         outputFiles[`${parentDir}${file.filename}`] = new Blob([file.contents])
@@ -18,7 +18,7 @@ export function zipToBlobs(outputList, binaryFiles, includeZips, parentDir = '')
                         zipfs.forEach(file => files.push(file))
                         return Promise.all(
                             files.map(
-                                filepath => zipfs.files[filepath].async('blob')
+                                filepath => zipfs.files[filepath].async("blob")
                             )
                         ).then(
                             blobs => blobs.map((blob, index) => {

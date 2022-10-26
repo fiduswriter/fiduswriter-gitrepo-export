@@ -16,7 +16,7 @@ export function commitFiles(repo, commitMessage, files) {
                         ) : false
                         if (!fileEntry) {
                             return {
-                                action: 'create',
+                                action: "create",
                                 encoding: "base64",
                                 file_path,
                                 content
@@ -36,7 +36,7 @@ export function commitFiles(repo, commitMessage, files) {
                                     return false
                                 } else {
                                     return {
-                                        action: 'update',
+                                        action: "update",
                                         encoding: "base64",
                                         file_path,
                                         content
@@ -55,13 +55,13 @@ export function commitFiles(repo, commitMessage, files) {
                         return 304
                     }
                     const commitData = {
-                        branch: 'main',
+                        branch: "main",
                         commit_message: commitMessage,
                         actions
                     }
                     return fetch(commitUrl, {
-                        method: 'POST',
-                        credentials: 'include',
+                        method: "POST",
+                        credentials: "include",
                         body: JSON.stringify(commitData)
                     }).then(
                         () => 201
