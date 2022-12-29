@@ -61,7 +61,8 @@ def update_book_repo(request):
             repo_name=request.POST["repo_name"],
             repo_type=request.POST["repo_type"],
             export_epub=request.POST["export_epub"] == "true",
-            export_unpacked_epub=request.POST["export_unpacked_epub"] == "true",
+            export_unpacked_epub=request.POST["export_unpacked_epub"]
+            == "true",
             export_html=request.POST["export_html"] == "true",
             export_unified_html=request.POST["export_unified_html"] == "true",
             export_latex=request.POST["export_latex"] == "true",

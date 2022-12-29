@@ -9,7 +9,9 @@ ALLOWED_PATHS = [
     re.compile(r"^user/repos$"),
     re.compile(r"^user/repos/reload$"),
     re.compile(r"^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/git/blobs/([\w\d]+)$"),
-    re.compile(r"^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/git/refs/heads/([\w\d]+)$"),
+    re.compile(
+        r"^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/git/refs/heads/([\w\d]+)$"
+    ),
     re.compile(r"^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/git/blobs$"),
     re.compile(r"^repos/([\w\.\-@_]+)/([\w\.\-@_]+)$"),
     re.compile(r"^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/git/commits$"),
