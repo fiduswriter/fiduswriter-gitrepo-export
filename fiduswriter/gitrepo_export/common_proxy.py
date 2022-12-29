@@ -47,13 +47,9 @@ async def get_repos(proxy_connector, path_parts, user):
             return
     repos = []
     if social_tokens["github"]:
-        repos += await github_proxy.get_repos(
-            proxy_connector, social_tokens["github"]
-        )
+        repos += await github_proxy.get_repos(proxy_connector, social_tokens["github"])
     if social_tokens["gitlab"]:
-        repos += await gitlab_proxy.get_repos(
-            proxy_connector, social_tokens["gitlab"]
-        )
+        repos += await gitlab_proxy.get_repos(proxy_connector, social_tokens["gitlab"])
     repo_info, created = models.RepoInfo.objects.get_or_create(user=user)
     repo_info.content = repos
     repo_info.save()
