@@ -84,7 +84,7 @@ export class GitrepoExporterBooksOverview {
             this.userReposMultitype = false
         }
         return getJson(
-            `/proxy/gitrepo_export/all/repos${reload ? "/reload" : ""}`
+            `/api/gitrepo_export/get_git_repos/${reload ? "reload/" : ""}`
         ).then(
             json => {
                 const initialType = json.length ? json[0].type : ""

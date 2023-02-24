@@ -2,9 +2,9 @@ import {getJson} from "../../../common"
 import {readBlobPromise, gitHashObject} from "../../tools"
 
 export function commitFiles(repo, commitMessage, files) {
-    return getJson(`/proxy/gitrepo_export/gitlab/repo/${repo.id}/`).then(
+    return getJson(`/api/gitrepo_export/get_gitlab_repo/${repo.id}/`).then(
         repoFileList => {
-            const commitUrl = `/proxy/gitrepo_export/gitlab/projects/${repo.id}/repository/commits`
+            const commitUrl = `/api/gitrepo_export/proxy_gitlab/projects/${repo.id}/repository/commits`
             const getActions = Object.entries(files).map(
                 ([file_path, blob]) => readBlobPromise(blob).then(
                     content => {
