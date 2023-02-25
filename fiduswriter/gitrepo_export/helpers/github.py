@@ -34,12 +34,14 @@ async def proxy(path, user, query_string, body, method):
     response = await http.fetch(request)
     return response
 
+
 def get_headers(token):
     return {
         "Authorization": f"token {token}",
         "User-Agent": "Fidus Writer",
         "Accept": "application/vnd.github.v3+json",
     }
+
 
 def githubrepo2repodata(github_repo):
     return {

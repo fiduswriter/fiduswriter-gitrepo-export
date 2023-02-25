@@ -1,6 +1,6 @@
 import json
 
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.providers.gitlab.views import GitLabOAuth2Adapter
 
@@ -27,6 +27,7 @@ def get_headers(token):
         "User-Agent": "Fidus Writer",
         "Content-Type": "application/json",
     }
+
 
 async def get_repo(id, user):
     social_token = SocialToken.objects.get(

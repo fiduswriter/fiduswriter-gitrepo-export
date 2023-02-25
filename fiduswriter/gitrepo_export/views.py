@@ -1,10 +1,16 @@
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_GET, require_POST, require_http_methods
+from django.views.decorators.http import (
+    require_GET,
+    require_POST,
+    require_http_methods,
+)
 from asgiref.sync import async_to_sync, sync_to_async
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponse
 from tornado.httpclient import HTTPError
 from base.decorators import ajax_required
 from django.db.models import Q
+
+from allauth.socialaccount.models import SocialToken
 from book.models import Book
 from . import models
 
@@ -100,13 +106,9 @@ async def get_git_repos(request, reload=False):
     repos = []
     try:
         if social_tokens["github"]:
-            repos += await helpers.github.get_repos(
-                social_tokens["github"]
-            )
+            repos += await helpers.github.get_repos(social_tokens["github"])
         if social_tokens["gitlab"]:
-            repos += await helpers.gitlab.get_repos(
-                social_tokens["gitlab"]
-            )
+            repos += await helpers.gitlab.get_repos(social_tokens["gitlab"])
     except HTTPError as e:
         if e.response.code == 404:
             # We remove the 404 response so it will not show up as an
@@ -117,7 +119,9 @@ async def get_git_repos(request, reload=False):
         return []
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
-    repo_info, created = models.RepoInfo.objects.get_or_create(user=request.user)
+    repo_info, created = models.RepoInfo.objects.get_or_create(
+        user=request.user
+    )
     repo_info.content = repos
     repo_info.save()
     return JsonResponse(repo_info.content, status=200)
@@ -129,12 +133,18 @@ async def get_git_repos(request, reload=False):
 @async_to_sync
 async def proxy_github(request, path):
     try:
-        response = await helpers.github.proxy(path, request.user, request.META["QUERY_STRING"], request.body, request.method)
+        response = await helpers.github.proxy(
+            path,
+            request.user,
+            request.META["QUERY_STRING"],
+            request.body,
+            request.method,
+        )
     except HTTPError as e:
         if e.response.code == 404:
             # We remove the 404 response so it will not show up as an
             # error in the browser
-            return HttpResponse('[]', status=200)
+            return HttpResponse("[]", status=200)
         else:
             return HttpResponse(e.response.body, status=e.response.code)
     except Exception as e:
@@ -149,12 +159,18 @@ async def proxy_github(request, path):
 @async_to_sync
 async def proxy_gitlab(request, path):
     try:
-        response = await helpers.gitlab.proxy(path, request.user, request.META["QUERY_STRING"], request.body, request.method)
+        response = await helpers.gitlab.proxy(
+            path,
+            request.user,
+            request.META["QUERY_STRING"],
+            request.body,
+            request.method,
+        )
     except HTTPError as e:
         if e.response.code == 404:
             # We remove the 404 response so it will not show up as an
             # error in the browser
-            return HttpResponse('[]', status=200)
+            return HttpResponse("[]", status=200)
         else:
             return HttpResponse(e.response.body, status=e.response.code)
     except Exception as e:
