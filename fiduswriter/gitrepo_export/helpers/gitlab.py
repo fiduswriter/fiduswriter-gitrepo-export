@@ -1,6 +1,6 @@
 import json
 
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest
+from httpx import AsyncClient, Request
 from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.providers.gitlab.views import GitLabOAuth2Adapter
 
@@ -17,9 +17,11 @@ async def proxy(path, user, query_string, body, method):
         url += "?" + query_string
     if method == "GET":
         body = None
-    request = HTTPRequest(url, method, headers, body=body, request_timeout=120)
-    http = AsyncHTTPClient()
-    response = await http.fetch(request)
+    request = Request(method, url, headers=headers, content=body)
+    async with AsyncClient(
+        timeout=88  # Firefox times out after 90 seconds, so we need to return before that.
+    ) as client:
+        response = await client.send(request)
     return response
 
 
@@ -42,10 +44,12 @@ async def get_repo(id, user):
         "?recursive=true&per_page=4&pagination=keyset"
     )
     while next_url:
-        request = HTTPRequest(next_url, "GET", headers, request_timeout=120)
-        http = AsyncHTTPClient()
-        response = await http.fetch(request)
-        files += json.loads(response.body)
+        request = Request("GET", next_url, headers=headers)
+        async with AsyncClient(
+            timeout=88  # Firefox times out after 90 seconds, so we need to return before that.
+        ) as client:
+            response = await client.send(request)
+        files += json.loads(response.text)
         next_url = False
         for link_info in response.headers["Link"].split(", "):
             link, rel = link_info.split("; ")
@@ -68,9 +72,11 @@ async def get_repos(gitlab_token):
     headers = get_headers(gitlab_token)
     repos = []
     url = f"{GITLAB_BASE_URL}projects?min_access_level=30&simple=true"
-    request = HTTPRequest(url, "GET", headers, request_timeout=120)
-    http = AsyncHTTPClient()
-    response = await http.fetch(request)
-    content = json.loads(response.body)
+    request = Request("GET", url, headers)
+    async with AsyncClient(
+        timeout=88  # Firefox times out after 90 seconds, so we need to return before that.
+    ) as client:
+        response = await client.send(request)
+    content = json.loads(response.text)
     repos += map(gitlabrepo2repodata, content)
     return repos

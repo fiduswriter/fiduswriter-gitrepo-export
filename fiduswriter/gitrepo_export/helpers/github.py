@@ -1,7 +1,7 @@
 import re
 import json
 
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest
+from httpx import AsyncClient, Request
 from allauth.socialaccount.models import SocialToken
 
 ALLOWED_PATHS = [
@@ -31,9 +31,11 @@ async def proxy(path, user, query_string, body, method):
         url += "?" + query_string
     if method == "GET":
         body = None
-    request = HTTPRequest(url, method, headers, body=body, request_timeout=120)
-    http = AsyncHTTPClient()
-    response = await http.fetch(request)
+    request = Request(method, url, headers=headers, content=body)
+    async with AsyncClient(
+        timeout=88  # Firefox times out after 90 seconds, so we need to return before that.
+    ) as client:
+        response = await client.send(request)
     return response
 
 
@@ -61,10 +63,12 @@ async def get_repos(github_token):
     last_page = False
     while not last_page:
         url = f"https://api.github.com/user/repos?page={page}&per_page=100"
-        request = HTTPRequest(url, "GET", headers, request_timeout=120)
-        http = AsyncHTTPClient()
-        response = await http.fetch(request)
-        content = json.loads(response.body)
+        request = Request("GET", url, headers=headers)
+        async with AsyncClient(
+            timeout=88  # Firefox times out after 90 seconds, so we need to return before that.
+        ) as client:
+            response = await client.send(request)
+        content = json.loads(response.text)
         repos += map(githubrepo2repodata, content)
         if len(content) == 100:
             page += 1

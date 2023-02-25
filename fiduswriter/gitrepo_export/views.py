@@ -6,11 +6,11 @@ from django.views.decorators.http import (
 )
 from asgiref.sync import async_to_sync, sync_to_async
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponse
-from tornado.httpclient import HTTPError
+from httpx import HTTPError
 from base.decorators import ajax_required
 from django.db.models import Q
-
 from allauth.socialaccount.models import SocialToken
+
 from book.models import Book
 from . import models
 
@@ -115,7 +115,7 @@ async def get_git_repos(request, reload=False):
             # error in the browser
             pass
         else:
-            return HttpResponse(e.response.body, status=e.response.code)
+            return HttpResponse(e.response.text, status=e.response.status_code)
         return []
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
@@ -146,11 +146,11 @@ async def proxy_github(request, path):
             # error in the browser
             return HttpResponse("[]", status=200)
         else:
-            return HttpResponse(e.response.body, status=e.response.code)
+            return HttpResponse(e.response.text, status=e.response.status_code)
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
     else:
-        return HttpResponse(response.body, status=response.code)
+        return HttpResponse(response.text, status=response.status_code)
 
 
 @sync_to_async
@@ -172,11 +172,11 @@ async def proxy_gitlab(request, path):
             # error in the browser
             return HttpResponse("[]", status=200)
         else:
-            return HttpResponse(e.response.body, status=e.response.code)
+            return HttpResponse(e.response.text, status=e.response.status_code)
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
     else:
-        return HttpResponse(response.body, status=response.code)
+        return HttpResponse(response.text, status=response.status_code)
 
 
 @sync_to_async
@@ -187,8 +187,8 @@ async def get_gitlab_repo(request, id):
     try:
         files = await gitlab.get_repo(id, request.user)
     except HTTPError as e:
-        return HttpResponse(e.response.body, status=e.response.code)
+        return HttpResponse(e.response.text, status=e.response.status_code)
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
     else:
-        return JsonResponse({'files': files}, status=200)
+        return JsonResponse({"files": files}, status=200)
