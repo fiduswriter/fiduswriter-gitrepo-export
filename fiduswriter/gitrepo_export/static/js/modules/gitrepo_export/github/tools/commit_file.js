@@ -1,4 +1,4 @@
-import {getJson} from "../../../common"
+import {getJson, getCookie} from "../../../common"
 import {gitHashObject, readBlobPromise} from "../../tools"
 
 export function commitFile(repo, blob, filename, parentDir = "", repoDirCache = {}) {
@@ -11,6 +11,7 @@ export function commitFile(repo, blob, filename, parentDir = "", repoDirCache = 
                 return Promise.resolve(json)
             }
         )
+    const csrfToken = getCookie("csrftoken")
     return Promise.resolve(getDirJsonPromise).then(json => {
         const fileEntry = Array.isArray(json) ? json.find(entry => entry.name === filename) : false
         const commitData = {
@@ -49,6 +50,9 @@ export function commitFile(repo, blob, filename, parentDir = "", repoDirCache = 
         }
         return fetch(`/api/gitrepo_export/proxy_github/repos/${repo.name}/git/blobs`.replace(/\/\//, "/"), {
             method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+            },
             credentials: "include",
             body: JSON.stringify(commitData)
         }).then(

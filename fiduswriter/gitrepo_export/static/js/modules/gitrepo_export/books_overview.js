@@ -86,9 +86,9 @@ export class GitrepoExporterBooksOverview {
         return getJson(
             `/api/gitrepo_export/get_git_repos/${reload ? "reload/" : ""}`
         ).then(
-            json => {
-                const initialType = json.length ? json[0].type : ""
-                json.forEach(entry => {
+            ({repos}) => {
+                const initialType = repos.length ? repos[0].type : ""
+                repos.forEach(entry => {
                     this.userRepos[entry.type + "-" + entry.id] = entry
                     if (entry.type !== initialType) {
                         this.userReposMultitype = true
@@ -100,8 +100,8 @@ export class GitrepoExporterBooksOverview {
 
     getBookRepos() {
         return getJson("/api/gitrepo_export/get_book_repos/").then(
-            json => {
-                this.bookRepos = json["book_repos"]
+            ({repos}) => {
+                this.bookRepos = repos
             }
         )
     }

@@ -1,8 +1,9 @@
 import {commitFile} from "./commit_file"
 import {promiseChain} from "./promise_chain"
-import {get} from "../../../common"
+import {get, getCookie} from "../../../common"
 
 export function commitZipContents(repo, outputList, binaryFiles, includeZips, parentDir = "") {
+    const csrfToken = getCookie("csrftoken")
     const repoDirCache = {}
     const textCommitFunctions = outputList.map(file => {
         const blob = new Blob([file.contents])
@@ -49,7 +50,8 @@ export function commitZipContents(repo, outputList, binaryFiles, includeZips, pa
                                     blob,
                                     filename,
                                     subDir,
-                                    repoDirCache
+                                    repoDirCache,
+                                    csrfToken
                                 )
                             })
                         )

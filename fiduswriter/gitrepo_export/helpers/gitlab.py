@@ -15,6 +15,8 @@ async def proxy(path, user, query_string, body, method):
     url = f"{GITLAB_BASE_URL}{path}"
     if query_string:
         url += "?" + query_string
+    if method == "GET":
+        body = None
     request = HTTPRequest(url, method, headers, body=body, request_timeout=120)
     http = AsyncHTTPClient()
     response = await http.fetch(request)
