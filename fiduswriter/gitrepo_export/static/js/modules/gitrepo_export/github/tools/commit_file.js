@@ -1,8 +1,8 @@
-import {getJson} from "../../../common"
+import {getJson, getCookie} from "../../../common"
 import {gitHashObject, readBlobPromise} from "../../tools"
 
 export function commitFile(repo, blob, filename, parentDir = "", repoDirCache = {}) {
-    const dirUrl = `/proxy/gitrepo_export/github/repos/${repo.name}/contents/${parentDir}`.replace(/\/\//, "/")
+    const dirUrl = `/api/gitrepo_export/proxy_github/repos/${repo.name}/contents/${parentDir}`.replace(/\/\//, "/")
     const getDirJsonPromise = repoDirCache[dirUrl] ?
         Promise.resolve(repoDirCache[dirUrl]) :
         getJson(dirUrl).then(
@@ -11,6 +11,7 @@ export function commitFile(repo, blob, filename, parentDir = "", repoDirCache = 
                 return Promise.resolve(json)
             }
         )
+    const csrfToken = getCookie("csrftoken")
     return Promise.resolve(getDirJsonPromise).then(json => {
         const fileEntry = Array.isArray(json) ? json.find(entry => entry.name === filename) : false
         const commitData = {
@@ -47,8 +48,11 @@ export function commitFile(repo, blob, filename, parentDir = "", repoDirCache = 
         if (!commitData || commitData === 304) {
             return Promise.resolve(304)
         }
-        return fetch(`/proxy/gitrepo_export/github/repos/${repo.name}/git/blobs`.replace(/\/\//, "/"), {
+        return fetch(`/api/gitrepo_export/proxy_github/repos/${repo.name}/git/blobs`.replace(/\/\//, "/"), {
             method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+            },
             credentials: "include",
             body: JSON.stringify(commitData)
         }).then(

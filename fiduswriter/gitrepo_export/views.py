@@ -1,10 +1,20 @@
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import (
+    require_GET,
+    require_POST,
+    require_http_methods,
+)
+from asgiref.sync import async_to_sync, sync_to_async
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponse
+from httpx import HTTPError
 from base.decorators import ajax_required
 from django.db.models import Q
+from allauth.socialaccount.models import SocialToken
+
 from book.models import Book
 from . import models
+
+from .helpers import github, gitlab
 
 
 @login_required
@@ -20,9 +30,9 @@ def get_book_repos(request):
             book__bookaccessright__holder_type__model="user",
         )
     ).distinct()
-    response["book_repos"] = {}
+    response["repos"] = {}
     for repo in book_repos:
-        response["book_repos"][repo.book.id] = {
+        response["repos"][repo.book.id] = {
             "repo_id": repo.repo_id,
             "repo_name": repo.repo_name,
             "repo_type": repo.repo_type,
@@ -69,3 +79,116 @@ def update_book_repo(request):
         )
         status = 201
     return HttpResponse(status=status)
+
+
+@sync_to_async
+@login_required
+@require_GET
+@async_to_sync
+async def get_git_repos(request, reload=False):
+    social_tokens = {
+        "github": SocialToken.objects.filter(
+            account__user=request.user, account__provider="github"
+        ).first(),
+        "gitlab": SocialToken.objects.filter(
+            account__user=request.user, account__provider="gitlab"
+        ).first(),
+    }
+
+    if not social_tokens["github"] and not social_tokens["gitlab"]:
+        return HttpResponseForbidden()
+    repo_info = models.RepoInfo.objects.filter(user=request.user).first()
+    if repo_info:
+        if reload:
+            repo_info.delete()
+        else:
+            return JsonResponse({"repos": repo_info.content}, status=200)
+    repos = []
+    try:
+        if social_tokens["github"]:
+            repos += await github.get_repos(social_tokens["github"])
+        if social_tokens["gitlab"]:
+            repos += await gitlab.get_repos(social_tokens["gitlab"])
+    except HTTPError as e:
+        if e.response.code == 404:
+            # We remove the 404 response so it will not show up as an
+            # error in the browser
+            pass
+        else:
+            return HttpResponse(e.response.text, status=e.response.status_code)
+        return []
+    except Exception as e:
+        return HttpResponse("Error: %s" % e, status=500)
+    repo_info, created = models.RepoInfo.objects.get_or_create(
+        user=request.user
+    )
+    repo_info.content = repos
+    repo_info.save()
+    return JsonResponse({"repos": repos}, status=200)
+
+
+@sync_to_async
+@login_required
+@require_http_methods(["GET", "POST", "PATCH"])
+@async_to_sync
+async def proxy_github(request, path):
+    try:
+        response = await github.proxy(
+            path,
+            request.user,
+            request.META["QUERY_STRING"],
+            request.body,
+            request.method,
+        )
+    except HTTPError as e:
+        if e.response.code == 404:
+            # We remove the 404 response so it will not show up as an
+            # error in the browser
+            return HttpResponse("[]", status=200)
+        else:
+            return HttpResponse(e.response.text, status=e.response.status_code)
+    except Exception as e:
+        return HttpResponse("Error: %s" % e, status=500)
+    else:
+        return HttpResponse(response.text, status=response.status_code)
+
+
+@sync_to_async
+@login_required
+@require_http_methods(["GET", "POST", "PATCH"])
+@async_to_sync
+async def proxy_gitlab(request, path):
+    try:
+        response = await gitlab.proxy(
+            path,
+            request.user,
+            request.META["QUERY_STRING"],
+            request.body,
+            request.method,
+        )
+    except HTTPError as e:
+        if e.response.code == 404:
+            # We remove the 404 response so it will not show up as an
+            # error in the browser
+            return HttpResponse("[]", status=200)
+        else:
+            return HttpResponse(e.response.text, status=e.response.status_code)
+    except Exception as e:
+        return HttpResponse("Error: %s" % e, status=500)
+    else:
+        return HttpResponse(response.text, status=response.status_code)
+
+
+@sync_to_async
+@login_required
+@require_GET
+@async_to_sync
+async def get_gitlab_repo(request, id):
+    try:
+        files = await gitlab.get_repo(id, request.user)
+    except HTTPError as e:
+        return HttpResponse(e.response.text, status=e.response.status_code)
+    except Exception as e:
+        return HttpResponse("Error: %s" % e, status=500)
+    else:
+        return JsonResponse({"files": files}, status=200)

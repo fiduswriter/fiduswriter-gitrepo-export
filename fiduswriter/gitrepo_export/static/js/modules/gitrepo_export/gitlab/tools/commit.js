@@ -1,14 +1,14 @@
-import {getJson} from "../../../common"
+import {getJson, getCookie} from "../../../common"
 import {readBlobPromise, gitHashObject} from "../../tools"
 
-export function commitFiles(repo, commitMessage, files) {
-    return getJson(`/proxy/gitrepo_export/gitlab/repo/${repo.id}/`).then(
-        repoFileList => {
-            const commitUrl = `/proxy/gitrepo_export/gitlab/projects/${repo.id}/repository/commits`
-            const getActions = Object.entries(files).map(
+export function commitFiles(repo, commitMessage, fileBlobs) {
+    return getJson(`/api/gitrepo_export/get_gitlab_repo/${repo.id}/`).then(
+        ({files}) => {
+            const commitUrl = `/api/gitrepo_export/proxy_gitlab/projects/${repo.id}/repository/commits`
+            const getActions = Object.entries(fileBlobs).map(
                 ([file_path, blob]) => readBlobPromise(blob).then(
                     content => {
-                        const fileEntry = Array.isArray(repoFileList) ? repoFileList.find(
+                        const fileEntry = Array.isArray(files) ? files.find(
                             entry => (
                                 entry.type === "blob" &&
                                 entry.path === file_path
@@ -62,6 +62,9 @@ export function commitFiles(repo, commitMessage, files) {
                     return fetch(commitUrl, {
                         method: "POST",
                         credentials: "include",
+                        headers: {
+                            "X-CSRFToken": getCookie("csrftoken"),
+                        },
                         body: JSON.stringify(commitData)
                     }).then(
                         () => 201
