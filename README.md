@@ -1,13 +1,11 @@
-**************************
 fiduswriter-gitrepo-export
-**************************
-A plugin to export books to GitLab/GitHub.
+==========================
 
-**This plugin is currently in early-stage development. It has not reached production level quality yet.**
+A plugin to export books to GitLab/GitHub.
 
 To install:
 
-1. Make sure you have installed the `fiduswriter-books` plugin and you have updated both `fiduswriter` and `fiduswriter-books` to the latest 3.9.x patch release.
+1. Make sure you have installed the `fiduswriter-books` plugin and you have updated both `fiduswriter` and `fiduswriter-books` to the latest patch release.
 
 2. Install this plugin (for example by running ``pip install fiduswriter-gitrepo-export``).
 
@@ -17,27 +15,30 @@ To install:
 
 5a. In your configuration.py file, make sure to add repo rights for the github connector like this::
 
-    SOCIALACCOUNT_PROVIDERS = {
-        'github': {
-            'SCOPE': [
-                'repo',
-                'user:email',
-            ],
-        }
+```python
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'SCOPE': [
+            'repo',
+            'user:email',
+        ],
     }
+}
+```
 
 4b. Set up GitLab as one of the connected login options. See instructions here: https://django-allauth.readthedocs.io/en/latest/providers.html#gitlab . The callback URL will be in the format https://DOMAIN.NAME/api/gitlab/gitlab/login/callback/
 
 5b. In your configuration.py file, make sure to add repo rights for the gitlab connector like this::
 
-    SOCIALACCOUNT_PROVIDERS = {
-        'gitlab': {
-            'SCOPE': [
-                'api',
-            ],
-        }
+```python
+SOCIALACCOUNT_PROVIDERS = {
+    'gitlab': {
+        'SCOPE': [
+            'api',
+        ],
     }
-
+}
+```
 
 To use:
 
