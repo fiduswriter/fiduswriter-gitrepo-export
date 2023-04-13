@@ -10,6 +10,13 @@ export function commitFile(repo, blob, filename, parentDir = "", repoDirCache = 
                 repoDirCache[dirUrl] = json
                 return Promise.resolve(json)
             }
+        ).catch(
+            error => {
+                if (error.status === 302) {// Redirect - which means the directory does not exist.
+                    return Promise.resolve(false)
+                }
+                throw error
+            }
         )
     const csrfToken = getCookie("csrftoken")
     return Promise.resolve(getDirJsonPromise).then(json => {
