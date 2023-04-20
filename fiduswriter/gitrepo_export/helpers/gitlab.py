@@ -72,11 +72,12 @@ async def get_repos(gitlab_token):
     headers = get_headers(gitlab_token)
     repos = []
     url = f"{GITLAB_BASE_URL}projects?min_access_level=30&simple=true"
-    request = Request("GET", url, headers)
+    request = Request("GET", url, headers=headers)
     async with AsyncClient(
         timeout=88  # Firefox times out after 90 seconds, so we need to return before that.
     ) as client:
         response = await client.send(request)
     content = json.loads(response.text)
-    repos += map(gitlabrepo2repodata, content)
+    if isinstance(content, list):
+        repos += map(gitlabrepo2repodata, content)
     return repos

@@ -20,30 +20,35 @@ export const repoSelectorTemplate = ({book, bookRepos, userRepos, userReposMulti
             <h4 class="fw-tablerow-title">${gettext("Git repository")}</h4>
         </th>
         <td>
-            <select class="entryForm" name="book-settings-repository"
-                title="${gettext("Select git repository to export to")}"
-                id="book-settings-repository"
-                ${
+            <div class="fw-select-container">
+                <select class="entry-form dk fw-button fw-light fw-large" name="book-settings-repository"
+                    title="${gettext("Select git repository to export to")}"
+                    id="book-settings-repository"
+                    ${
     book.rights === "read" ?
         "disabled=\"disabled\"" :
         ""
 }
-            >
-            ${
+                >
+                ${
     bookRepo ?
         `<option value="${bookRepo.repo_type}-${bookRepo.repo_id}" selected>${repoName(bookRepo.repo_name, bookRepo.repo_type, userReposMultitype)}</option>
-                    <option value="-0"></option>` :
+                        <option value="-0"></option>` :
         "<option value=\"-0\" selected></option>"
 }
-            ${
+                ${
     Object.entries(userRepos).sort((a, b) => a[1].name > b[1].name ? 1 : -1).map(([key, repo]) =>
         `<option value="${key}">${repoName(repo.name, repo.type, userReposMultitype)}</option>`
     ).join("")
 }
-            </select>
-            <button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small reload">
-                ${gettext("Reload")}
-            </button>
+                </select>
+                <div class="fw-select-arrow fa fa-caret-down"></div>
+            </div>
+        </td>
+        <td>
+        <button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small reload">
+            ${gettext("Reload")}
+        </button>
         </td>
     </tr>
 

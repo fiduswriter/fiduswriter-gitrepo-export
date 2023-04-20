@@ -69,9 +69,12 @@ async def get_repos(github_token):
         ) as client:
             response = await client.send(request)
         content = json.loads(response.text)
-        repos += map(githubrepo2repodata, content)
-        if len(content) == 100:
-            page += 1
+        if isinstance(content, list):
+            repos += map(githubrepo2repodata, content)
+            if len(content) == 100:
+                page += 1
+            else:
+                last_page = True
         else:
             last_page = True
     return repos
