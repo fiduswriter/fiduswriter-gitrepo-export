@@ -11,7 +11,7 @@ To install:
 
 3. In your configuration.py file, add "gitrepo_export" and "allauth.socialaccount.providers.github" and/or "allauth.socialaccount.providers.gitlab" to ``INSTALLED_APPS``.
 
-4a. Set up GitHub as one of the connected login options. See instructions here: https://django-allauth.readthedocs.io/en/latest/providers.html#github . The callback URL will be in the format https://DOMAIN.NAME/api/github/github/login/callback/
+4a. Set up GitHub as one of the connected login options. See instructions here: https://docs.allauth.org/en/latest/socialaccount/providers/github.html . The callback URL will be in the format https://DOMAIN.NAME/api/github/github/login/callback/
 
 5a. In your configuration.py file, make sure to add repo rights for the github connector like this::
 
@@ -26,7 +26,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 ```
 
-4b. Set up GitLab as one of the connected login options. See instructions here: https://django-allauth.readthedocs.io/en/latest/providers.html#gitlab . The callback URL will be in the format https://DOMAIN.NAME/api/gitlab/gitlab/login/callback/
+4b. Set up GitLab as one of the connected login options. See instructions here: https://docs.allauth.org/en/latest/socialaccount/providers/gitlab.html . The callback URL will be in the format https://DOMAIN.NAME/api/gitlab/gitlab/login/callback/
 
 5b. In your configuration.py file, make sure to add repo rights for the gitlab connector like this::
 
