@@ -3,9 +3,10 @@
 export function promiseChain(tasks) {
     return tasks.reduce((promiseChain, currentTask) => {
         return promiseChain.then(chainResults =>
-            currentTask().then(currentResult =>
-                [...chainResults, currentResult]
-            )
+            currentTask().then(currentResult => [
+                ...chainResults,
+                currentResult
+            ])
         )
     }, Promise.resolve([]))
 }

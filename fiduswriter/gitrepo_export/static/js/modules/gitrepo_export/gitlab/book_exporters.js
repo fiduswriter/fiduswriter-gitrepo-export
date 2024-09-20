@@ -1,5 +1,8 @@
 import {EpubBookExporter} from "../../books/exporter/epub"
-import {HTMLBookExporter, SingleFileHTMLBookExporter} from "../../books/exporter/html"
+import {
+    HTMLBookExporter,
+    SingleFileHTMLBookExporter
+} from "../../books/exporter/html"
 import {LatexBookExporter} from "../../books/exporter/latex"
 import {zipToBlobs} from "./tools"
 
@@ -71,11 +74,6 @@ export class LatexBookGitlabExporter extends LatexBookExporter {
     }
 
     createZip() {
-        return zipToBlobs(
-            this.textFiles,
-            this.httpFiles,
-            [],
-            "latex/"
-        )
+        return zipToBlobs(this.textFiles, this.httpFiles, [], "latex/")
     }
 }

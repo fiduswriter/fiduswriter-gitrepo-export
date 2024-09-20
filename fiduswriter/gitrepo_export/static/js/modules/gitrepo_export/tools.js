@@ -10,20 +10,24 @@ export function gitHashObject(content, utf8 = true) {
             contentArray[i] = content.charCodeAt(i)
         }
     }
-    const prefixArray = new TextEncoder().encode("blob " + contentArray.byteLength + "\0") // encode as (utf-8) Uint8Array
+    const prefixArray = new TextEncoder().encode(
+        "blob " + contentArray.byteLength + "\0"
+    ) // encode as (utf-8) Uint8Array
 
     // Join arrays
-    const unifiedArray = new Uint8Array(prefixArray.byteLength + contentArray.byteLength)
+    const unifiedArray = new Uint8Array(
+        prefixArray.byteLength + contentArray.byteLength
+    )
     unifiedArray.set(new Uint8Array(prefixArray), 0)
     unifiedArray.set(new Uint8Array(contentArray), prefixArray.byteLength)
 
-    return crypto.subtle.digest("SHA-1", unifiedArray).then(
-        hashBuffer => {
-            const hashArray = Array.from(new Uint8Array(hashBuffer)) // convert buffer to byte array
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("") // convert bytes to hex string
-            return hashHex
-        }
-    )
+    return crypto.subtle.digest("SHA-1", unifiedArray).then(hashBuffer => {
+        const hashArray = Array.from(new Uint8Array(hashBuffer)) // convert buffer to byte array
+        const hashHex = hashArray
+            .map(b => b.toString(16).padStart(2, "0"))
+            .join("") // convert bytes to hex string
+        return hashHex
+    })
 }
 
 export function readBlobPromise(blob) {

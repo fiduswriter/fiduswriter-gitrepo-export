@@ -1,5 +1,8 @@
 import {EpubBookExporter} from "../../books/exporter/epub"
-import {HTMLBookExporter, SingleFileHTMLBookExporter} from "../../books/exporter/html"
+import {
+    HTMLBookExporter,
+    SingleFileHTMLBookExporter
+} from "../../books/exporter/html"
 import {LatexBookExporter} from "../../books/exporter/latex"
 import {commitFile, commitZipContents} from "./tools"
 
@@ -10,13 +13,10 @@ export class EpubBookGithubExporter extends EpubBookExporter {
     }
 
     download(blob) {
-        return () => commitFile(
-            this.repo,
-            blob,
-            "book.epub"
-        ).then(
-            response => [response]
-        )
+        return () =>
+            commitFile(this.repo, blob, "book.epub").then(response => [
+                response
+            ])
     }
 }
 
@@ -27,13 +27,14 @@ export class UnpackedEpubBookGithubExporter extends EpubBookExporter {
     }
 
     createZip() {
-        return () => commitZipContents(
-            this.repo,
-            this.outputList,
-            this.binaryFiles,
-            this.includeZips,
-            "epub/"
-        )
+        return () =>
+            commitZipContents(
+                this.repo,
+                this.outputList,
+                this.binaryFiles,
+                this.includeZips,
+                "epub/"
+            )
     }
 }
 
@@ -44,13 +45,14 @@ export class HTMLBookGithubExporter extends HTMLBookExporter {
     }
 
     createZip() {
-        return () => commitZipContents(
-            this.repo,
-            this.outputList,
-            this.binaryFiles,
-            this.includeZips,
-            "html/"
-        )
+        return () =>
+            commitZipContents(
+                this.repo,
+                this.outputList,
+                this.binaryFiles,
+                this.includeZips,
+                "html/"
+            )
     }
 }
 
@@ -61,13 +63,14 @@ export class SingleFileHTMLBookGithubExporter extends SingleFileHTMLBookExporter
     }
 
     createZip() {
-        return () => commitZipContents(
-            this.repo,
-            this.outputList,
-            this.binaryFiles,
-            this.includeZips,
-            "uhtml/"
-        )
+        return () =>
+            commitZipContents(
+                this.repo,
+                this.outputList,
+                this.binaryFiles,
+                this.includeZips,
+                "uhtml/"
+            )
     }
 }
 
@@ -78,12 +81,13 @@ export class LatexBookGithubExporter extends LatexBookExporter {
     }
 
     createZip() {
-        return () => commitZipContents(
-            this.repo,
-            this.textFiles,
-            this.httpFiles,
-            [],
-            "latex/"
-        )
+        return () =>
+            commitZipContents(
+                this.repo,
+                this.textFiles,
+                this.httpFiles,
+                [],
+                "latex/"
+            )
     }
 }

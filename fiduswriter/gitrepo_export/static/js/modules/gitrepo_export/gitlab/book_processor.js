@@ -1,5 +1,11 @@
 import {addAlert, Dialog, escapeText} from "../../common"
-import {EpubBookGitlabExporter, UnpackedEpubBookGitlabExporter, HTMLBookGitlabExporter, LatexBookGitlabExporter, SingleFileHTMLBookGitlabExporter} from "./book_exporters"
+import {
+    EpubBookGitlabExporter,
+    UnpackedEpubBookGitlabExporter,
+    HTMLBookGitlabExporter,
+    LatexBookGitlabExporter,
+    SingleFileHTMLBookGitlabExporter
+} from "./book_exporters"
 import {commitFiles} from "./tools"
 
 export class GitlabBookProcessor {
@@ -11,13 +17,10 @@ export class GitlabBookProcessor {
         this.userRepo = userRepo
     }
 
-
     init() {
-        return this.getCommitMessage().then(
-            commitMessage => this.publishBook(commitMessage)
-        ).catch(
-            () => {}
-        )
+        return this.getCommitMessage()
+            .then(commitMessage => this.publishBook(commitMessage))
+            .catch(() => {})
     }
 
     getCommitMessage() {
@@ -27,7 +30,9 @@ export class GitlabBookProcessor {
                     text: gettext("Submit"),
                     classes: "fw-dark",
                     click: () => {
-                        const commitMessage = dialog.dialogEl.querySelector(".commit-message").value || gettext("Update from Fidus Writer")
+                        const commitMessage =
+                            dialog.dialogEl.querySelector(".commit-message")
+                                .value || gettext("Update from Fidus Writer")
                         dialog.close()
                         resolve(commitMessage)
                     }
@@ -46,7 +51,9 @@ export class GitlabBookProcessor {
                 height: 150,
                 body: `<p>
             ${gettext("Updating")}: ${escapeText(this.book.title)}
-            <input type="text" class="commit-message" placeholder="${gettext("Enter commit message")}" >
+            <input type="text" class="commit-message" placeholder="${gettext(
+        "Enter commit message"
+    )}" >
             </p>`,
                 buttons
             })
@@ -70,9 +77,7 @@ export class GitlabBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            fileGetters.push(
-                epubExporter.init()
-            )
+            fileGetters.push(epubExporter.init())
         }
 
         if (this.bookRepo.export_unpacked_epub) {
@@ -86,9 +91,7 @@ export class GitlabBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            fileGetters.push(
-                unpackedEpubExporter.init()
-            )
+            fileGetters.push(unpackedEpubExporter.init())
         }
 
         if (this.bookRepo.export_html) {
@@ -102,9 +105,7 @@ export class GitlabBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            fileGetters.push(
-                htmlExporter.init()
-            )
+            fileGetters.push(htmlExporter.init())
         }
 
         if (this.bookRepo.export_unified_html) {
@@ -118,9 +119,7 @@ export class GitlabBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            fileGetters.push(
-                unifiedHtmlExporter.init()
-            )
+            fileGetters.push(unifiedHtmlExporter.init())
         }
 
         if (this.bookRepo.export_latex) {
@@ -132,27 +131,39 @@ export class GitlabBookProcessor {
                 new Date(this.book.updated * 1000),
                 this.userRepo
             )
-            fileGetters.push(
-                latexExporter.init()
-            )
+            fileGetters.push(latexExporter.init())
         }
-        return Promise.all(fileGetters).then(
-            files => commitFiles(this.userRepo, commitMessage, Object.assign(...files))
-        ).then(
-            returnCode => {
+        return Promise.all(fileGetters)
+            .then(files =>
+                commitFiles(
+                    this.userRepo,
+                    commitMessage,
+                    Object.assign(...files)
+                )
+            )
+            .then(returnCode => {
                 switch (returnCode) {
                 case 201:
-                    addAlert("info", gettext("Book published to repository successfully!"))
+                    addAlert(
+                        "info",
+                        gettext(
+                            "Book published to repository successfully!"
+                        )
+                    )
                     break
                 case 304:
-                    addAlert("info", gettext("Book already up to date in repository."))
+                    addAlert(
+                        "info",
+                        gettext("Book already up to date in repository.")
+                    )
                     break
                 case 400:
-                    addAlert("error", gettext("Could not publish book to repository."))
+                    addAlert(
+                        "error",
+                        gettext("Could not publish book to repository.")
+                    )
                     break
                 }
-
-            }
-        )
+            })
     }
 }
