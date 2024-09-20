@@ -41,6 +41,8 @@ def get_book_repos(request):
             "export_html": repo.export_html,
             "export_unified_html": repo.export_unified_html,
             "export_latex": repo.export_latex,
+            "export_odt": repo.export_odt,
+            "export_docx": repo.export_docx,
         }
     return JsonResponse(response, status=status)
 
