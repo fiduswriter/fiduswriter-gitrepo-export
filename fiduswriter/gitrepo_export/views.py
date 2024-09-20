@@ -101,7 +101,9 @@ async def get_git_repos(request, reload=False):
 
     if not social_tokens["github"] and not social_tokens["gitlab"]:
         return HttpResponseForbidden()
-    repo_info = await models.RepoInfo.objects.filter(user=request.user).afirst()
+    repo_info = await models.RepoInfo.objects.filter(
+        user=request.user
+    ).afirst()
     if repo_info:
         if reload:
             await repo_info.adelete()
