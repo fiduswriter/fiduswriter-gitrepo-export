@@ -253,12 +253,20 @@ export class GitrepoExporterBooksOverview {
             const exportLatex = document.querySelector(
                 "#book-settings-repository-latex"
             ).checked
+            const exportDocx = document.querySelector(
+                "#book-settings-repository-docx"
+            ).checked
+            const exportOdt = document.querySelector(
+                "#book-settings-repository-odt"
+            ).checked
             if (
                 !exportEpub &&
                 !exportUnpackedEpub &&
                 !exportHtml &&
                 !exportUnifiedHtml &&
-                !exportLatex
+                !exportLatex &&
+                !exportDocx &&
+                !exportOdt
             ) {
                 // No export formats selected. Reset repository.
                 repoId = 0
@@ -274,7 +282,10 @@ export class GitrepoExporterBooksOverview {
                         this.bookRepos[book.id].export_html !== exportHtml ||
                         this.bookRepos[book.id].export_unified_html !==
                             exportUnifiedHtml ||
-                        this.bookRepos[book.id].export_latex !== exportLatex))
+                        this.bookRepos[book.id].export_latex !== exportLatex ||
+                        this.bookRepos[book.id].export_odt !== exportOdt ||
+                        this.bookRepos[book.id].export_docx !== exportDocx
+                    ))
             ) {
                 const postData = {
                     book_id: book.id,
@@ -289,6 +300,8 @@ export class GitrepoExporterBooksOverview {
                     postData["export_html"] = exportHtml
                     postData["export_unified_html"] = exportUnifiedHtml
                     postData["export_latex"] = exportLatex
+                    postData["export_odt"] = exportOdt
+                    postData["export_docx"] = exportDocx
                 }
                 return post(
                     "/api/gitrepo_export/update_book_repo/",
@@ -306,7 +319,9 @@ export class GitrepoExporterBooksOverview {
                             export_unpacked_epub: exportUnpackedEpub,
                             export_html: exportHtml,
                             export_unified_html: exportUnifiedHtml,
-                            export_latex: exportLatex
+                            export_latex: exportLatex,
+                            export_odt: exportOdt,
+                            export_docx: exportDocx
                         }
                     }
                 })

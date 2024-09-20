@@ -115,5 +115,29 @@ export const repoSelectorTemplate = ({
     bookRepo && bookRepo.export_latex ? "checked" : ""
 }>
         </td>
+    </tr>
+    <tr>
+        <th>
+            <h4 class="fw-tablerow-title">${gettext("Export ODT")}</h4>
+        </th>
+        <td>
+            <input type="checkbox" id="book-settings-repository-odt" ${
+    bookRepo && bookRepo.export_odt && book.odt_template ? "checked" : ""
+} ${
+    book.odt_template ? "" : "disabled"
+}>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <h4 class="fw-tablerow-title">${gettext("Export DOCX")}</h4>
+        </th>
+        <td>
+            <input type="checkbox" id="book-settings-repository-docx" ${
+    bookRepo && bookRepo.export_docx && book.docx_template ? "checked" : ""
+} ${
+    book.docx_template ? "" : "disabled"
+}>
+        </td>
     </tr>`
 }

@@ -22,7 +22,7 @@ ALLOWED_PATHS = [
 async def proxy(path, user, query_string, body, method):
     if not any(regex.match(path) for regex in ALLOWED_PATHS):
         raise Exception("Path not permitted.")
-    social_token = SocialToken.objects.get(
+    social_token = await SocialToken.objects.aget(
         account__user=user, account__provider="github"
     )
     headers = get_headers(social_token.token)

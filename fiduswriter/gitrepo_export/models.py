@@ -23,6 +23,8 @@ class BookRepository(models.Model):
     export_html = models.BooleanField()
     export_unified_html = models.BooleanField()
     export_latex = models.BooleanField()
+    export_odt = models.BooleanField()
+    export_docx = models.BooleanField()
 
     class Meta(object):
         verbose_name_plural = "Book repositories"

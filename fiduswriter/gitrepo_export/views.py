@@ -76,6 +76,8 @@ def update_book_repo(request):
             export_html=request.POST["export_html"] == "true",
             export_unified_html=request.POST["export_unified_html"] == "true",
             export_latex=request.POST["export_latex"] == "true",
+            export_docx=request.POST["export_docx"] == "true",
+            export_odt=request.POST["export_odt"] == "true",
         )
         status = 201
     return HttpResponse(status=status)
@@ -87,20 +89,20 @@ def update_book_repo(request):
 @async_to_sync
 async def get_git_repos(request, reload=False):
     social_tokens = {
-        "github": SocialToken.objects.filter(
+        "github": await SocialToken.objects.filter(
             account__user=request.user, account__provider="github"
-        ).first(),
-        "gitlab": SocialToken.objects.filter(
+        ).afirst(),
+        "gitlab": await SocialToken.objects.filter(
             account__user=request.user, account__provider="gitlab"
-        ).first(),
+        ).afirst(),
     }
 
     if not social_tokens["github"] and not social_tokens["gitlab"]:
         return HttpResponseForbidden()
-    repo_info = models.RepoInfo.objects.filter(user=request.user).first()
+    repo_info = await models.RepoInfo.objects.filter(user=request.user).afirst()
     if repo_info:
         if reload:
-            repo_info.delete()
+            await repo_info.adelete()
         else:
             return JsonResponse({"repos": repo_info.content}, status=200)
     repos = []
@@ -119,11 +121,11 @@ async def get_git_repos(request, reload=False):
         return []
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
-    repo_info, created = models.RepoInfo.objects.get_or_create(
+    repo_info, created = await models.RepoInfo.objects.aget_or_create(
         user=request.user
     )
     repo_info.content = repos
-    repo_info.save()
+    await repo_info.asave()
     return JsonResponse({"repos": repos}, status=200)
 
 

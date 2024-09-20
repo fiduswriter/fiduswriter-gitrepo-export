@@ -4,6 +4,8 @@ import {
     SingleFileHTMLBookExporter
 } from "../../books/exporter/html"
 import {LatexBookExporter} from "../../books/exporter/latex"
+import {ODTBookExporter} from "../../books/exporter/odt"
+import {DOCXBookExporter} from "../../books/exporter/docx"
 import {commitFile, commitZipContents} from "./tools"
 
 export class EpubBookGithubExporter extends EpubBookExporter {
@@ -90,4 +92,34 @@ export class LatexBookGithubExporter extends LatexBookExporter {
                 "latex/"
             )
     }
+}
+
+export class DOCXBookGithubExporter extends DOCXBookExporter {
+    constructor(schema, csl, book, user, docList, updated, repo) {
+        super(schema, csl, book, user, docList, updated)
+        this.repo = repo
+    }
+
+    download(blob) {
+        return () =>
+            commitFile(this.repo, blob, "book.docx").then(response => [
+                response
+            ])
+    }
+
+}
+
+export class ODTBookGithubExporter extends ODTBookExporter {
+    constructor(schema, csl, book, user, docList, updated, repo) {
+        super(schema, csl, book, user, docList, updated)
+        this.repo = repo
+    }
+
+    download(blob) {
+        return () =>
+            commitFile(this.repo, blob, "book.odt").then(response => [
+                response
+            ])
+    }
+
 }

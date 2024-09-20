@@ -8,7 +8,7 @@ GITLAB_BASE_URL = f"{GitLabOAuth2Adapter.provider_base_url}/api/v4/"
 
 
 async def proxy(path, user, query_string, body, method):
-    social_token = SocialToken.objects.get(
+    social_token = await SocialToken.objects.aget(
         account__user=user, account__provider="gitlab"
     )
     headers = get_headers(social_token.token)

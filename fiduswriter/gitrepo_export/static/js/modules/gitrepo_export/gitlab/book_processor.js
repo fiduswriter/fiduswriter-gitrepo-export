@@ -4,7 +4,9 @@ import {
     UnpackedEpubBookGitlabExporter,
     HTMLBookGitlabExporter,
     LatexBookGitlabExporter,
-    SingleFileHTMLBookGitlabExporter
+    SingleFileHTMLBookGitlabExporter,
+    DOCXBookGitlabExporter,
+    ODTBookGitlabExporter
 } from "./book_exporters"
 import {commitFiles} from "./tools"
 
@@ -132,6 +134,31 @@ export class GitlabBookProcessor {
                 this.userRepo
             )
             fileGetters.push(latexExporter.init())
+        }
+        if (this.bookRepo.export_docx) {
+            const docxExporter = new DOCXBookGitlabExporter(
+                this.booksOverview.schema,
+                this.booksOverview.app.csl,
+                this.book,
+                this.booksOverview.user,
+                this.booksOverview.documentList,
+                new Date(this.book.updated * 1000),
+                this.userRepo
+            )
+            fileGetters.push(docxExporter.init())
+        }
+
+        if (this.bookRepo.export_odt) {
+            const odtExporter = new ODTBookGitlabExporter(
+                this.booksOverview.schema,
+                this.booksOverview.app.csl,
+                this.book,
+                this.booksOverview.user,
+                this.booksOverview.documentList,
+                new Date(this.book.updated * 1000),
+                this.userRepo
+            )
+            fileGetters.push(odtExporter.init())
         }
         return Promise.all(fileGetters)
             .then(files =>

@@ -3,6 +3,8 @@ import {
     HTMLBookExporter,
     SingleFileHTMLBookExporter
 } from "../../books/exporter/html"
+import {ODTBookExporter} from "../../books/exporter/odt"
+import {DOCXBookExporter} from "../../books/exporter/docx"
 import {LatexBookExporter} from "../../books/exporter/latex"
 import {zipToBlobs} from "./tools"
 
@@ -76,4 +78,32 @@ export class LatexBookGitlabExporter extends LatexBookExporter {
     createZip() {
         return zipToBlobs(this.textFiles, this.httpFiles, [], "latex/")
     }
+}
+
+export class DOCXBookGitlabExporter extends DOCXBookExporter {
+    constructor(schema, csl, book, user, docList, updated, repo) {
+        super(schema, csl, book, user, docList, updated)
+        this.repo = repo
+    }
+
+    download(blob) {
+        return Promise.resolve({
+            "book.docx": blob
+        })
+    }
+
+}
+
+export class ODTBookGitlabExporter extends ODTBookExporter {
+    constructor(schema, csl, book, user, docList, updated, repo) {
+        super(schema, csl, book, user, docList, updated)
+        this.repo = repo
+    }
+
+    download(blob) {
+        return Promise.resolve({
+            "book.odt": blob
+        })
+    }
+
 }

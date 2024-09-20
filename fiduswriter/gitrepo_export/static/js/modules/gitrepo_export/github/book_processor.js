@@ -4,7 +4,9 @@ import {
     UnpackedEpubBookGithubExporter,
     HTMLBookGithubExporter,
     LatexBookGithubExporter,
-    SingleFileHTMLBookGithubExporter
+    SingleFileHTMLBookGithubExporter,
+    DOCXBookGithubExporter,
+    ODTBookGithubExporter
 } from "./book_exporters"
 import {promiseChain, commitTree} from "./tools"
 
@@ -132,6 +134,32 @@ export class GithubBookProcessor {
                 this.userRepo
             )
             commitInitiators.push(latexExporter.init())
+        }
+
+        if (this.bookRepo.export_docx) {
+            const docxExporter = new DOCXBookGithubExporter(
+                this.booksOverview.schema,
+                this.booksOverview.app.csl,
+                this.book,
+                this.booksOverview.user,
+                this.booksOverview.documentList,
+                new Date(this.book.updated * 1000),
+                this.userRepo
+            )
+            commitInitiators.push(docxExporter.init())
+        }
+
+        if (this.bookRepo.export_odt) {
+            const odtExporter = new ODTBookGithubExporter(
+                this.booksOverview.schema,
+                this.booksOverview.app.csl,
+                this.book,
+                this.booksOverview.user,
+                this.booksOverview.documentList,
+                new Date(this.book.updated * 1000),
+                this.userRepo
+            )
+            commitInitiators.push(odtExporter.init())
         }
         return Promise.all(commitInitiators).then(commitFunctions =>
             promiseChain(commitFunctions.flat()).then(responses => {
