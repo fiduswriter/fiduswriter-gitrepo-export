@@ -1,7 +1,7 @@
-import {getJson, post, findTarget, addAlert} from "../common"
-import {repoSelectorTemplate} from "./templates"
+import {addAlert, findTarget, getJson, post } from "../common"
 import {GithubBookProcessor} from "./github"
 import {GitlabBookProcessor} from "./gitlab"
+import {repoSelectorTemplate} from "./templates"
 
 export class GitrepoExporterBooksOverview {
     constructor(booksOverview) {

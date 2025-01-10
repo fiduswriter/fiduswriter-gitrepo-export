@@ -1,4 +1,4 @@
-import {getJson, getCookie} from "../../../common"
+import {getCookie, getJson } from "../../../common"
 import {gitHashObject, readBlobPromise} from "../../tools"
 
 export function commitFile(

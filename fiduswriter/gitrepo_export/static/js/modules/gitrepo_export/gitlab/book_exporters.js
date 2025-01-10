@@ -1,11 +1,10 @@
+import {DOCXBookExporter} from "../../books/exporter/docx"
 import {EpubBookExporter} from "../../books/exporter/epub"
 import {
-    HTMLBookExporter,
-    SingleFileHTMLBookExporter
+    HTMLBookExporter
 } from "../../books/exporter/html"
-import {ODTBookExporter} from "../../books/exporter/odt"
-import {DOCXBookExporter} from "../../books/exporter/docx"
 import {LatexBookExporter} from "../../books/exporter/latex"
+import {ODTBookExporter} from "../../books/exporter/odt"
 import {zipToBlobs} from "./tools"
 
 export class EpubBookGitlabExporter extends EpubBookExporter {
@@ -53,9 +52,9 @@ export class HTMLBookGitlabExporter extends HTMLBookExporter {
     }
 }
 
-export class SingleFileHTMLBookGitlabExporter extends SingleFileHTMLBookExporter {
+export class SingleFileHTMLBookGitlabExporter extends HTMLBookExporter {
     constructor(schema, csl, bookStyles, book, user, docList, updated, repo) {
-        super(schema, csl, bookStyles, book, user, docList, updated)
+        super(schema, csl, bookStyles, book, user, docList, updated, false)
         this.repo = repo
     }
 

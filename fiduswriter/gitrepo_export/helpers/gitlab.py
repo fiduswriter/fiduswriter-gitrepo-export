@@ -4,15 +4,19 @@ from httpx import AsyncClient, Request
 from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.providers.gitlab.views import GitLabOAuth2Adapter
 
-GITLAB_BASE_URL = f"{GitLabOAuth2Adapter.provider_base_url}/api/v4/"
+
+class URLTranslator(GitLabOAuth2Adapter):
+    def get_url(self, path):
+        return self._build_url('/api/v4/' + path)
 
 
-async def proxy(path, user, query_string, body, method):
+async def proxy(request, path, user, query_string, body, method):
     social_token = await SocialToken.objects.aget(
         account__user=user, account__provider="gitlab"
     )
     headers = get_headers(social_token.token)
-    url = f"{GITLAB_BASE_URL}{path}"
+    url_translator = URLTranslator(request)
+    url = url_translator.get_url(path)
     if query_string:
         url += "?" + query_string
     if method == "GET":
@@ -33,14 +37,15 @@ def get_headers(token):
     }
 
 
-async def get_repo(id, user):
+async def get_repo(request, id, user):
     social_token = SocialToken.objects.get(
         account__user=user, account__provider="gitlab"
     )
     headers = get_headers(social_token.token)
     files = []
-    next_url = (
-        f"{GITLAB_BASE_URL}projects/{id}/repository/tree"
+    url_translator = URLTranslator(request)
+    next_url = url_translator.get_url(
+        f"projects/{id}/repository/tree"
         "?recursive=true&per_page=4&pagination=keyset"
     )
     while next_url:
@@ -67,11 +72,12 @@ def gitlabrepo2repodata(gitlab_repo):
     }
 
 
-async def get_repos(gitlab_token):
+async def get_repos(request, gitlab_token):
     # TODO: API documentation unclear on whether pagination is required.
     headers = get_headers(gitlab_token)
     repos = []
-    url = f"{GITLAB_BASE_URL}projects?min_access_level=30&simple=true"
+    url_translator = URLTranslator(request)
+    url = url_translator.get_url("projects?min_access_level=30&simple=true")
     request = Request("GET", url, headers=headers)
     async with AsyncClient(
         timeout=88  # Firefox times out after 90 seconds, so we need to return before that.

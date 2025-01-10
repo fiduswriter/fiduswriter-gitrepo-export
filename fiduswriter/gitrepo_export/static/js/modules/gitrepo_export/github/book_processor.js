@@ -1,14 +1,14 @@
-import {addAlert, Dialog, escapeText} from "../../common"
+import {Dialog, addAlert, escapeText} from "../../common"
 import {
+    DOCXBookGithubExporter,
     EpubBookGithubExporter,
-    UnpackedEpubBookGithubExporter,
     HTMLBookGithubExporter,
     LatexBookGithubExporter,
+    ODTBookGithubExporter,
     SingleFileHTMLBookGithubExporter,
-    DOCXBookGithubExporter,
-    ODTBookGithubExporter
+    UnpackedEpubBookGithubExporter
 } from "./book_exporters"
-import {promiseChain, commitTree} from "./tools"
+import {commitTree, promiseChain } from "./tools"
 
 export class GithubBookProcessor {
     constructor(app, booksOverview, book, bookRepo, userRepo) {

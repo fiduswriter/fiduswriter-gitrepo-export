@@ -1,6 +1,6 @@
+import {get, getCookie} from "../../../common"
 import {commitFile} from "./commit_file"
 import {promiseChain} from "./promise_chain"
-import {get, getCookie} from "../../../common"
 
 export function commitZipContents(
     repo,

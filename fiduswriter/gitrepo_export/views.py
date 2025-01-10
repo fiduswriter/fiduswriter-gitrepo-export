@@ -114,7 +114,7 @@ async def get_git_repos(request, reload=False):
         if social_tokens["github"]:
             repos += await github.get_repos(social_tokens["github"])
         if social_tokens["gitlab"]:
-            repos += await gitlab.get_repos(social_tokens["gitlab"])
+            repos += await gitlab.get_repos(request, social_tokens["gitlab"])
     except HTTPError as e:
         if e.response.code == 404:
             # We remove the 404 response so it will not show up as an
@@ -166,6 +166,7 @@ async def proxy_github(request, path):
 async def proxy_gitlab(request, path):
     try:
         response = await gitlab.proxy(
+            request,
             path,
             request.user,
             request.META["QUERY_STRING"],
@@ -191,7 +192,7 @@ async def proxy_gitlab(request, path):
 @async_to_sync
 async def get_gitlab_repo(request, id):
     try:
-        files = await gitlab.get_repo(id, request.user)
+        files = await gitlab.get_repo(request, id, request.user)
     except HTTPError as e:
         return HttpResponse(e.response.text, status=e.response.status_code)
     except Exception as e:

@@ -1,12 +1,12 @@
-import {addAlert, Dialog, escapeText} from "../../common"
+import {Dialog, addAlert, escapeText} from "../../common"
 import {
+    DOCXBookGitlabExporter,
     EpubBookGitlabExporter,
-    UnpackedEpubBookGitlabExporter,
     HTMLBookGitlabExporter,
     LatexBookGitlabExporter,
+    ODTBookGitlabExporter,
     SingleFileHTMLBookGitlabExporter,
-    DOCXBookGitlabExporter,
-    ODTBookGitlabExporter
+    UnpackedEpubBookGitlabExporter
 } from "./book_exporters"
 import {commitFiles} from "./tools"
 
