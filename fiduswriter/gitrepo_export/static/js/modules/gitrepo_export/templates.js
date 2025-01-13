@@ -28,31 +28,31 @@ export const repoSelectorTemplate = ({
                 <select class="entry-form dk fw-button fw-light fw-large" name="book-settings-repository"
                     title="${gettext("Select git repository to export to")}"
                     id="book-settings-repository"
-                    ${book.rights === "read" ? "disabled=\"disabled\"" : ""}
+                    ${book.rights === "read" ? 'disabled="disabled"' : ""}
                 >
                 ${
-    bookRepo
-        ? `<option value="${bookRepo.repo_type}-${
-            bookRepo.repo_id
-        }" selected>${repoName(
-            bookRepo.repo_name,
-            bookRepo.repo_type,
-            userReposMultitype
-        )}</option>
+                    bookRepo
+                        ? `<option value="${bookRepo.repo_type}-${
+                              bookRepo.repo_id
+                          }" selected>${repoName(
+                              bookRepo.repo_name,
+                              bookRepo.repo_type,
+                              userReposMultitype
+                          )}</option>
                         <option value="-0"></option>`
-        : "<option value=\"-0\" selected></option>"
-}
+                        : '<option value="-0" selected></option>'
+                }
                 ${Object.entries(userRepos)
-        .sort((a, b) => (a[1].name > b[1].name ? 1 : -1))
-        .map(
-            ([key, repo]) =>
-                `<option value="${key}">${repoName(
-                    repo.name,
-                    repo.type,
-                    userReposMultitype
-                )}</option>`
-        )
-        .join("")}
+                    .sort((a, b) => (a[1].name > b[1].name ? 1 : -1))
+                    .map(
+                        ([key, repo]) =>
+                            `<option value="${key}">${repoName(
+                                repo.name,
+                                repo.type,
+                                userReposMultitype
+                            )}</option>`
+                    )
+                    .join("")}
                 </select>
                 <div class="fw-select-arrow fa fa-caret-down"></div>
             </div>
@@ -70,20 +70,18 @@ export const repoSelectorTemplate = ({
         </th>
         <td>
             <input type="checkbox" id="book-settings-repository-epub" ${
-    bookRepo && bookRepo.export_epub ? "checked" : ""
-}>
+                bookRepo && bookRepo.export_epub ? "checked" : ""
+            }>
         </td>
     </tr>
     <tr>
         <th>
-            <h4 class="fw-tablerow-title">${gettext(
-        "Export unpacked EPUB"
-    )}</h4>
+            <h4 class="fw-tablerow-title">${gettext("Export unpacked EPUB")}</h4>
         </th>
         <td>
             <input type="checkbox" id="book-settings-repository-unpacked-epub" ${
-    bookRepo && bookRepo.export_unpacked_epub ? "checked" : ""
-}>
+                bookRepo && bookRepo.export_unpacked_epub ? "checked" : ""
+            }>
         </td>
     </tr>
     <tr>
@@ -92,8 +90,8 @@ export const repoSelectorTemplate = ({
         </th>
         <td>
             <input type="checkbox" id="book-settings-repository-html" ${
-    bookRepo && bookRepo.export_html ? "checked" : ""
-}>
+                bookRepo && bookRepo.export_html ? "checked" : ""
+            }>
         </td>
     </tr>
     <tr>
@@ -102,8 +100,8 @@ export const repoSelectorTemplate = ({
         </th>
         <td>
             <input type="checkbox" id="book-settings-repository-unified-html" ${
-    bookRepo && bookRepo.export_unified_html ? "checked" : ""
-}>
+                bookRepo && bookRepo.export_unified_html ? "checked" : ""
+            }>
         </td>
     </tr>
     <tr>
@@ -112,8 +110,8 @@ export const repoSelectorTemplate = ({
         </th>
         <td>
             <input type="checkbox" id="book-settings-repository-latex" ${
-    bookRepo && bookRepo.export_latex ? "checked" : ""
-}>
+                bookRepo && bookRepo.export_latex ? "checked" : ""
+            }>
         </td>
     </tr>
     <tr>
@@ -122,10 +120,10 @@ export const repoSelectorTemplate = ({
         </th>
         <td>
             <input type="checkbox" id="book-settings-repository-odt" ${
-    bookRepo && bookRepo.export_odt && book.odt_template ? "checked" : ""
-} ${
-    book.odt_template ? "" : "disabled"
-}>
+                bookRepo && bookRepo.export_odt && book.odt_template
+                    ? "checked"
+                    : ""
+            } ${book.odt_template ? "" : "disabled"}>
         </td>
     </tr>
     <tr>
@@ -134,10 +132,10 @@ export const repoSelectorTemplate = ({
         </th>
         <td>
             <input type="checkbox" id="book-settings-repository-docx" ${
-    bookRepo && bookRepo.export_docx && book.docx_template ? "checked" : ""
-} ${
-    book.docx_template ? "" : "disabled"
-}>
+                bookRepo && bookRepo.export_docx && book.docx_template
+                    ? "checked"
+                    : ""
+            } ${book.docx_template ? "" : "disabled"}>
         </td>
     </tr>`
 }

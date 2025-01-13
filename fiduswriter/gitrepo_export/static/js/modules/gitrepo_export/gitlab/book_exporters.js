@@ -1,8 +1,6 @@
 import {DOCXBookExporter} from "../../books/exporter/docx"
 import {EpubBookExporter} from "../../books/exporter/epub"
-import {
-    HTMLBookExporter
-} from "../../books/exporter/html"
+import {HTMLBookExporter} from "../../books/exporter/html"
 import {LatexBookExporter} from "../../books/exporter/latex"
 import {ODTBookExporter} from "../../books/exporter/odt"
 import {zipToBlobs} from "./tools"
@@ -90,7 +88,6 @@ export class DOCXBookGitlabExporter extends DOCXBookExporter {
             "book.docx": blob
         })
     }
-
 }
 
 export class ODTBookGitlabExporter extends ODTBookExporter {
@@ -104,5 +101,4 @@ export class ODTBookGitlabExporter extends ODTBookExporter {
             "book.odt": blob
         })
     }
-
 }

@@ -7,7 +7,7 @@ from allauth.socialaccount.providers.gitlab.views import GitLabOAuth2Adapter
 
 class URLTranslator(GitLabOAuth2Adapter):
     def get_url(self, path):
-        return self._build_url('/api/v4/' + path)
+        return self._build_url("/api/v4/" + path)
 
 
 async def proxy(request, path, user, query_string, body, method):

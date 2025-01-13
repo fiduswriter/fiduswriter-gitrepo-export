@@ -54,8 +54,8 @@ export class GitlabBookProcessor {
                 body: `<p>
             ${gettext("Updating")}: ${escapeText(this.book.title)}
             <input type="text" class="commit-message" placeholder="${gettext(
-        "Enter commit message"
-    )}" >
+                "Enter commit message"
+            )}" >
             </p>`,
                 buttons
             })
@@ -170,26 +170,26 @@ export class GitlabBookProcessor {
             )
             .then(returnCode => {
                 switch (returnCode) {
-                case 201:
-                    addAlert(
-                        "info",
-                        gettext(
-                            "Book published to repository successfully!"
+                    case 201:
+                        addAlert(
+                            "info",
+                            gettext(
+                                "Book published to repository successfully!"
+                            )
                         )
-                    )
-                    break
-                case 304:
-                    addAlert(
-                        "info",
-                        gettext("Book already up to date in repository.")
-                    )
-                    break
-                case 400:
-                    addAlert(
-                        "error",
-                        gettext("Could not publish book to repository.")
-                    )
-                    break
+                        break
+                    case 304:
+                        addAlert(
+                            "info",
+                            gettext("Book already up to date in repository.")
+                        )
+                        break
+                    case 400:
+                        addAlert(
+                            "error",
+                            gettext("Could not publish book to repository.")
+                        )
+                        break
                 }
             })
     }

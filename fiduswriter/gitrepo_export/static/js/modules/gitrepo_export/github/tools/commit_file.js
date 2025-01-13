@@ -1,4 +1,4 @@
-import {getCookie, getJson } from "../../../common"
+import {getCookie, getJson} from "../../../common"
 import {gitHashObject, readBlobPromise} from "../../tools"
 
 export function commitFile(
@@ -16,17 +16,17 @@ export function commitFile(
     const getDirJsonPromise = repoDirCache[dirUrl]
         ? Promise.resolve(repoDirCache[dirUrl])
         : getJson(dirUrl)
-            .then(json => {
-                repoDirCache[dirUrl] = json
-                return Promise.resolve(json)
-            })
-            .catch(error => {
-                if (error.status === 302) {
-                    // Redirect - which means the directory does not exist.
-                    return Promise.resolve(false)
-                }
-                throw error
-            })
+              .then(json => {
+                  repoDirCache[dirUrl] = json
+                  return Promise.resolve(json)
+              })
+              .catch(error => {
+                  if (error.status === 302) {
+                      // Redirect - which means the directory does not exist.
+                      return Promise.resolve(false)
+                  }
+                  throw error
+              })
     const csrfToken = getCookie("csrftoken")
     return Promise.resolve(getDirJsonPromise)
         .then(json => {

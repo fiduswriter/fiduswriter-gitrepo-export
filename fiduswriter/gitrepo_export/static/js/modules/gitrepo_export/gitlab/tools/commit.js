@@ -1,5 +1,5 @@
-import {getCookie, getJson } from "../../../common"
-import {gitHashObject, readBlobPromise } from "../../tools"
+import {getCookie, getJson} from "../../../common"
+import {gitHashObject, readBlobPromise} from "../../tools"
 
 export function commitFiles(repo, commitMessage, fileBlobs) {
     return getJson(`/api/gitrepo_export/get_gitlab_repo/${repo.id}/`).then(
@@ -10,10 +10,10 @@ export function commitFiles(repo, commitMessage, fileBlobs) {
                     readBlobPromise(blob).then(content => {
                         const fileEntry = Array.isArray(files)
                             ? files.find(
-                                entry =>
-                                    entry.type === "blob" &&
+                                  entry =>
+                                      entry.type === "blob" &&
                                       entry.path === file_path
-                            )
+                              )
                             : false
                         if (!fileEntry) {
                             return {

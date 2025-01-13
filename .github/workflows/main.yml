@@ -14,21 +14,39 @@ on:
   workflow_dispatch:
 
 jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: |
+          pip install pip --upgrade
+          if grep version pyproject.toml | grep -q "dev";
+            then pip install https://github.com/fiduswriter/fiduswriter/archive/develop.zip;
+            else pip install https://github.com/fiduswriter/fiduswriter/archive/main.zip;
+          fi
+          if grep version pyproject.toml | grep -q "dev";
+            then pip install https://github.com/fiduswriter/fiduswriter-books/archive/develop.zip;
+            else pip install https://github.com/fiduswriter/fiduswriter-books/archive/main.zip;
+          fi
+      - uses: pre-commit/action@v3.0.1
   test:
     name: Run tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.13"
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
       - name: Install Python dependencies
         run: |
           pip install wheel
@@ -50,13 +68,7 @@ jobs:
           pip install packaging
           pip install webdriver-manager
           pip install selenium
-          pip install flake8
-          pip install black
           coverage run $(which fiduswriter) setup --no-static
-      - name: Run linters
-        run: |
-          cd fiduswriter
-          fiduswriter lint
       - name: Run tests
         uses: nick-invision/retry@v2
         with:

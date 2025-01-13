@@ -14,3 +14,5 @@ fiduswriter/static-collected
 fiduswriter/.coveragerc
 fiduswriter/configuration.py
 fiduswriter/fiduswriter.sql
+*.direnv
+.envrc

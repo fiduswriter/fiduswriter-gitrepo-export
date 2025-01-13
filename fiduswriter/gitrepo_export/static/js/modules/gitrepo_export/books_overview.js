@@ -1,4 +1,4 @@
-import {addAlert, findTarget, getJson, post } from "../common"
+import {addAlert, findTarget, getJson, post} from "../common"
 import {GithubBookProcessor} from "./github"
 import {GitlabBookProcessor} from "./gitlab"
 import {repoSelectorTemplate} from "./templates"
@@ -50,11 +50,11 @@ export class GitrepoExporterBooksOverview {
         window.document.body.addEventListener("click", event => {
             const el = {}
             switch (true) {
-            case findTarget(event, "tbody.gitrepo-repository .reload", el):
-                this.resetUserRepos()
-                break
-            default:
-                break
+                case findTarget(event, "tbody.gitrepo-repository .reload", el):
+                    this.resetUserRepos()
+                    break
+                default:
+                    break
             }
         })
     }
@@ -64,7 +64,7 @@ export class GitrepoExporterBooksOverview {
         const repoSelector = document.querySelector("tbody.gitrepo-repository")
         if (repoSelector) {
             repoSelector.innerHTML =
-                "<tr><th></th><td><i class=\"fa fa-spinner fa-pulse\"></i></td></tr>"
+                '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
         }
 
         this.getUserRepos(true).then(() => {
@@ -151,19 +151,19 @@ export class GitrepoExporterBooksOverview {
                             const processor =
                                 userRepo.type === "github"
                                     ? new GithubBookProcessor(
-                                        overview.app,
-                                        overview,
-                                        book,
-                                        bookRepo,
-                                        userRepo
-                                    )
+                                          overview.app,
+                                          overview,
+                                          book,
+                                          bookRepo,
+                                          userRepo
+                                      )
                                     : new GitlabBookProcessor(
-                                        overview.app,
-                                        overview,
-                                        book,
-                                        bookRepo,
-                                        userRepo
-                                    )
+                                          overview.app,
+                                          overview,
+                                          book,
+                                          bookRepo,
+                                          userRepo
+                                      )
                             processor.init()
                         })
                 }
@@ -182,19 +182,19 @@ export class GitrepoExporterBooksOverview {
                     const processor =
                         userRepo.type === "github"
                             ? new GithubBookProcessor(
-                                overview.app,
-                                overview,
-                                book,
-                                bookRepo,
-                                userRepo
-                            )
+                                  overview.app,
+                                  overview,
+                                  book,
+                                  bookRepo,
+                                  userRepo
+                              )
                             : new GitlabBookProcessor(
-                                overview.app,
-                                overview,
-                                book,
-                                bookRepo,
-                                userRepo
-                            )
+                                  overview.app,
+                                  overview,
+                                  book,
+                                  bookRepo,
+                                  userRepo
+                              )
                     processor.init()
                 })
             }
@@ -210,16 +210,16 @@ export class GitrepoExporterBooksOverview {
                 return `<table class="fw-dialog-table">
                     <tbody class="gitrepo-repository">
                             ${
-    this.finishedLoading
-        ? repoSelectorTemplate({
-            book,
-            userRepos: this.userRepos,
-            bookRepos: this.bookRepos,
-            userReposMultitype:
+                                this.finishedLoading
+                                    ? repoSelectorTemplate({
+                                          book,
+                                          userRepos: this.userRepos,
+                                          bookRepos: this.bookRepos,
+                                          userReposMultitype:
                                               this.userReposMultitype
-        })
-        : "<tr><th></th><td><i class=\"fa fa-spinner fa-pulse\"></i></td></tr>"
-}
+                                      })
+                                    : '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
+                            }
                     </tbody>
                 </table>`
             }
@@ -284,8 +284,7 @@ export class GitrepoExporterBooksOverview {
                             exportUnifiedHtml ||
                         this.bookRepos[book.id].export_latex !== exportLatex ||
                         this.bookRepos[book.id].export_odt !== exportOdt ||
-                        this.bookRepos[book.id].export_docx !== exportDocx
-                    ))
+                        this.bookRepos[book.id].export_docx !== exportDocx))
             ) {
                 const postData = {
                     book_id: book.id,

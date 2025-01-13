@@ -8,7 +8,7 @@ import {
     SingleFileHTMLBookGithubExporter,
     UnpackedEpubBookGithubExporter
 } from "./book_exporters"
-import {commitTree, promiseChain } from "./tools"
+import {commitTree, promiseChain} from "./tools"
 
 export class GithubBookProcessor {
     constructor(app, booksOverview, book, bookRepo, userRepo) {
@@ -54,8 +54,8 @@ export class GithubBookProcessor {
                 body: `<p>
             ${gettext("Updating")}: ${escapeText(this.book.title)}
             <input type="text" class="commit-message" placeholder="${gettext(
-        "Enter commit message"
-    )}" >
+                "Enter commit message"
+            )}" >
             </p>`,
                 buttons
             })

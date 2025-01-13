@@ -1,4 +1,4 @@
-import {getCookie, getJson } from "../../../common"
+import {getCookie, getJson} from "../../../common"
 
 export function commitTree(tree, commitMessage, repo) {
     let branch, parentSha
