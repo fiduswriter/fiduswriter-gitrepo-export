@@ -4,7 +4,6 @@ from django.views.decorators.http import (
     require_POST,
     require_http_methods,
 )
-from asgiref.sync import async_to_sync, sync_to_async
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponse
 from httpx import HTTPError
 from base.decorators import ajax_required
@@ -85,10 +84,8 @@ def update_book_repo(request):
     return HttpResponse(status=status)
 
 
-@sync_to_async
 @login_required
 @require_GET
-@async_to_sync
 async def get_git_repos(request, reload=False):
     social_tokens = {
         "github": await SocialToken.objects.filter(
@@ -133,10 +130,8 @@ async def get_git_repos(request, reload=False):
     return JsonResponse({"repos": repos}, status=200)
 
 
-@sync_to_async
 @login_required
 @require_http_methods(["GET", "POST", "PATCH"])
-@async_to_sync
 async def proxy_github(request, path):
     try:
         response = await github.proxy(
@@ -159,10 +154,8 @@ async def proxy_github(request, path):
         return HttpResponse(response.text, status=response.status_code)
 
 
-@sync_to_async
 @login_required
 @require_http_methods(["GET", "POST", "PATCH"])
-@async_to_sync
 async def proxy_gitlab(request, path):
     try:
         response = await gitlab.proxy(
@@ -186,10 +179,8 @@ async def proxy_gitlab(request, path):
         return HttpResponse(response.text, status=response.status_code)
 
 
-@sync_to_async
 @login_required
 @require_GET
-@async_to_sync
 async def get_gitlab_repo(request, id):
     try:
         files = await gitlab.get_repo(request, id, request.user)
