@@ -25,4 +25,4 @@ classifiers=[
 ]
 
 [project.urls]
-repository = "https://www.github.org/fiduswriter/fiduswriter-gitrepo-export"
+repository = "https://www.github.com/fiduswriter/fiduswriter-gitrepo-export"
