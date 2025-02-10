@@ -87,19 +87,20 @@ def update_book_repo(request):
 @login_required
 @require_GET
 async def get_git_repos(request, reload=False):
+    request_user = await request.auser()
     social_tokens = {
         "github": await SocialToken.objects.filter(
-            account__user=request.user, account__provider="github"
+            account__user=request_user, account__provider="github"
         ).afirst(),
         "gitlab": await SocialToken.objects.filter(
-            account__user=request.user, account__provider="gitlab"
+            account__user=request_user, account__provider="gitlab"
         ).afirst(),
     }
 
     if not social_tokens["github"] and not social_tokens["gitlab"]:
         return HttpResponseForbidden()
     repo_info = await models.RepoInfo.objects.filter(
-        user=request.user
+        user=request_user
     ).afirst()
     if repo_info:
         if reload:
@@ -123,7 +124,7 @@ async def get_git_repos(request, reload=False):
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
     repo_info, created = await models.RepoInfo.objects.aget_or_create(
-        user=request.user
+        user=request_user
     )
     repo_info.content = repos
     await repo_info.asave()
@@ -133,10 +134,11 @@ async def get_git_repos(request, reload=False):
 @login_required
 @require_http_methods(["GET", "POST", "PATCH"])
 async def proxy_github(request, path):
+    request_user = await request.auser()
     try:
         response = await github.proxy(
             path,
-            request.user,
+            request_user,
             request.META["QUERY_STRING"],
             request.body,
             request.method,
@@ -157,11 +159,12 @@ async def proxy_github(request, path):
 @login_required
 @require_http_methods(["GET", "POST", "PATCH"])
 async def proxy_gitlab(request, path):
+    request_user = await request.auser()
     try:
         response = await gitlab.proxy(
             request,
             path,
-            request.user,
+            request_user,
             request.META["QUERY_STRING"],
             request.body,
             request.method,
@@ -182,8 +185,9 @@ async def proxy_gitlab(request, path):
 @login_required
 @require_GET
 async def get_gitlab_repo(request, id):
+    request_user = await request.auser()
     try:
-        files = await gitlab.get_repo(request, id, request.user)
+        files = await gitlab.get_repo(request, id, request_user)
     except HTTPError as e:
         return HttpResponse(e.response.text, status=e.response.status_code)
     except Exception as e:
