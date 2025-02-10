@@ -8,3 +8,4 @@ omit =
 	venv/*
 	*virtualenv*
 	configuration.py
+    locale/*
