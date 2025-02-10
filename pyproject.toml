@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "fiduswriter-gitrepo-export"
 description = "A Fidus Writer plugin to allow publishing of books to a Gitlab/Github repository."
-version = "4.0.0rc2"
+version = "4.0.0rc3"
 readme = "README.md"
 license = {text = "AGPL-3.0-or-later"}
 authors = [
