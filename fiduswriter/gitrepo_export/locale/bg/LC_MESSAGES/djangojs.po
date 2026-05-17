@@ -1,85 +1,135 @@
+#
 msgid ""
 msgstr ""
+"Project-Id-Version: Fidus Writer Github Export\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-14 13:28+0000\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
-"Project-Id-Version: Fidus Writer Github Export\n"
-"Language: bg\n"
 
-#: github_export/static/js/modules/github_export/book_processor.js:20
-msgid "There is no github repository registered for the book:"
-msgstr "Няма регистрирано хранилище на github за книгата:"
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:118
+msgid "There is no git repository registered for the book:"
+msgstr "За книгата няма регистрирано git хранилище:"
 
-#: github_export/static/js/modules/github_export/book_processor.js:27
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:128
 msgid "You do not have access to the repository:"
 msgstr "Нямате достъп до хранилището:"
 
-#: github_export/static/js/modules/github_export/book_processor.js:31
-msgid "Book publishing to Github initiated."
-msgstr "Инициирано издаване на книги в Github."
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:139
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:174
+msgid "Export to Git Repository"
+msgstr "Експортиране в Git Repository"
 
-#: github_export/static/js/modules/github_export/book_processor.js:58
-msgid "Book already up to date in repository."
-msgstr "Резервирайте вече актуално в хранилището."
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:140
+msgid "Export selected to Git repository."
+msgstr "Експортирайте избраното в Git хранилище."
 
-#: github_export/static/js/modules/github_export/book_processor.js:60
-msgid "Could not publish book to repository."
-msgstr "Не можа да публикува книга в хранилището."
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:175
+msgid "Export book to git repository."
+msgstr "Експортиране на книга в git хранилище."
 
-#: github_export/static/js/modules/github_export/book_processor.js:62
-msgid "Could not publish some parts of book to repository."
-msgstr "Не можах да публикувам някои части от книгата в хранилището."
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:206
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:24
+msgid "Git repository"
+msgstr "Git хранилище"
 
-#: github_export/static/js/modules/github_export/book_processor.js:64
-msgid "Book published to repository successfully!"
-msgstr "Книгата е публикувана успешно в хранилището!"
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:207
+msgid "Git repository related settings"
+msgstr "Настройки, свързани с хранилището на Git"
 
-#: github_export/static/js/modules/github_export/book_processor.js:66
-msgid "Book updated in repository successfully!"
-msgstr "Книгата е актуализирана в хранилището успешно!"
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:32
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:32
+msgid "Submit"
+msgstr "Изпратете"
 
-#: github_export/static/js/modules/github_export/books_overview.js:57
-msgid "Export to Github"
-msgstr "Експортирайте в Github"
-
-#: github_export/static/js/modules/github_export/books_overview.js:58
-msgid "Export selected to Github."
-msgstr "Експортирането е избрано в Github."
-
-#: github_export/static/js/modules/github_export/books_overview.js:73
-msgid "Github"
-msgstr "Github"
-
-#: github_export/static/js/modules/github_export/books_overview.js:74
-msgid "Github related settings"
-msgstr "Настройки, свързани с Github"
-
-#: github_export/static/js/modules/github_export/templates.js:8
-msgid "Github repository"
-msgstr "Хранилище на Github"
-
-#: github_export/static/js/modules/github_export/templates.js:8
-msgid "Select github repository to export to"
-msgstr "Изберете хранилището на github, в което да експортирате"
-
-#: github_export/static/js/modules/github_export/templates.js:8
-msgid "Export EPUB"
-msgstr "Експортиране на EPUB"
-
-#: github_export/static/js/modules/github_export/templates.js:8
-msgid "Export unpacked EPUB"
-msgstr "Експортирайте разопакован EPUB"
-
-#: github_export/static/js/modules/github_export/templates.js:8
-msgid "Export HTML"
-msgstr "Експортиране на HTML"
-
-#: github_export/static/js/modules/github_export/templates.js:8
-msgid "Export LaTeX"
-msgstr "Експортирайте LaTeX"
-
-#: github_export/static/js/modules/github_export/tools/commit_file.js:17
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:37
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:37
 msgid "Update from Fidus Writer"
 msgstr "Актуализация от Fidus Writer"
 
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:52
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:52
+msgid "Commit message"
+msgstr "Съобщение за ангажиране"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:55
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:55
+msgid "Updating"
+msgstr "Актуализиране"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:57
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:57
+msgid "Enter commit message"
+msgstr "Въведете съобщение за ангажиране"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:67
+msgid "Book publishing to GitHub initiated."
+msgstr "Стартира публикуването на книги в GitHub."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:170
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:184
+msgid "Book already up to date in repository."
+msgstr "Резервирайте вече актуално в хранилището."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:175
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:190
+msgid "Could not publish book to repository."
+msgstr "Не можа да публикува книга в хранилището."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:181
+msgid "Could not publish some parts of book to repository."
+msgstr "Не можах да публикувам някои части от книгата в хранилището."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:196
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:177
+msgid "Book published to repository successfully!"
+msgstr "Книгата е публикувана успешно в хранилището!"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:67
+msgid "Book publishing to GitLab initiated."
+msgstr "Стартира публикуването на книги в GitLab."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:29
+msgid "Select git repository to export to"
+msgstr "Изберете git хранилище, към което да експортирате"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:62
+msgid "Reload"
+msgstr "Презареди"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:69
+msgid "Export EPUB"
+msgstr "Експортиране на EPUB"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:79
+msgid "Export unpacked EPUB"
+msgstr "Експортирайте разопакован EPUB"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:89
+msgid "Export HTML"
+msgstr "Експортиране на HTML"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:99
+msgid "Export Unified HTML"
+msgstr "Експортирайте Unified HTML"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:109
+msgid "Export LaTeX"
+msgstr "Експортирайте LaTeX"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:119
+msgid "Export ODT"
+msgstr "Експортирайте ODT"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:131
+msgid "Export DOCX"
+msgstr "Експортирайте DOCX"
+
+#~ msgid "Book updated in repository successfully!"
+#~ msgstr "Книгата е актуализирана в хранилището успешно!"
+
+#~ msgid "Github"
+#~ msgstr "Github"

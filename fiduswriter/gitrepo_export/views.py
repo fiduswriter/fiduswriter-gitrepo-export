@@ -50,7 +50,7 @@ def get_book_repos(request):
 @ajax_required
 @require_POST
 def update_book_repo(request):
-    book_id = request.POST["book_id"]
+    book_id = request.JSON["book_id"]
     book = Book.objects.filter(id=book_id).first()
     if not book or (
         book.owner != request.user
@@ -62,23 +62,22 @@ def update_book_repo(request):
     ):
         return HttpResponseForbidden()
     models.BookRepository.objects.filter(book_id=book_id).delete()
-    repo_id = request.POST["repo_id"]
+    repo_id = request.JSON["repo_id"]
     if repo_id == 0:
         status = 200
     else:
         models.BookRepository.objects.create(
             book_id=book_id,
             repo_id=repo_id,
-            repo_name=request.POST["repo_name"],
-            repo_type=request.POST["repo_type"],
-            export_epub=request.POST["export_epub"] == "true",
-            export_unpacked_epub=request.POST["export_unpacked_epub"]
-            == "true",
-            export_html=request.POST["export_html"] == "true",
-            export_unified_html=request.POST["export_unified_html"] == "true",
-            export_latex=request.POST["export_latex"] == "true",
-            export_docx=request.POST["export_docx"] == "true",
-            export_odt=request.POST["export_odt"] == "true",
+            repo_name=request.JSON["repo_name"],
+            repo_type=request.JSON["repo_type"],
+            export_epub=request.JSON["export_epub"],
+            export_unpacked_epub=request.JSON["export_unpacked_epub"],
+            export_html=request.JSON["export_html"],
+            export_unified_html=request.JSON["export_unified_html"],
+            export_latex=request.JSON["export_latex"],
+            export_docx=request.JSON["export_docx"],
+            export_odt=request.JSON["export_odt"],
         )
         status = 201
     return HttpResponse(status=status)

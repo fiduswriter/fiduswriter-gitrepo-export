@@ -1,135 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Fidus Writer Github Export\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 13:28+0000\n"
-"Language: it\n"
+"POT-Creation-Date: 2026-05-14 09:47+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:118
 msgid "There is no git repository registered for the book:"
-msgstr "Non esiste un repository git registrato per il libro:"
+msgstr "There is no git repository registered for the book:"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:128
 msgid "You do not have access to the repository:"
-msgstr "Non hai accesso al repository:"
+msgstr "You do not have access to the repository:"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:139
 #: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:174
 msgid "Export to Git Repository"
-msgstr "Esporta nel repository Git"
+msgstr "Export to Git Repository"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:140
 msgid "Export selected to Git repository."
-msgstr "Esporta selezionato nel repository Git."
+msgstr "Export selected to Git repository."
 
 #: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:175
 msgid "Export book to git repository."
-msgstr "Esporta il libro nel repository git."
+msgstr "Export book to git repository."
 
 #: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:206
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:24
 msgid "Git repository"
-msgstr "Deposito Git"
+msgstr "Git repository"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:207
 msgid "Git repository related settings"
-msgstr "Impostazioni relative al repository Git"
+msgstr "Git repository related settings"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:32
 #: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:32
 msgid "Submit"
-msgstr "Invia"
+msgstr "Submit"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:37
 #: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:37
 msgid "Update from Fidus Writer"
-msgstr "Aggiornamento da Fidus Writer"
+msgstr "Update from Fidus Writer"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:52
 #: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:52
 msgid "Commit message"
-msgstr "Invia messaggio"
+msgstr "Commit message"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:55
 #: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:55
 msgid "Updating"
-msgstr "Aggiornamento"
+msgstr "Updating"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:57
 #: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:57
 msgid "Enter commit message"
-msgstr "Inserisci il messaggio di conferma"
+msgstr "Enter commit message"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:67
 msgid "Book publishing to GitHub initiated."
-msgstr "Avviata la pubblicazione del libro su GitHub."
+msgstr "Book publishing to GitHub initiated."
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:170
 #: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:184
 msgid "Book already up to date in repository."
-msgstr "Prenota già aggiornato nel repository."
+msgstr "Book already up to date in repository."
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:175
 #: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:190
 msgid "Could not publish book to repository."
-msgstr "Impossibile pubblicare il libro nel repository."
+msgstr "Could not publish book to repository."
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:181
 msgid "Could not publish some parts of book to repository."
-msgstr "Impossibile pubblicare alcune parti del libro nel repository."
+msgstr "Could not publish some parts of book to repository."
 
 #: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:196
 #: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:177
 msgid "Book published to repository successfully!"
-msgstr "Libro pubblicato nel repository con successo!"
+msgstr "Book published to repository successfully!"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:67
 msgid "Book publishing to GitLab initiated."
-msgstr "Avviata la pubblicazione del libro su GitLab."
+msgstr "Book publishing to GitLab initiated."
 
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:29
 msgid "Select git repository to export to"
-msgstr "Seleziona il repository git in cui esportare"
+msgstr "Select git repository to export to"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:62
 msgid "Reload"
-msgstr "Ricaricare"
+msgstr "Reload"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:69
 msgid "Export EPUB"
-msgstr "Esporta EPUB"
+msgstr "Export EPUB"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:79
 msgid "Export unpacked EPUB"
-msgstr "Esporta EPUB decompresso"
+msgstr "Export unpacked EPUB"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:89
 msgid "Export HTML"
-msgstr "Esporta HTML"
+msgstr "Export HTML"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:99
 msgid "Export Unified HTML"
-msgstr "Esporta HTML unificato"
+msgstr "Export Unified HTML"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:109
 msgid "Export LaTeX"
-msgstr "Esporta LaTeX"
+msgstr "Export LaTeX"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:119
 msgid "Export ODT"
-msgstr "Esporta ODT"
+msgstr "Export ODT"
 
 #: gitrepo_export/static/js/modules/gitrepo_export/templates.js:131
 msgid "Export DOCX"
-msgstr "Esporta DOCX"
-
-#~ msgid "Book updated in repository successfully!"
-#~ msgstr "Libro aggiornato nel repository con successo!"
-
-#~ msgid "Github"
-#~ msgstr "Github"
+msgstr "Export DOCX"

@@ -7,16 +7,15 @@ name = "fiduswriter-gitrepo-export"
 description = "A Fidus Writer plugin to allow publishing of books to a Gitlab/Github repository."
 version = "4.0.0"
 readme = "README.md"
-license = {text = "AGPL-3.0-or-later"}
+license = "AGPL-3.0-or-later"
 authors = [
   {email = "johannes@fiduswriter.org", name = "Johannes Wilm"},
 ]
 classifiers=[
   "Environment :: Web Environment",
   "Framework :: Django",
-  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 6.0",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: GNU Affero General Public License v3",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
