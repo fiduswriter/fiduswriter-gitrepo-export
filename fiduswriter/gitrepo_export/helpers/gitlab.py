@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from httpx import AsyncClient, Request
 from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.providers.gitlab.views import GitLabOAuth2Adapter
@@ -15,8 +16,12 @@ async def proxy(request, path, user, query_string, body, method):
         account__user=user, account__provider="gitlab"
     )
     headers = get_headers(social_token.token)
-    url_translator = URLTranslator(request)
-    url = url_translator.get_url(path)
+    base_url = getattr(settings, "GITLAB_API_URL", None)
+    if base_url:
+        url = f"{base_url}/{path}"
+    else:
+        url_translator = URLTranslator(request)
+        url = url_translator.get_url(path)
     if query_string:
         url += "?" + query_string
     if method == "GET":
@@ -38,16 +43,20 @@ def get_headers(token):
 
 
 async def get_repo(request, id, user):
-    social_token = SocialToken.objects.get(
+    social_token = await SocialToken.objects.aget(
         account__user=user, account__provider="gitlab"
     )
     headers = get_headers(social_token.token)
     files = []
-    url_translator = URLTranslator(request)
-    next_url = url_translator.get_url(
-        f"projects/{id}/repository/tree"
-        "?recursive=true&per_page=4&pagination=keyset"
-    )
+    base_url = getattr(settings, "GITLAB_API_URL", None)
+    if base_url:
+        next_url = f"{base_url}/projects/{id}/repository/tree?recursive=true&per_page=4&pagination=keyset"
+    else:
+        url_translator = URLTranslator(request)
+        next_url = url_translator.get_url(
+            f"projects/{id}/repository/tree"
+            "?recursive=true&per_page=4&pagination=keyset"
+        )
     while next_url:
         request = Request("GET", next_url, headers=headers)
         async with AsyncClient(
@@ -76,8 +85,14 @@ async def get_repos(request, gitlab_token):
     # TODO: API documentation unclear on whether pagination is required.
     headers = get_headers(gitlab_token)
     repos = []
-    url_translator = URLTranslator(request)
-    url = url_translator.get_url("projects?min_access_level=30&simple=true")
+    base_url = getattr(settings, "GITLAB_API_URL", None)
+    if base_url:
+        url = f"{base_url}/projects?min_access_level=30&simple=true"
+    else:
+        url_translator = URLTranslator(request)
+        url = url_translator.get_url(
+            "projects?min_access_level=30&simple=true"
+        )
     request = Request("GET", url, headers=headers)
     async with AsyncClient(
         timeout=88  # Firefox times out after 90 seconds, so we need to return before that.

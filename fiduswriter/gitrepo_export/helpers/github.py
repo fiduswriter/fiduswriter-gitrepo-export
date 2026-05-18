@@ -1,6 +1,7 @@
 import re
 import json
 
+from django.conf import settings
 from httpx import AsyncClient, Request
 from allauth.socialaccount.models import SocialToken
 
@@ -26,7 +27,8 @@ async def proxy(path, user, query_string, body, method):
         account__user=user, account__provider="github"
     )
     headers = get_headers(social_token.token)
-    url = f"https://api.github.com/{path}"
+    base_url = getattr(settings, "GITHUB_API_URL", "https://api.github.com")
+    url = f"{base_url}/{path}"
     if query_string:
         url += "?" + query_string
     if method == "GET":
@@ -58,11 +60,12 @@ def githubrepo2repodata(github_repo):
 
 async def get_repos(github_token):
     headers = get_headers(github_token)
+    base_url = getattr(settings, "GITHUB_API_URL", "https://api.github.com")
     repos = []
     page = 1
     last_page = False
     while not last_page:
-        url = f"https://api.github.com/user/repos?page={page}&per_page=100"
+        url = f"{base_url}/user/repos?page={page}&per_page=100"
         request = Request("GET", url, headers=headers)
         async with AsyncClient(
             timeout=88  # Firefox times out after 90 seconds, so we need to return before that.
