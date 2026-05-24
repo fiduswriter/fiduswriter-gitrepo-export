@@ -1,12 +1,29 @@
 from django.contrib import admin
+from django.apps import apps
+
 from . import models
 
 
-class BookRepositoryAdmin(admin.ModelAdmin):
+if apps.is_installed("book"):
+
+    class BookRepositoryAdmin(admin.ModelAdmin):
+        pass
+
+    admin.site.register(models.BookRepository, BookRepositoryAdmin)
+
+
+class DocumentRepositoryAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.register(models.BookRepository, BookRepositoryAdmin)
+admin.site.register(models.DocumentRepository, DocumentRepositoryAdmin)
+
+
+class ForgejoServerAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(models.ForgejoServer, ForgejoServerAdmin)
 
 
 class RepoInfoAdmin(admin.ModelAdmin):

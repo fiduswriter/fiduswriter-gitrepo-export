@@ -10,7 +10,6 @@ export class EpubBookGithubExporter extends EpubBookExporter {
         super(schema, csl, bookStyles, book, user, docList, updated)
         this.repo = repo
     }
-
     download(blob) {
         return () =>
             commitFile(this.repo, blob, "book.epub").then(response => [
@@ -24,7 +23,6 @@ export class UnpackedEpubBookGithubExporter extends EpubBookExporter {
         super(schema, csl, bookStyles, book, user, docList, updated)
         this.repo = repo
     }
-
     createZip() {
         return () =>
             commitZipContents(
@@ -42,7 +40,6 @@ export class HTMLBookGithubExporter extends HTMLBookExporter {
         super(schema, csl, bookStyles, book, user, docList, updated)
         this.repo = repo
     }
-
     createZip() {
         return () =>
             commitZipContents(
@@ -60,7 +57,6 @@ export class SingleFileHTMLBookGithubExporter extends HTMLBookExporter {
         super(schema, csl, bookStyles, book, user, docList, updated, false)
         this.repo = repo
     }
-
     createZip() {
         return () =>
             commitZipContents(
@@ -78,7 +74,6 @@ export class LatexBookGithubExporter extends LatexBookExporter {
         super(schema, book, user, docList, updated)
         this.repo = repo
     }
-
     createZip() {
         return () =>
             commitZipContents(
@@ -96,7 +91,6 @@ export class DOCXBookGithubExporter extends DOCXBookExporter {
         super(schema, csl, book, user, docList, updated)
         this.repo = repo
     }
-
     download(blob) {
         return () =>
             commitFile(this.repo, blob, "book.docx").then(response => [
@@ -110,7 +104,6 @@ export class ODTBookGithubExporter extends ODTBookExporter {
         super(schema, csl, book, user, docList, updated)
         this.repo = repo
     }
-
     download(blob) {
         return () =>
             commitFile(this.repo, blob, "book.odt").then(response => [response])

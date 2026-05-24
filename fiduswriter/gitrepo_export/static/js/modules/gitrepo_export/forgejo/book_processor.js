@@ -1,26 +1,21 @@
 import {Dialog, addAlert, escapeText} from "../../common"
 import {
-    DOCXBookGitlabExporter,
-    EpubBookGitlabExporter,
-    HTMLBookGitlabExporter,
-    LatexBookGitlabExporter,
-    ODTBookGitlabExporter,
-    SingleFileHTMLBookGitlabExporter,
-    UnpackedEpubBookGitlabExporter
+    DOCXBookForgejoExporter,
+    EpubBookForgejoExporter,
+    HTMLBookForgejoExporter,
+    LatexBookForgejoExporter,
+    ODTBookForgejoExporter
 } from "./book_exporters"
-import {commitFiles} from "./tools"
 
 const EXPORTER_MAP = {
-    epub: EpubBookGitlabExporter,
-    unpacked_epub: UnpackedEpubBookGitlabExporter,
-    html: HTMLBookGitlabExporter,
-    unified_html: SingleFileHTMLBookGitlabExporter,
-    latex: LatexBookGitlabExporter,
-    odt: ODTBookGitlabExporter,
-    docx: DOCXBookGitlabExporter
+    epub: EpubBookForgejoExporter,
+    html: HTMLBookForgejoExporter,
+    latex: LatexBookForgejoExporter,
+    odt: ODTBookForgejoExporter,
+    docx: DOCXBookForgejoExporter
 }
 
-export class GitlabBookProcessor {
+export class ForgejoBookProcessor {
     constructor(
         app,
         booksOverview,
@@ -77,11 +72,10 @@ export class GitlabBookProcessor {
     }
 
     publishBook(commitMessage) {
-        addAlert("info", gettext("Book publishing to GitLab initiated."))
-        const commitInitiators = []
+        addAlert("info", gettext("Book publishing to Forgejo initiated."))
         const targets = this.bookRepo.targets || []
 
-        targets.forEach(targetKey => {
+        const exportPromises = targets.map(targetKey => {
             const ExporterClass = this._getExporterClass(targetKey)
             if (ExporterClass) {
                 let exporter
@@ -106,42 +100,33 @@ export class GitlabBookProcessor {
                         this.userRepo
                     )
                 }
-                commitInitiators.push(exporter.init())
+                exporter.commitMessage = commitMessage
+                return exporter.init()
+            }
+            return Promise.resolve()
+        })
+
+        return Promise.all(exportPromises).then(results => {
+            if (results.some(r => r === 400)) {
+                addAlert(
+                    "error",
+                    gettext(
+                        "Could not publish some parts of book to repository."
+                    )
+                )
+            } else {
+                addAlert(
+                    "info",
+                    gettext("Book published to repository successfully!")
+                )
             }
         })
-        return Promise.all(commitInitiators)
-            .then(commitBlobs => {
-                const blobs = Object.assign({}, ...commitBlobs)
-                if (Object.keys(blobs).length) {
-                    return commitFiles(blobs, commitMessage, this.userRepo)
-                }
-            })
-            .then(result => {
-                if (result && result.id) {
-                    addAlert(
-                        "info",
-                        gettext("Book published to repository successfully!")
-                    )
-                } else {
-                    addAlert(
-                        "error",
-                        gettext("Could not publish book to repository.")
-                    )
-                }
-            })
     }
 
     _getExporterClass(targetKey) {
         if (EXPORTER_MAP[targetKey]) {
             return EXPORTER_MAP[targetKey]
         }
-        if (targetKey.startsWith("pandoc:")) {
-            return this._getPandocExporterClass()
-        }
-        return null
-    }
-
-    _getPandocExporterClass() {
         return null
     }
 }

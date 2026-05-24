@@ -1,4 +1,6 @@
 import {addAlert, findTarget, getJson, post} from "../common"
+import {ForgejoBookProcessor} from "./forgejo"
+import {ForgejoServerManagerDialog} from "./forgejo_management"
 import {GithubBookProcessor} from "./github"
 import {GitlabBookProcessor} from "./gitlab"
 import {repoSelectorTemplate} from "./templates"
@@ -9,41 +11,18 @@ export class GitrepoExporterBooksOverview {
         this.userRepos = {}
         this.userReposMultitype = false
         this.bookRepos = {}
+        this.availableFormats = []
         this.finishedLoading = false
         this.openedBook = false
     }
 
     init() {
-        const githubAccount =
-            this.booksOverview.app.config.user.socialaccounts.find(
-                account => account.provider === "github"
-            )
-        const gitlabAccount =
-            this.booksOverview.app.config.user.socialaccounts.find(
-                account => account.provider === "gitlab"
-            )
-        if (!githubAccount && !gitlabAccount) {
-            return
-        }
-        Promise.all([this.getUserRepos(), this.getBookRepos()]).then(() => {
-            this.finishedLoading = true
-            const spinner = document.querySelector(
-                "tbody.gitrepo-repository .fa-spinner"
-            )
-            if (spinner) {
-                document.querySelector("tbody.gitrepo-repository").innerHTML =
-                    repoSelectorTemplate({
-                        book: this.openedBook,
-                        userRepos: this.userRepos,
-                        bookRepos: this.bookRepos,
-                        userReposMultitype: this.userReposMultitype
-                    })
-            }
-        })
         this.addButton()
         this.addDialogPart()
         this.addDialogSaveMethod()
         this.bind()
+        this.getUserRepos()
+        this.getBookRepos()
     }
 
     bind() {
@@ -53,10 +32,18 @@ export class GitrepoExporterBooksOverview {
                 case findTarget(event, "tbody.gitrepo-repository .reload", el):
                     this.resetUserRepos()
                     break
-                default:
+                case findTarget(event, ".forgejo-servers", el):
+                    this.manageForgejoServers()
                     break
             }
         })
+    }
+
+    manageForgejoServers() {
+        const manager = new ForgejoServerManagerDialog(() => {
+            this.resetUserRepos()
+        })
+        manager.open()
     }
 
     resetUserRepos() {
@@ -66,8 +53,7 @@ export class GitrepoExporterBooksOverview {
             repoSelector.innerHTML =
                 '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
         }
-
-        this.getUserRepos(true).then(() => {
+        Promise.all([this.getUserRepos(true), this.fetchFormats()]).then(() => {
             this.finishedLoading = true
             const repoSelector = document.querySelector(
                 "tbody.gitrepo-repository"
@@ -77,10 +63,19 @@ export class GitrepoExporterBooksOverview {
                     book: this.openedBook,
                     userRepos: this.userRepos,
                     bookRepos: this.bookRepos,
-                    userReposMultitype: this.userReposMultitype
+                    userReposMultitype: this.userReposMultitype,
+                    availableFormats: this.availableFormats
                 })
             }
         })
+    }
+
+    fetchFormats() {
+        return getJson("/api/gitrepo_export/get_export_formats/").then(
+            ({formats}) => {
+                this.availableFormats = formats
+            }
+        )
     }
 
     getUserRepos(reload = false) {
@@ -110,13 +105,11 @@ export class GitrepoExporterBooksOverview {
     }
 
     getRepos(book) {
-        const bookRepo = this.bookRepos[book.id]
+        const bookRepo = this.bookRepos[String(book.id)]
         if (!bookRepo) {
             addAlert(
                 "error",
-                `${gettext(
-                    "There is no git repository registered for the book:"
-                )} ${book.title}`
+                `${gettext("There is no git repository registered for the book:")} ${book.title}`
             )
             return [false, false]
         }
@@ -125,13 +118,54 @@ export class GitrepoExporterBooksOverview {
         if (!userRepo) {
             addAlert(
                 "error",
-                `${gettext("You do not have access to the repository:")} ${
-                    bookRepo.github_repo_full_name
-                }`
+                `${gettext("You do not have access to the repository:")} ${bookRepo.repo_name}`
             )
             return [bookRepo, false]
         }
         return [bookRepo, userRepo]
+    }
+
+    loadDialogData() {
+        this.finishedLoading = false
+        Promise.all([
+            this.getUserRepos(),
+            this.getBookRepos(),
+            this.fetchFormats()
+        ])
+            .then(() => {
+                this.finishedLoading = true
+                const spinner = document.querySelector(
+                    "tbody.gitrepo-repository .fa-spinner"
+                )
+                if (spinner) {
+                    document.querySelector(
+                        "tbody.gitrepo-repository"
+                    ).innerHTML = repoSelectorTemplate({
+                        book: this.openedBook,
+                        userRepos: this.userRepos,
+                        bookRepos: this.bookRepos,
+                        userReposMultitype: this.userReposMultitype,
+                        availableFormats: this.availableFormats
+                    })
+                }
+            })
+            .catch(() => {
+                this.finishedLoading = true
+                const spinner = document.querySelector(
+                    "tbody.gitrepo-repository .fa-spinner"
+                )
+                if (spinner) {
+                    document.querySelector(
+                        "tbody.gitrepo-repository"
+                    ).innerHTML = repoSelectorTemplate({
+                        book: this.openedBook,
+                        userRepos: this.userRepos,
+                        bookRepos: this.bookRepos,
+                        userReposMultitype: this.userReposMultitype,
+                        availableFormats: this.availableFormats
+                    })
+                }
+            })
     }
 
     addButton() {
@@ -148,27 +182,20 @@ export class GitrepoExporterBooksOverview {
                             if (!userRepo) {
                                 return
                             }
-                            const processor =
-                                userRepo.type === "github"
-                                    ? new GithubBookProcessor(
-                                          overview.app,
-                                          overview,
-                                          book,
-                                          bookRepo,
-                                          userRepo
-                                      )
-                                    : new GitlabBookProcessor(
-                                          overview.app,
-                                          overview,
-                                          book,
-                                          bookRepo,
-                                          userRepo
-                                      )
-                            processor.init()
+                            const processor = this._getProcessor(
+                                overview,
+                                book,
+                                bookRepo,
+                                userRepo
+                            )
+                            if (processor) {
+                                processor.init()
+                            }
                         })
                 }
             },
-            disabled: overview => !overview.getSelected().length
+            disabled: overview => !overview.getSelected().length,
+            order: 9.5
         })
         this.booksOverview.mod.actions.exportMenu.content.push({
             title: gettext("Export to Git Repository"),
@@ -179,26 +206,52 @@ export class GitrepoExporterBooksOverview {
                     if (!userRepo) {
                         return
                     }
-                    const processor =
-                        userRepo.type === "github"
-                            ? new GithubBookProcessor(
-                                  overview.app,
-                                  overview,
-                                  book,
-                                  bookRepo,
-                                  userRepo
-                              )
-                            : new GitlabBookProcessor(
-                                  overview.app,
-                                  overview,
-                                  book,
-                                  bookRepo,
-                                  userRepo
-                              )
-                    processor.init()
+                    const processor = this._getProcessor(
+                        overview,
+                        book,
+                        bookRepo,
+                        userRepo
+                    )
+                    if (processor) {
+                        processor.init()
+                    }
                 })
             }
         })
+    }
+
+    _getProcessor(overview, book, bookRepo, userRepo) {
+        switch (userRepo.type) {
+            case "github":
+                return new GithubBookProcessor(
+                    overview.app,
+                    overview,
+                    book,
+                    bookRepo,
+                    userRepo,
+                    this.availableFormats
+                )
+            case "gitlab":
+                return new GitlabBookProcessor(
+                    overview.app,
+                    overview,
+                    book,
+                    bookRepo,
+                    userRepo,
+                    this.availableFormats
+                )
+            case "forgejo":
+                return new ForgejoBookProcessor(
+                    overview.app,
+                    overview,
+                    book,
+                    bookRepo,
+                    userRepo,
+                    this.availableFormats
+                )
+            default:
+                return null
+        }
     }
 
     addDialogPart() {
@@ -207,19 +260,23 @@ export class GitrepoExporterBooksOverview {
             description: gettext("Git repository related settings"),
             template: ({book}) => {
                 this.openedBook = book
+                if (!this.finishedLoading) {
+                    this.loadDialogData()
+                }
                 return `<table class="fw-dialog-table">
                     <tbody class="gitrepo-repository">
-                            ${
-                                this.finishedLoading
-                                    ? repoSelectorTemplate({
-                                          book,
-                                          userRepos: this.userRepos,
-                                          bookRepos: this.bookRepos,
-                                          userReposMultitype:
-                                              this.userReposMultitype
-                                      })
-                                    : '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
-                            }
+                        ${
+                            this.finishedLoading
+                                ? repoSelectorTemplate({
+                                      book,
+                                      userRepos: this.userRepos,
+                                      bookRepos: this.bookRepos,
+                                      userReposMultitype:
+                                          this.userReposMultitype,
+                                      availableFormats: this.availableFormats
+                                  })
+                                : '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
+                        }
                     </tbody>
                 </table>`
             }
@@ -232,59 +289,26 @@ export class GitrepoExporterBooksOverview {
                 "#book-settings-repository"
             )
             if (!repoSelector) {
-                // Dialog may have been closed before the repoSelector was loaded
                 return
             }
             const selected = repoSelector.value.split("-")
             const repoType = selected[0]
             let repoId = parseInt(selected[1])
-            const exportEpub = document.querySelector(
-                "#book-settings-repository-epub"
-            ).checked
-            const exportUnpackedEpub = document.querySelector(
-                "#book-settings-repository-unpacked-epub"
-            ).checked
-            const exportHtml = document.querySelector(
-                "#book-settings-repository-html"
-            ).checked
-            const exportUnifiedHtml = document.querySelector(
-                "#book-settings-repository-unified-html"
-            ).checked
-            const exportLatex = document.querySelector(
-                "#book-settings-repository-latex"
-            ).checked
-            const exportDocx = document.querySelector(
-                "#book-settings-repository-docx"
-            ).checked
-            const exportOdt = document.querySelector(
-                "#book-settings-repository-odt"
-            ).checked
-            if (
-                !exportEpub &&
-                !exportUnpackedEpub &&
-                !exportHtml &&
-                !exportUnifiedHtml &&
-                !exportLatex &&
-                !exportDocx &&
-                !exportOdt
-            ) {
-                // No export formats selected. Reset repository.
+            const formatCheckboxes = document.querySelectorAll(".export-format")
+            const targets = Array.from(formatCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.dataset.key)
+            if (targets.length === 0) {
                 repoId = 0
             }
             if (
-                (repoId === 0 && this.bookRepos[book.id]) ||
+                (repoId === 0 && this.bookRepos[String(book.id)]) ||
                 (repoId > 0 &&
-                    (!this.bookRepos[book.id] ||
-                        this.bookRepos[book.id].repo_id !== repoId ||
-                        this.bookRepos[book.id].export_epub !== exportEpub ||
-                        this.bookRepos[book.id].export_unpacked_epub !==
-                            exportUnpackedEpub ||
-                        this.bookRepos[book.id].export_html !== exportHtml ||
-                        this.bookRepos[book.id].export_unified_html !==
-                            exportUnifiedHtml ||
-                        this.bookRepos[book.id].export_latex !== exportLatex ||
-                        this.bookRepos[book.id].export_odt !== exportOdt ||
-                        this.bookRepos[book.id].export_docx !== exportDocx))
+                    (!this.bookRepos[String(book.id)] ||
+                        this.bookRepos[String(book.id)].repo_id !== repoId ||
+                        JSON.stringify(
+                            this.bookRepos[String(book.id)].targets
+                        ) !== JSON.stringify(targets)))
             ) {
                 const postData = {
                     book_id: book.id,
@@ -294,33 +318,21 @@ export class GitrepoExporterBooksOverview {
                 if (repoId > 0) {
                     postData["repo_name"] =
                         this.userRepos[`${repoType}-${repoId}`].name
-                    postData["export_epub"] = exportEpub
-                    postData["export_unpacked_epub"] = exportUnpackedEpub
-                    postData["export_html"] = exportHtml
-                    postData["export_unified_html"] = exportUnifiedHtml
-                    postData["export_latex"] = exportLatex
-                    postData["export_odt"] = exportOdt
-                    postData["export_docx"] = exportDocx
+                    postData["targets"] = targets
                 }
                 return post(
                     "/api/gitrepo_export/update_book_repo/",
                     postData
                 ).then(() => {
                     if (repoId === 0) {
-                        delete this.bookRepos[book.id]
+                        delete this.bookRepos[String(book.id)]
                     } else {
-                        this.bookRepos[book.id] = {
+                        this.bookRepos[String(book.id)] = {
                             repo_id: repoId,
                             repo_type: repoType,
                             repo_name:
                                 this.userRepos[`${repoType}-${repoId}`].name,
-                            export_epub: exportEpub,
-                            export_unpacked_epub: exportUnpackedEpub,
-                            export_html: exportHtml,
-                            export_unified_html: exportUnifiedHtml,
-                            export_latex: exportLatex,
-                            export_odt: exportOdt,
-                            export_docx: exportDocx
+                            targets
                         }
                     }
                 })

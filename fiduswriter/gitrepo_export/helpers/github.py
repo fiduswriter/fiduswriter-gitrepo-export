@@ -20,13 +20,15 @@ ALLOWED_PATHS = [
 ]
 
 
-async def proxy(path, user, query_string, body, method):
+async def proxy(path, user, query_string, body, method, content_type=None):
     if not any(regex.match(path) for regex in ALLOWED_PATHS):
         raise Exception("Path not permitted.")
     social_token = await SocialToken.objects.aget(
         account__user=user, account__provider="github"
     )
     headers = get_headers(social_token.token)
+    if content_type:
+        headers["Content-Type"] = content_type
     base_url = getattr(settings, "GITHUB_API_URL", "https://api.github.com")
     url = f"{base_url}/{path}"
     if query_string:

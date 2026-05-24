@@ -10,13 +10,31 @@ import {
 } from "./book_exporters"
 import {commitTree, promiseChain} from "./tools"
 
+const EXPORTER_MAP = {
+    epub: EpubBookGithubExporter,
+    unpacked_epub: UnpackedEpubBookGithubExporter,
+    html: HTMLBookGithubExporter,
+    unified_html: SingleFileHTMLBookGithubExporter,
+    latex: LatexBookGithubExporter,
+    odt: ODTBookGithubExporter,
+    docx: DOCXBookGithubExporter
+}
+
 export class GithubBookProcessor {
-    constructor(app, booksOverview, book, bookRepo, userRepo) {
+    constructor(
+        app,
+        booksOverview,
+        book,
+        bookRepo,
+        userRepo,
+        availableFormats
+    ) {
         this.app = app
         this.booksOverview = booksOverview
         this.book = book
         this.bookRepo = bookRepo
         this.userRepo = userRepo
+        this.availableFormats = availableFormats || []
     }
 
     init() {
@@ -47,16 +65,11 @@ export class GithubBookProcessor {
                     }
                 }
             ]
-
             const dialog = new Dialog({
                 title: gettext("Commit message"),
                 height: 150,
-                body: `<p>
-            ${gettext("Updating")}: ${escapeText(this.book.title)}
-            <input type="text" class="commit-message" placeholder="${gettext(
-                "Enter commit message"
-            )}" >
-            </p>`,
+                body: `<p>${gettext("Updating")}: ${escapeText(this.book.title)}
+                    <input type="text" class="commit-message" placeholder="${gettext("Enter commit message")}"></p>`,
                 buttons
             })
             dialog.open()
@@ -65,102 +78,37 @@ export class GithubBookProcessor {
 
     publishBook(commitMessage) {
         addAlert("info", gettext("Book publishing to GitHub initiated."))
-
         const commitInitiators = []
+        const targets = this.bookRepo.targets || []
 
-        if (this.bookRepo.export_epub) {
-            const epubExporter = new EpubBookGithubExporter(
-                this.booksOverview.schema,
-                this.booksOverview.app.csl,
-                this.booksOverview.styles,
-                this.book,
-                this.booksOverview.user,
-                this.booksOverview.documentList,
-                new Date(this.book.updated * 1000),
-                this.userRepo
-            )
-            commitInitiators.push(epubExporter.init())
-        }
-
-        if (this.bookRepo.export_unpacked_epub) {
-            const unpackedEpubExporter = new UnpackedEpubBookGithubExporter(
-                this.booksOverview.schema,
-                this.booksOverview.app.csl,
-                this.booksOverview.styles,
-                this.book,
-                this.booksOverview.user,
-                this.booksOverview.documentList,
-                new Date(this.book.updated * 1000),
-                this.userRepo
-            )
-            commitInitiators.push(unpackedEpubExporter.init())
-        }
-
-        if (this.bookRepo.export_html) {
-            const htmlExporter = new HTMLBookGithubExporter(
-                this.booksOverview.schema,
-                this.booksOverview.app.csl,
-                this.booksOverview.styles,
-                this.book,
-                this.booksOverview.user,
-                this.booksOverview.documentList,
-                new Date(this.book.updated * 1000),
-                this.userRepo
-            )
-            commitInitiators.push(htmlExporter.init())
-        }
-
-        if (this.bookRepo.export_unified_html) {
-            const unifiedHtmlExporter = new SingleFileHTMLBookGithubExporter(
-                this.booksOverview.schema,
-                this.booksOverview.app.csl,
-                this.booksOverview.styles,
-                this.book,
-                this.booksOverview.user,
-                this.booksOverview.documentList,
-                new Date(this.book.updated * 1000),
-                this.userRepo
-            )
-            commitInitiators.push(unifiedHtmlExporter.init())
-        }
-
-        if (this.bookRepo.export_latex) {
-            const latexExporter = new LatexBookGithubExporter(
-                this.booksOverview.schema,
-                this.book,
-                this.booksOverview.user,
-                this.booksOverview.documentList,
-                new Date(this.book.updated * 1000),
-                this.userRepo
-            )
-            commitInitiators.push(latexExporter.init())
-        }
-
-        if (this.bookRepo.export_docx) {
-            const docxExporter = new DOCXBookGithubExporter(
-                this.booksOverview.schema,
-                this.booksOverview.app.csl,
-                this.book,
-                this.booksOverview.user,
-                this.booksOverview.documentList,
-                new Date(this.book.updated * 1000),
-                this.userRepo
-            )
-            commitInitiators.push(docxExporter.init())
-        }
-
-        if (this.bookRepo.export_odt) {
-            const odtExporter = new ODTBookGithubExporter(
-                this.booksOverview.schema,
-                this.booksOverview.app.csl,
-                this.book,
-                this.booksOverview.user,
-                this.booksOverview.documentList,
-                new Date(this.book.updated * 1000),
-                this.userRepo
-            )
-            commitInitiators.push(odtExporter.init())
-        }
+        targets.forEach(targetKey => {
+            const ExporterClass = this._getExporterClass(targetKey)
+            if (ExporterClass) {
+                let exporter
+                if (targetKey === "latex") {
+                    exporter = new ExporterClass(
+                        this.booksOverview.schema,
+                        this.book,
+                        this.booksOverview.user,
+                        this.booksOverview.documentList,
+                        new Date(this.book.updated * 1000),
+                        this.userRepo
+                    )
+                } else {
+                    exporter = new ExporterClass(
+                        this.booksOverview.schema,
+                        this.booksOverview.app.csl,
+                        this.booksOverview.styles,
+                        this.book,
+                        this.booksOverview.user,
+                        this.booksOverview.documentList,
+                        new Date(this.book.updated * 1000),
+                        this.userRepo
+                    )
+                }
+                commitInitiators.push(exporter.init())
+            }
+        })
         return Promise.all(commitInitiators).then(commitFunctions =>
             promiseChain(commitFunctions.flat()).then(responses => {
                 const responseCodes = responses.flat()
@@ -182,7 +130,6 @@ export class GithubBookProcessor {
                         )
                     )
                 } else {
-                    // The responses looks fine, but we are not done yet.
                     commitTree(
                         responseCodes.filter(
                             response => typeof response === "object"
@@ -200,5 +147,19 @@ export class GithubBookProcessor {
                 }
             })
         )
+    }
+
+    _getExporterClass(targetKey) {
+        if (EXPORTER_MAP[targetKey]) {
+            return EXPORTER_MAP[targetKey]
+        }
+        if (targetKey.startsWith("pandoc:")) {
+            return this._getPandocExporterClass()
+        }
+        return null
+    }
+
+    _getPandocExporterClass() {
+        return null
     }
 }

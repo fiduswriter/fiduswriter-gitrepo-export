@@ -8,7 +8,7 @@ from urllib.parse import urljoin
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from channels.testing import ChannelsLiveServerTestCase
+from testing.liveserver import ChannelsLiveServerTestCase
 from testing.selenium_helper import SeleniumHelper
 
 from django.conf import settings
@@ -18,8 +18,12 @@ from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
 from allauth.socialaccount.providers import registry
 from allauth.socialaccount.providers.github.provider import GitHubProvider
 from allauth.socialaccount.providers.gitlab.provider import GitLabProvider
-from book.models import Book
+from django.apps import apps
 from gitrepo_export import models
+
+books_installed = apps.is_installed("book")
+if books_installed:
+    from book.models import Book
 
 
 class MockGitHubHandler(BaseHTTPRequestHandler):
@@ -125,8 +129,6 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
         cls.client = driver_data["clients"][0]
         cls.driver.implicitly_wait(driver_data["wait_time"])
         cls.wait_time = driver_data["wait_time"]
-        # Inject mock Paddle before any page script runs so the payment
-        # app's frontend doesn't hang trying to load the real paddle.js.
 
     @classmethod
     def tearDownClass(cls):
@@ -231,7 +233,7 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
             # Enable EPUB export
             epub_checkbox = WebDriverWait(self.driver, self.wait_time).until(
                 EC.presence_of_element_located(
-                    (By.ID, "book-settings-repository-epub")
+                    (By.CSS_SELECTOR, '.export-format[data-key="epub"]')
                 )
             )
             self.driver.execute_script("arguments[0].click();", epub_checkbox)
@@ -256,7 +258,7 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
             self.assertEqual(book_repo.repo_id, 123)
             self.assertEqual(book_repo.repo_name, "testuser/testrepo")
             self.assertEqual(book_repo.repo_type, "github")
-            self.assertTrue(book_repo.export_epub)
+            self.assertIn("epub", book_repo.targets)
 
             # Go back to books overview
             self.driver.get(urljoin(self.base_url, "/books/"))
@@ -519,7 +521,7 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
 
         # Enable EPUB export
         self.driver.find_element(
-            By.ID, "book-settings-repository-epub"
+            By.CSS_SELECTOR, '.export-format[data-key="epub"]'
         ).click()
 
         # Save the book
@@ -537,7 +539,7 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
         self.assertEqual(book_repo.repo_id, 456)
         self.assertEqual(book_repo.repo_name, "testuser/testgitlabrepo")
         self.assertEqual(book_repo.repo_type, "gitlab")
-        self.assertTrue(book_repo.export_epub)
+        self.assertIn("epub", book_repo.targets)
 
         # Go back to books overview
         self.driver.get(urljoin(self.base_url, "/books/"))

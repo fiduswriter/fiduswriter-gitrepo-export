@@ -11,11 +11,15 @@ class URLTranslator(GitLabOAuth2Adapter):
         return self._build_url("/api/v4/" + path)
 
 
-async def proxy(request, path, user, query_string, body, method):
+async def proxy(
+    request, path, user, query_string, body, method, content_type=None
+):
     social_token = await SocialToken.objects.aget(
         account__user=user, account__provider="gitlab"
     )
     headers = get_headers(social_token.token)
+    if content_type:
+        headers["Content-Type"] = content_type
     base_url = getattr(settings, "GITLAB_API_URL", None)
     if base_url:
         url = f"{base_url}/{path}"
