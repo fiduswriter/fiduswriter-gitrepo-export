@@ -1,5 +1,6 @@
-import {Dialog, addAlert, escapeText, getJson, post} from "../common"
+import {Dialog, addAlert, escapeText, findTarget, getJson, post} from "../common"
 import {ForgejoDocumentProcessor} from "./forgejo/document_processor"
+import {ForgejoServerManagerDialog} from "./forgejo_management"
 import {GithubDocumentProcessor} from "./github/document_processor"
 import {GitlabDocumentProcessor} from "./gitlab/document_processor"
 import {docRepoSettingsTemplate} from "./templates"
@@ -279,6 +280,23 @@ export class EditorGitrepoExporter {
                 ]
             })
             dialog.open()
+            dialog.dialogEl.addEventListener("click", event => {
+                const el = {}
+                if (findTarget(event, ".forgejo-servers", el)) {
+                    const manager = new ForgejoServerManagerDialog(() => {
+                        this.fetchData().then(() => {
+                            dialog.close()
+                            this.openSettingsDialog()
+                        })
+                    })
+                    manager.open()
+                } else if (findTarget(event, ".reload", el)) {
+                    this.fetchData().then(() => {
+                        dialog.close()
+                        this.openSettingsDialog()
+                    })
+                }
+            })
         }
 
         if (!this.finishedLoading) {
