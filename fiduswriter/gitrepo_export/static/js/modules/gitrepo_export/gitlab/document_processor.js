@@ -5,7 +5,8 @@ import {
     EpubDocGitlabExporter,
     HTMLDocGitlabExporter,
     LatexDocGitlabExporter,
-    ODTDocGitlabExporter
+    ODTDocGitlabExporter,
+    PandocDocGitlabExporter
 } from "./document_exporters"
 import {commitFiles} from "./tools"
 
@@ -92,6 +93,34 @@ export class GitlabDocumentProcessor {
         const csl = this.overview.app.csl
         const updated = new Date(this.doc.updated * 1000)
         const repo = this.userRepo
+
+        if (targetKey.startsWith("pandoc:")) {
+            const formatInfo = this.availableFormats.find(
+                f => f.key === targetKey
+            )
+            if (!formatInfo) {
+                return null
+            }
+            const format = targetKey.slice(7)
+            const options = {}
+            if (format === "rtf") {
+                options.fullFileExport = true
+            } else if (format === "typst") {
+                options.includeBibliography = true
+            }
+            return new ExporterClass(
+                format,
+                formatInfo.ext,
+                "application/octet-stream",
+                options,
+                this.doc,
+                bibDB,
+                imageDB,
+                csl,
+                updated,
+                repo
+            )
+        }
 
         switch (targetKey) {
             case "html":
@@ -206,6 +235,9 @@ export class GitlabDocumentProcessor {
     _getExporterClass(targetKey) {
         if (EXPORTER_MAP[targetKey]) {
             return EXPORTER_MAP[targetKey]
+        }
+        if (targetKey.startsWith("pandoc:")) {
+            return PandocDocGitlabExporter
         }
         return null
     }

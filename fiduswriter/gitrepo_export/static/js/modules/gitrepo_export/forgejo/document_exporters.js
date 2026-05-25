@@ -3,6 +3,7 @@ import {EpubExporter} from "../../exporter/epub"
 import {HTMLExporter} from "../../exporter/html"
 import {LatexExporter} from "../../exporter/latex"
 import {ODTExporter} from "../../exporter/odt"
+import {PandocDocGitExporter} from "../pandoc_document_exporter"
 
 export class EpubDocForgejoExporter extends EpubExporter {
     constructor(doc, bibDB, imageDB, csl, updated, documentStyles, repo) {
@@ -83,5 +84,27 @@ export class ODTDocForgejoExporter extends ODTExporter {
     download(blob) {
         // Return the result for batch commit, do not commit here.
         return Promise.resolve({filename: "document.odt", blob})
+    }
+}
+
+export class PandocDocForgejoExporter extends PandocDocGitExporter {
+    returnSingleFile(blob) {
+        return Promise.resolve({
+            filename: `document.${this.fileExtension}`,
+            blob
+        })
+    }
+
+    returnFiles() {
+        return Promise.resolve({
+            textFiles: this.textFiles.map(file => ({
+                ...file,
+                filename: `${this.format}/${file.filename}`
+            })),
+            httpFiles: this.httpFiles.map(file => ({
+                ...file,
+                filename: `${this.format}/${file.filename}`
+            }))
+        })
     }
 }
