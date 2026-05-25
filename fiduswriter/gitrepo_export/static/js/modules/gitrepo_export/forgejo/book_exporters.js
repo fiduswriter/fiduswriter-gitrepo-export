@@ -11,6 +11,21 @@ export class EpubBookForgejoExporter extends EpubBookExporter {
         super(schema, csl, bookStyles, book, user, docList, updated)
         this.repo = repo
     }
+    async init() {
+        const originalCreateZip = this.createZip.bind(this)
+        let cachedResult
+        this.createZip = () => {
+            if (cachedResult === undefined) {
+                cachedResult = originalCreateZip()
+            }
+            return cachedResult
+        }
+        const result = await super.init()
+        if (result === false) {
+            return false
+        }
+        return cachedResult
+    }
     download(blob) {
         return commitFile(this.repo, blob, "book.epub", this.commitMessage)
     }
@@ -21,11 +36,26 @@ export class HTMLBookForgejoExporter extends HTMLBookExporter {
         super(schema, csl, bookStyles, book, user, docList, updated)
         this.repo = repo
     }
+    async init() {
+        const originalCreateZip = this.createZip.bind(this)
+        let cachedResult
+        this.createZip = () => {
+            if (cachedResult === undefined) {
+                cachedResult = originalCreateZip()
+            }
+            return cachedResult
+        }
+        const result = await super.init()
+        if (result === false) {
+            return false
+        }
+        return cachedResult
+    }
     createZip() {
         return commitZipContents(
             this.repo,
-            this.outputList,
-            this.binaryFiles,
+            this.textFiles,
+            this.httpFiles,
             this.includeZips,
             "html/",
             this.commitMessage

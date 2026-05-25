@@ -12,6 +12,22 @@ export class EpubBookGitlabExporter extends EpubBookExporter {
         this.repo = repo
     }
 
+    async init() {
+        const originalCreateZip = this.createZip.bind(this)
+        let cachedResult
+        this.createZip = () => {
+            if (cachedResult === undefined) {
+                cachedResult = originalCreateZip()
+            }
+            return cachedResult
+        }
+        const result = await super.init()
+        if (result === false) {
+            return false
+        }
+        return cachedResult
+    }
+
     download(blob) {
         return Promise.resolve({
             "book.epub": blob
@@ -25,10 +41,26 @@ export class UnpackedEpubBookGitlabExporter extends EpubBookExporter {
         this.repo = repo
     }
 
+    async init() {
+        const originalCreateZip = this.createZip.bind(this)
+        let cachedResult
+        this.createZip = () => {
+            if (cachedResult === undefined) {
+                cachedResult = originalCreateZip()
+            }
+            return cachedResult
+        }
+        const result = await super.init()
+        if (result === false) {
+            return false
+        }
+        return cachedResult
+    }
+
     createZip() {
         return zipToBlobs(
-            this.outputList,
-            this.binaryFiles,
+            this.textFiles,
+            this.httpFiles,
             this.includeZips,
             "epub/"
         )
@@ -41,10 +73,26 @@ export class HTMLBookGitlabExporter extends HTMLBookExporter {
         this.repo = repo
     }
 
+    async init() {
+        const originalCreateZip = this.createZip.bind(this)
+        let cachedResult
+        this.createZip = () => {
+            if (cachedResult === undefined) {
+                cachedResult = originalCreateZip()
+            }
+            return cachedResult
+        }
+        const result = await super.init()
+        if (result === false) {
+            return false
+        }
+        return cachedResult
+    }
+
     createZip() {
         return zipToBlobs(
-            this.outputList,
-            this.binaryFiles,
+            this.textFiles,
+            this.httpFiles,
             this.includeZips,
             "html/"
         )
@@ -57,10 +105,26 @@ export class SingleFileHTMLBookGitlabExporter extends HTMLBookExporter {
         this.repo = repo
     }
 
+    async init() {
+        const originalCreateZip = this.createZip.bind(this)
+        let cachedResult
+        this.createZip = () => {
+            if (cachedResult === undefined) {
+                cachedResult = originalCreateZip()
+            }
+            return cachedResult
+        }
+        const result = await super.init()
+        if (result === false) {
+            return false
+        }
+        return cachedResult
+    }
+
     createZip() {
         return zipToBlobs(
-            this.outputList,
-            this.binaryFiles,
+            this.textFiles,
+            this.httpFiles,
             this.includeZips,
             "uhtml/"
         )
