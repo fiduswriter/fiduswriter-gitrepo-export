@@ -599,3 +599,214 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
             "Book published to repository successfully!",
             alert.text,
         )
+
+
+class MockForgejoHandler(BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        with open("/tmp/mock_forgejo.log", "a") as f:
+            f.write(f"{self.command} {self.path}\n")
+
+    def _send_json(self, data, status=200):
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(data).encode(encoding="utf_8"))
+
+    def do_GET(self):
+        if self.path.startswith("/api/v1/user/repos"):
+            self._send_json(
+                [
+                    {
+                        "id": 789,
+                        "full_name": "testuser/testforgejorepo",
+                        "default_branch": "main",
+                    }
+                ]
+            )
+            return
+        if self.path.startswith("/api/v1/repos/testuser/testforgejorepo/git/trees/main"):
+            self._send_json({"tree": []})
+            return
+        if self.path.startswith("/api/v1/repos/testuser/testforgejorepo/contents/"):
+            self._send_json({"sha": "abc123", "content": ""})
+            return
+        self.send_response(404)
+        self.end_headers()
+
+    def do_POST(self):
+        if self.path.startswith("/api/v1/repos/testuser/testforgejorepo/contents"):
+            self._send_json({"commit": {"id": "commit123"}})
+            return
+        self.send_response(404)
+        self.end_headers()
+
+
+class ForgejoDocumentExportTest(SeleniumHelper, ChannelsLiveServerTestCase):
+    fixtures = [
+        "initial_documenttemplates.json",
+        "initial_styles.json",
+    ]
+
+    @classmethod
+    def start_server(cls, port):
+        httpd = HTTPServer(("", port), MockForgejoHandler)
+        httpd.serve_forever()
+
+    @classmethod
+    def setUpClass(cls):
+        cls.server_port = get_free_port()
+        cls.server = multiprocessing.Process(
+            target=cls.start_server, args=(cls.server_port,)
+        )
+        cls.server.daemon = True
+        cls.server.start()
+        super().setUpClass()
+        cls.base_url = cls.live_server_url
+        driver_data = cls.get_drivers(1)
+        cls.driver = driver_data["drivers"][0]
+        cls.client = driver_data["clients"][0]
+        cls.driver.implicitly_wait(driver_data["wait_time"])
+        cls.wait_time = driver_data["wait_time"]
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        cls.server.terminate()
+        super().tearDownClass()
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="User1", email="user1@user.com", passtext="password"
+        )
+        # Create a Forgejo server linked to the mock instance
+        self.forgejo_server = models.ForgejoServer.objects.create(
+            user=self.user,
+            instance_url=f"http://localhost:{self.server_port}",
+            name="Mock Forgejo",
+            token="mock-forgejo-token",
+        )
+        # Pre-populate cached repo info so the overview/editor loads repos
+        # without hitting the mock server during initial render
+        models.RepoInfo.objects.create(
+            user=self.user,
+            content=[
+                {
+                    "type": "forgejo",
+                    "server_id": self.forgejo_server.id,
+                    "name": "testuser/testforgejorepo",
+                    "id": 789,
+                    "branch": "main",
+                }
+            ],
+        )
+
+    def create_document(self, title="Test Doc"):
+        WebDriverWait(self.driver, self.wait_time).until(
+            EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, ".new_document button")
+            )
+        ).click()
+        WebDriverWait(self.driver, self.wait_time).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "editor-toolbar"))
+        )
+        self.driver.find_element(By.CSS_SELECTOR, ".doc-title").click()
+        self.driver.find_element(By.CSS_SELECTOR, ".doc-title").send_keys(title)
+        time.sleep(1)
+
+    def test_forgejo_document_export(self):
+        from document.models import Document
+
+        self.login_user(self.user, self.driver, self.client)
+        self.driver.get(urljoin(self.base_url, "/"))
+
+        # Create a document
+        self.create_document("Forgejo Export Doc")
+
+        # Open Settings → Git Repository
+        self.driver.find_element(
+            By.CSS_SELECTOR, ".header-menu:nth-child(3) > .header-nav-item"
+        ).click()
+        WebDriverWait(self.driver, self.wait_time).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, '//*[normalize-space()="Git Repository"]')
+            )
+        ).click()
+
+        # Wait for the dialog to render
+        WebDriverWait(self.driver, self.wait_time).until(
+            EC.presence_of_element_located(
+                (By.ID, "doc-settings-repository")
+            )
+        )
+
+        # Select the mock Forgejo repository
+        repo_select = self.driver.find_element(By.ID, "doc-settings-repository")
+        self.driver.execute_script(
+            'arguments[0].value = "forgejo-789"; arguments[0].dispatchEvent(new Event("change"));',
+            repo_select,
+        )
+
+        # Enable HTML export
+        html_checkbox = self.driver.find_element(
+            By.CSS_SELECTOR, '.export-format[data-key="html"]'
+        )
+        if not html_checkbox.is_selected():
+            self.driver.execute_script("arguments[0].click();", html_checkbox)
+
+        # Save the settings
+        self.driver.find_element(
+            By.XPATH,
+            '//*[contains(@class, "ui-button") and normalize-space()="Submit"]',
+        ).click()
+
+        time.sleep(1)
+
+        # Verify DocumentRepository was created
+        doc = Document.objects.filter(owner=self.user).first()
+        self.assertIsNotNone(doc)
+        doc_repo = models.DocumentRepository.objects.filter(document=doc).first()
+        self.assertIsNotNone(doc_repo)
+        self.assertEqual(doc_repo.repo_id, 789)
+        self.assertEqual(doc_repo.repo_name, "testuser/testforgejorepo")
+        self.assertEqual(doc_repo.repo_type, "forgejo")
+        self.assertIn("html", doc_repo.targets)
+
+        # Export to Git Repository via File menu
+        self.driver.find_element(
+            By.CSS_SELECTOR, ".header-menu:nth-child(1) > .header-nav-item"
+        ).click()
+        WebDriverWait(self.driver, self.wait_time).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, '//*[normalize-space()="Export to Git Repository"]')
+            )
+        ).click()
+
+        # Enter commit message
+        WebDriverWait(self.driver, self.wait_time).until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, ".commit-message")
+            )
+        )
+        self.driver.find_element(By.CSS_SELECTOR, ".commit-message").send_keys(
+            "Test Forgejo commit"
+        )
+        self.driver.find_element(
+            By.XPATH,
+            '//*[contains(@class, "ui-button") and normalize-space()="Submit"]',
+        ).click()
+
+        # Wait for success alert
+        def success_alert_present(driver):
+            alerts = driver.find_elements(
+                By.CSS_SELECTOR, "body #alerts-outer-wrapper .alerts-info"
+            )
+            for alert in alerts:
+                if "Document published to repository successfully!" in alert.text:
+                    return alert
+            return False
+
+        alert = WebDriverWait(self.driver, 60).until(success_alert_present)
+        self.assertIn(
+            "Document published to repository successfully!",
+            alert.text,
+        )
