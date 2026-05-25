@@ -4,6 +4,7 @@ import {HTMLBookExporter} from "../../books/exporter/html"
 import {LatexBookExporter} from "../../books/exporter/latex"
 import {ODTBookExporter} from "../../books/exporter/odt"
 import {commitFile, commitZipContents} from "./tools"
+import {PandocBookGitExporter} from "../pandoc_book_exporter"
 
 export class EpubBookGithubExporter extends EpubBookExporter {
     constructor(schema, csl, bookStyles, book, user, docList, updated, repo) {
@@ -107,5 +108,18 @@ export class ODTBookGithubExporter extends ODTBookExporter {
     download(blob) {
         return () =>
             commitFile(this.repo, blob, "book.odt").then(response => [response])
+    }
+}
+
+export class PandocBookGithubExporter extends PandocBookGitExporter {
+    returnFiles() {
+        return () =>
+            commitZipContents(
+                this.repo,
+                this.textFiles,
+                this.httpFiles,
+                [],
+                `${this.format}/`
+            )
     }
 }

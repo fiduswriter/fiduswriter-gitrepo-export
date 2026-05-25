@@ -4,7 +4,8 @@ import {
     EpubBookForgejoExporter,
     HTMLBookForgejoExporter,
     LatexBookForgejoExporter,
-    ODTBookForgejoExporter
+    ODTBookForgejoExporter,
+    PandocBookForgejoExporter
 } from "./book_exporters"
 
 const EXPORTER_MAP = {
@@ -79,7 +80,33 @@ export class ForgejoBookProcessor {
             const ExporterClass = this._getExporterClass(targetKey)
             if (ExporterClass) {
                 let exporter
-                if (targetKey === "latex") {
+                if (targetKey.startsWith("pandoc:")) {
+                    const formatInfo = this.availableFormats.find(
+                        f => f.key === targetKey
+                    )
+                    if (formatInfo) {
+                        const format = targetKey.slice(7)
+                        const options = {}
+                        if (format === "rtf") {
+                            options.fullFileExport = true
+                        } else if (format === "typst") {
+                            options.includeBibliography = true
+                        }
+                        exporter = new ExporterClass(
+                            this.booksOverview.schema,
+                            this.booksOverview.app.csl,
+                            this.book,
+                            this.booksOverview.user,
+                            this.booksOverview.documentList,
+                            new Date(this.book.updated * 1000),
+                            format,
+                            formatInfo.ext,
+                            "application/octet-stream",
+                            options,
+                            this.userRepo
+                        )
+                    }
+                } else if (targetKey === "latex") {
                     exporter = new ExporterClass(
                         this.booksOverview.schema,
                         this.book,
@@ -100,8 +127,10 @@ export class ForgejoBookProcessor {
                         this.userRepo
                     )
                 }
-                exporter.commitMessage = commitMessage
-                return exporter.init()
+                if (exporter) {
+                    exporter.commitMessage = commitMessage
+                    return exporter.init()
+                }
             }
             return Promise.resolve()
         })
@@ -126,6 +155,9 @@ export class ForgejoBookProcessor {
     _getExporterClass(targetKey) {
         if (EXPORTER_MAP[targetKey]) {
             return EXPORTER_MAP[targetKey]
+        }
+        if (targetKey.startsWith("pandoc:")) {
+            return PandocBookForgejoExporter
         }
         return null
     }

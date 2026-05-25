@@ -4,6 +4,7 @@ import {HTMLBookExporter} from "../../books/exporter/html"
 import {LatexBookExporter} from "../../books/exporter/latex"
 import {ODTBookExporter} from "../../books/exporter/odt"
 import {zipToBlobs} from "./tools"
+import {PandocBookGitExporter} from "../pandoc_book_exporter"
 
 export class EpubBookGitlabExporter extends EpubBookExporter {
     constructor(schema, csl, bookStyles, book, user, docList, updated, repo) {
@@ -100,5 +101,16 @@ export class ODTBookGitlabExporter extends ODTBookExporter {
         return Promise.resolve({
             "book.odt": blob
         })
+    }
+}
+
+export class PandocBookGitlabExporter extends PandocBookGitExporter {
+    returnFiles() {
+        return zipToBlobs(
+            this.textFiles,
+            this.httpFiles,
+            [],
+            `${this.format}/`
+        )
     }
 }

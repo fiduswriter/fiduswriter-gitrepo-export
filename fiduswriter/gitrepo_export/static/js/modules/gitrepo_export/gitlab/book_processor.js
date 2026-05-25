@@ -5,6 +5,7 @@ import {
     HTMLBookGitlabExporter,
     LatexBookGitlabExporter,
     ODTBookGitlabExporter,
+    PandocBookGitlabExporter,
     SingleFileHTMLBookGitlabExporter,
     UnpackedEpubBookGitlabExporter
 } from "./book_exporters"
@@ -85,7 +86,33 @@ export class GitlabBookProcessor {
             const ExporterClass = this._getExporterClass(targetKey)
             if (ExporterClass) {
                 let exporter
-                if (targetKey === "latex") {
+                if (targetKey.startsWith("pandoc:")) {
+                    const formatInfo = this.availableFormats.find(
+                        f => f.key === targetKey
+                    )
+                    if (formatInfo) {
+                        const format = targetKey.slice(7)
+                        const options = {}
+                        if (format === "rtf") {
+                            options.fullFileExport = true
+                        } else if (format === "typst") {
+                            options.includeBibliography = true
+                        }
+                        exporter = new ExporterClass(
+                            this.booksOverview.schema,
+                            this.booksOverview.app.csl,
+                            this.book,
+                            this.booksOverview.user,
+                            this.booksOverview.documentList,
+                            new Date(this.book.updated * 1000),
+                            format,
+                            formatInfo.ext,
+                            "application/octet-stream",
+                            options,
+                            this.userRepo
+                        )
+                    }
+                } else if (targetKey === "latex") {
                     exporter = new ExporterClass(
                         this.booksOverview.schema,
                         this.book,
@@ -106,7 +133,9 @@ export class GitlabBookProcessor {
                         this.userRepo
                     )
                 }
-                commitInitiators.push(exporter.init())
+                if (exporter) {
+                    commitInitiators.push(exporter.init())
+                }
             }
         })
         return Promise.all(commitInitiators)
@@ -142,6 +171,6 @@ export class GitlabBookProcessor {
     }
 
     _getPandocExporterClass() {
-        return null
+        return PandocBookGitlabExporter
     }
 }
