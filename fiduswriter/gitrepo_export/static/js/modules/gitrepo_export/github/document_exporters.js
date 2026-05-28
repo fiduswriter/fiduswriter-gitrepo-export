@@ -3,8 +3,9 @@ import {EpubExporter} from "../../exporter/epub"
 import {HTMLExporter} from "../../exporter/html"
 import {LatexExporter} from "../../exporter/latex"
 import {ODTExporter} from "../../exporter/odt"
-import {commitFile, commitZipContents} from "./tools"
+import {FidusDocGitExporter} from "../fidus_exporters"
 import {PandocDocGitExporter} from "../pandoc_document_exporter"
+import {commitFile, commitZipContents} from "./tools"
 
 export class EpubDocGithubExporter extends EpubExporter {
     constructor(doc, bibDB, imageDB, csl, updated, documentStyles, repo) {
@@ -31,7 +32,7 @@ export class HTMLDocGithubExporter extends HTMLExporter {
                 this.textFiles,
                 this.httpFiles,
                 this.includeZips,
-                ""
+                "html/"
             )
     }
 }
@@ -43,7 +44,13 @@ export class LatexDocGithubExporter extends LatexExporter {
     }
     createZip() {
         return () =>
-            commitZipContents(this.repo, this.textFiles, this.httpFiles, [], "")
+            commitZipContents(
+                this.repo,
+                this.textFiles,
+                this.httpFiles,
+                [],
+                "latex/"
+            )
     }
 }
 
@@ -76,11 +83,9 @@ export class ODTDocGithubExporter extends ODTExporter {
 export class PandocDocGithubExporter extends PandocDocGitExporter {
     returnSingleFile(blob) {
         return () =>
-            commitFile(
-                this.repo,
-                blob,
-                `document.${this.fileExtension}`
-            ).then(response => [response])
+            commitFile(this.repo, blob, `document.${this.fileExtension}`).then(
+                response => [response]
+            )
     }
 
     returnFiles() {
@@ -90,7 +95,19 @@ export class PandocDocGithubExporter extends PandocDocGitExporter {
                 this.textFiles,
                 this.httpFiles,
                 [],
-                ""
+                `${this.format}/`
             )
+    }
+}
+
+export class FidusDocGithubExporter extends FidusDocGitExporter {
+    init() {
+        return super.init().then(blobMap => {
+            const blob = blobMap["document.fidus"]
+            return () =>
+                commitFile(this.repo, blob, "document.fidus").then(response => [
+                    response
+                ])
+        })
     }
 }

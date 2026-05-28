@@ -1,6 +1,13 @@
-import {Dialog, addAlert, escapeText, findTarget, getJson, post} from "../common"
+import {
+    Dialog,
+    addAlert,
+    escapeText,
+    findTarget,
+    getJson,
+    post
+} from "../common"
 import {ForgejoDocumentProcessor} from "./forgejo/document_processor"
-import {ForgejoServerManagerDialog} from "./forgejo_management"
+import {GitServerManagerDialog} from "./git_server_management"
 import {GithubDocumentProcessor} from "./github/document_processor"
 import {GitlabDocumentProcessor} from "./gitlab/document_processor"
 import {docRepoSettingsTemplate} from "./templates"
@@ -49,7 +56,12 @@ export class EditorGitrepoExporter {
     }
 
     getUserRepos() {
-        return getJson("/api/gitrepo_export/get_git_repos/").then(({repos}) => {
+        if (this._userReposPromise) {
+            return this._userReposPromise
+        }
+        this._userReposPromise = getJson(
+            "/api/gitrepo_export/get_git_repos/"
+        ).then(({repos}) => {
             this.userRepos = {}
             this.userReposMultitype = false
             const initialType = repos.length ? repos[0].type : ""
@@ -60,6 +72,7 @@ export class EditorGitrepoExporter {
                 }
             })
         })
+        return this._userReposPromise
     }
 
     getDocRepo() {
@@ -144,6 +157,8 @@ export class EditorGitrepoExporter {
             const doc = this.editor.getDoc({changes: "acceptAllNoInsertions"})
             doc.bibliography = this.editor.mod.db.bibDB.db
             doc.images = this.editor.mod.db.imageDB.db
+            doc.export_templates =
+                this.editor.mod.documentTemplate.exportTemplates
 
             const overview = createOverviewFromEditor(this.editor)
 
@@ -168,6 +183,7 @@ export class EditorGitrepoExporter {
                     )
                     break
                 case "forgejo":
+                case "gitea":
                     processor = new ForgejoDocumentProcessor(
                         overview,
                         doc,
@@ -194,11 +210,12 @@ export class EditorGitrepoExporter {
     }
 
     openSettingsDialog() {
-        const doc = this.editor.getDoc({changes: "acceptAllNoInsertions"})
-        doc.bibliography = this.editor.mod.db.bibDB.db
-        doc.images = this.editor.mod.db.imageDB.db
-
         const showDialog = () => {
+            const doc = this.editor.getDoc({changes: "acceptAllNoInsertions"})
+            doc.bibliography = this.editor.mod.db.bibDB.db
+            doc.images = this.editor.mod.db.imageDB.db
+            doc.export_templates =
+                this.editor.mod.documentTemplate.exportTemplates
             const body = `<table class="fw-dialog-table">${docRepoSettingsTemplate(
                 {
                     doc,
@@ -283,18 +300,28 @@ export class EditorGitrepoExporter {
             dialog.dialogEl.addEventListener("click", event => {
                 const el = {}
                 if (findTarget(event, ".forgejo-servers", el)) {
-                    const manager = new ForgejoServerManagerDialog(() => {
-                        this.fetchData().then(() => {
-                            dialog.close()
-                            this.openSettingsDialog()
-                        })
+                    const manager = new GitServerManagerDialog(() => {
+                        this.fetchData()
+                            .then(() => {
+                                dialog.close()
+                                this.openSettingsDialog()
+                            })
+                            .catch(() => {
+                                dialog.close()
+                                this.openSettingsDialog()
+                            })
                     })
                     manager.open()
                 } else if (findTarget(event, ".reload", el)) {
-                    this.fetchData().then(() => {
-                        dialog.close()
-                        this.openSettingsDialog()
-                    })
+                    this.fetchData()
+                        .then(() => {
+                            dialog.close()
+                            this.openSettingsDialog()
+                        })
+                        .catch(() => {
+                            dialog.close()
+                            this.openSettingsDialog()
+                        })
                 }
             })
         }

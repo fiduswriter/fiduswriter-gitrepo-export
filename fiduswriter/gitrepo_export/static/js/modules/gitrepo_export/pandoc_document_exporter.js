@@ -1,6 +1,6 @@
-import {get} from "../../common"
 import {convert} from "pandoc-wasm"
-import {PandocExporter} from "../../exporter/pandoc"
+import {get} from "../common"
+import {PandocExporter} from "../exporter/pandoc"
 
 export class PandocDocGitExporter extends PandocExporter {
     constructor(

@@ -7,8 +7,8 @@ from django.views.decorators.http import (
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponse
 from django.apps import apps
 from django.db.models import Q
-from httpx import HTTPError
-from allauth.socialaccount.models import SocialToken
+from django.conf import settings
+from httpx import Client, HTTPError
 
 from base.decorators import ajax_required
 
@@ -147,14 +147,6 @@ def update_document_repo(request):
 @require_GET
 async def get_git_repos(request, reload=False):
     request_user = await request.auser()
-    social_tokens = {
-        "github": await SocialToken.objects.filter(
-            account__user=request_user, account__provider="github"
-        ).afirst(),
-        "gitlab": await SocialToken.objects.filter(
-            account__user=request_user, account__provider="gitlab"
-        ).afirst(),
-    }
     repo_info = await models.RepoInfo.objects.filter(
         user=request_user
     ).afirst()
@@ -164,24 +156,34 @@ async def get_git_repos(request, reload=False):
         else:
             return JsonResponse({"repos": repo_info.content}, status=200)
     repos = []
-    try:
-        if social_tokens["github"]:
-            repos += await github.get_repos(social_tokens["github"])
-        if social_tokens["gitlab"]:
-            repos += await gitlab.get_repos(request, social_tokens["gitlab"])
-        async for server in models.ForgejoServer.objects.filter(
-            user=request_user, active=True
-        ):
-            repos += await forgejo.get_repos(
-                server.instance_url, server.token, server.id
-            )
-    except HTTPError as e:
-        if e.response.code == 404:
-            pass
-        else:
-            return HttpResponse(e.response.text, status=e.response.status_code)
-    except Exception as e:
-        return HttpResponse("Error: %s" % e, status=500)
+    async for server in models.GitServer.objects.filter(
+        user=request_user, active=True
+    ):
+        try:
+            if server.server_type == "github":
+                base_url = getattr(
+                    settings, "GITHUB_API_URL", "https://api.github.com"
+                )
+                new_repos = await github.get_repos(server.token, base_url)
+                for r in new_repos:
+                    r["server_id"] = server.id
+                repos += new_repos
+            elif server.server_type == "gitlab":
+                base_url = server.instance_url or None
+                new_repos = await gitlab.get_repos(server.token, base_url)
+                for r in new_repos:
+                    r["server_id"] = server.id
+                repos += new_repos
+            elif server.server_type in ("forgejo", "gitea"):
+                repos += await forgejo.get_repos(
+                    server.instance_url, server.token, server.id
+                )
+        except HTTPError as e:
+            if e.response.status_code != 404:
+                # Skip failed servers rather than aborting entirely.
+                continue
+        except Exception:
+            continue
     repo_info, created = await models.RepoInfo.objects.aget_or_create(
         user=request_user
     )
@@ -194,17 +196,22 @@ async def get_git_repos(request, reload=False):
 @require_http_methods(["GET", "POST", "PUT", "PATCH"])
 async def proxy_github(request, path):
     request_user = await request.auser()
+    server = await models.GitServer.objects.filter(
+        user=request_user, server_type="github", active=True
+    ).afirst()
+    if not server:
+        return HttpResponse("No GitHub server configured.", status=400)
     try:
         response = await github.proxy(
             path,
-            request_user,
+            server.token,
             request.META["QUERY_STRING"],
             request.body,
             request.method,
             request.content_type,
         )
     except HTTPError as e:
-        if e.response.code == 404:
+        if e.response.status_code == 404:
             return HttpResponse("[]", status=200)
         else:
             return HttpResponse(e.response.text, status=e.response.status_code)
@@ -216,23 +223,27 @@ async def proxy_github(request, path):
 
 @login_required
 @require_http_methods(["GET", "POST", "PUT", "PATCH"])
-async def proxy_gitlab(request, path):
+async def proxy_gitlab(request, server_id, path):
     request_user = await request.auser()
+    server = await models.GitServer.objects.filter(
+        id=server_id, user=request_user, server_type="gitlab", active=True
+    ).afirst()
+    if not server:
+        return HttpResponse("No GitLab server configured.", status=400)
     try:
         response = await gitlab.proxy(
-            request,
+            server.token,
+            server.instance_url,
             path,
-            request_user,
             request.META["QUERY_STRING"],
             request.body,
             request.method,
             request.content_type,
         )
     except HTTPError as e:
-        if e.response.code == 404:
+        if e.response.status_code == 404 and request.method == "GET":
             return HttpResponse("[]", status=200)
-        else:
-            return HttpResponse(e.response.text, status=e.response.status_code)
+        return HttpResponse(e.response.text, status=e.response.status_code)
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
     else:
@@ -241,11 +252,18 @@ async def proxy_gitlab(request, path):
 
 @login_required
 @require_GET
-async def get_gitlab_repo(request, id):
+async def get_gitlab_repo(request, server_id, id):
     request_user = await request.auser()
+    server = await models.GitServer.objects.filter(
+        id=server_id, user=request_user, server_type="gitlab", active=True
+    ).afirst()
+    if not server:
+        return HttpResponse("No GitLab server configured.", status=400)
     try:
-        files = await gitlab.get_repo(request, id, request_user)
+        files = await gitlab.get_repo(id, server.token, server.instance_url)
     except HTTPError as e:
+        if e.response.status_code == 404:
+            return JsonResponse({"files": []}, status=200)
         return HttpResponse(e.response.text, status=e.response.status_code)
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
@@ -256,14 +274,15 @@ async def get_gitlab_repo(request, id):
 @login_required
 @ajax_required
 @require_http_methods(["GET", "POST", "DELETE"])
-def manage_forgejo_servers(request):
+def manage_git_servers(request):
     if request.method == "GET":
-        servers = models.ForgejoServer.objects.filter(user=request.user)
+        servers = models.GitServer.objects.filter(user=request.user)
         return JsonResponse(
             {
                 "servers": [
                     {
                         "id": s.id,
+                        "type": s.server_type,
                         "url": s.instance_url,
                         "name": s.name,
                         "active": s.active,
@@ -273,43 +292,58 @@ def manage_forgejo_servers(request):
             }
         )
     elif request.method == "POST":
-        instance_url = request.JSON["instance_url"].rstrip("/")
+        server_type = request.JSON["server_type"]
+        instance_url = request.JSON.get("instance_url", "").rstrip("/")
         name = request.JSON.get("name", "")
         token = request.JSON["token"]
-        # Verify token against the actual endpoint we will use
-        from httpx import AsyncClient, Request as HttpxRequest
-        import asyncio
 
-        verify_url = f"{instance_url}/api/v1/user/repos?limit=1"
-        headers = {"Authorization": f"Bearer {token}"}
-        verify_request = HttpxRequest("GET", verify_url, headers=headers)
+        if server_type == "github":
+            base_url = getattr(
+                settings, "GITHUB_API_URL", "https://api.github.com"
+            )
+            verify_url = f"{base_url}/user/repos?per_page=1"
+            headers = {"Authorization": f"Bearer {token}"}
+        elif server_type == "gitlab":
+            base_url = instance_url or "https://gitlab.com"
+            verify_url = (
+                f"{base_url}/api/v4/projects?min_access_level=30&per_page=1"
+            )
+            headers = {"Authorization": f"Bearer {token}"}
+        elif server_type in ("forgejo", "gitea"):
+            if not instance_url:
+                return HttpResponse(
+                    "Instance URL is required for Forgejo/Gitea.", status=400
+                )
+            verify_url = f"{instance_url}/api/v1/user/repos?limit=1"
+            headers = {"Authorization": f"Bearer {token}"}
+        else:
+            return HttpResponse("Invalid server type.", status=400)
 
-        loop = asyncio.new_event_loop()
         try:
+            with Client(timeout=30) as client:
+                response = client.get(verify_url, headers=headers)
+        except HTTPError as e:
+            return HttpResponse(f"Could not reach server: {e}", status=400)
 
-            async def verify():
-                async with AsyncClient(timeout=30) as client:
-                    response = await client.send(verify_request)
-                return response
-
-            response = loop.run_until_complete(verify())
-        finally:
-            loop.close()
         if response.status_code != 200:
             try:
                 error_body = response.json()
                 error_msg = error_body.get("message", "")
                 if "scope" in error_msg.lower():
                     return HttpResponse(
-                        "The token is missing required scopes. "
-                        "Make sure the token has 'read:user' and 'repo' permissions.",
+                        "The token is missing required scopes.",
                         status=400,
                     )
             except Exception:
                 pass
-            return HttpResponse("Invalid token or instance URL", status=400)
-        server = models.ForgejoServer.objects.create(
+            return HttpResponse(
+                f"Invalid token or instance URL. Server responded with {response.status_code}: {response.text[:200]}",
+                status=400,
+            )
+
+        server = models.GitServer.objects.create(
             user=request.user,
+            server_type=server_type,
             instance_url=instance_url,
             name=name,
             token=token,
@@ -317,13 +351,14 @@ def manage_forgejo_servers(request):
         return JsonResponse(
             {
                 "id": server.id,
+                "type": server.server_type,
                 "url": server.instance_url,
                 "name": server.name,
             }
         )
     elif request.method == "DELETE":
         server_id = request.JSON["server_id"]
-        models.ForgejoServer.objects.filter(
+        models.GitServer.objects.filter(
             id=server_id, user=request.user
         ).delete()
         models.RepoInfo.objects.filter(user=request.user).delete()
@@ -334,8 +369,11 @@ def manage_forgejo_servers(request):
 @require_GET
 async def get_forgejo_repos(request, server_id):
     request_user = await request.auser()
-    server = await models.ForgejoServer.objects.aget(
-        id=server_id, user=request_user, active=True
+    server = await models.GitServer.objects.aget(
+        id=server_id,
+        user=request_user,
+        active=True,
+        server_type__in=("forgejo", "gitea"),
     )
     repos = await forgejo.get_repos(
         server.instance_url, server.token, server.id
@@ -347,8 +385,11 @@ async def get_forgejo_repos(request, server_id):
 @require_http_methods(["GET", "POST", "PUT", "PATCH"])
 async def proxy_forgejo(request, server_id, path):
     request_user = await request.auser()
-    server = await models.ForgejoServer.objects.aget(
-        id=server_id, user=request_user, active=True
+    server = await models.GitServer.objects.aget(
+        id=server_id,
+        user=request_user,
+        active=True,
+        server_type__in=("forgejo", "gitea"),
     )
     try:
         response = await forgejo.proxy(
@@ -361,7 +402,7 @@ async def proxy_forgejo(request, server_id, path):
             request.content_type,
         )
     except HTTPError as e:
-        if e.response.code == 404:
+        if e.response.status_code == 404:
             return HttpResponse("[]", status=200)
         else:
             return HttpResponse(e.response.text, status=e.response.status_code)

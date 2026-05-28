@@ -38,3 +38,21 @@ export function readBlobPromise(blob) {
         reader.readAsDataURL(blob)
     })
 }
+
+/**
+ * Wrap a blob mapping in a sub-folder when it contains multiple files.
+ * Single-file exports (e.g. epub, docx, rtf) stay at the root.
+ */
+export function wrapBlobsInFolder(targetKey, blobMap) {
+    if (!blobMap || Object.keys(blobMap).length <= 1) {
+        return blobMap
+    }
+    const folderName = targetKey.startsWith("pandoc:")
+        ? targetKey.slice(7)
+        : targetKey
+    const wrapped = {}
+    Object.entries(blobMap).forEach(([path, blob]) => {
+        wrapped[`${folderName}/${path}`] = blob
+    })
+    return wrapped
+}

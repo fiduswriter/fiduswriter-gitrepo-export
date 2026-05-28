@@ -27,9 +27,9 @@ urlpatterns = [
         name="update_document_repo",
     ),
     re_path(
-        "^manage_forgejo_servers/$",
-        views.manage_forgejo_servers,
-        name="manage_forgejo_servers",
+        "^manage_git_servers/$",
+        views.manage_git_servers,
+        name="manage_git_servers",
     ),
     re_path(
         "^get_forgejo_repos/(?P<server_id>[0-9]+)/$",
@@ -45,7 +45,14 @@ urlpatterns = [
         "^proxy_github/(?P<path>.*)$", views.proxy_github, name="proxy_github"
     ),
     re_path(
-        "^proxy_gitlab/(?P<path>.*)$", views.proxy_gitlab, name="proxy_gitlab"
+        "^proxy_gitlab/(?P<server_id>[0-9]+)/(?P<path>.*)$",
+        views.proxy_gitlab,
+        name="proxy_gitlab",
+    ),
+    re_path(
+        "^get_gitlab_repo/(?P<server_id>[0-9]+)/(?P<id>.*)/$",
+        views.get_gitlab_repo,
+        name="get_gitlab_repo",
     ),
 ]
 
@@ -60,10 +67,5 @@ if apps.is_installed("book"):
             "^update_book_repo/$",
             views.update_book_repo,
             name="update_book_repo",
-        ),
-        re_path(
-            "^get_gitlab_repo/(?P<id>.*)/$",
-            views.get_gitlab_repo,
-            name="get_gitlab_repo",
         ),
     ]

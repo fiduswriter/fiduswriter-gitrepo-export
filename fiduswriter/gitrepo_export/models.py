@@ -3,9 +3,10 @@ from django.db import models
 from django.conf import settings as django_settings
 
 REPO_TYPES = (
+    ("forgejo", "Forgejo"),
+    ("gitea", "Gitea"),
     ("github", "GitHub"),
     ("gitlab", "GitLab"),
-    ("forgejo", "Forgejo"),
 )
 
 if apps.is_installed("book"):
@@ -34,27 +35,37 @@ class DocumentRepository(models.Model):
         verbose_name_plural = "Document repositories"
 
 
-class ForgejoServer(models.Model):
+class GitServer(models.Model):
+    SERVER_TYPES = (
+        ("forgejo", "Forgejo"),
+        ("gitea", "Gitea"),
+        ("github", "GitHub"),
+        ("gitlab", "GitLab"),
+    )
     user = models.ForeignKey(
         django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
+    server_type = models.CharField(
+        max_length=8, choices=SERVER_TYPES, default="forgejo"
+    )
     instance_url = models.URLField(
-        help_text="Base URL of the Forgejo instance (e.g. https://code.example.org)"
+        blank=True,
+        help_text="Base URL (e.g. https://code.example.org). Not needed for GitHub.com.",
     )
     name = models.CharField(
         max_length=128,
         blank=True,
-        help_text="A label to identify this instance",
+        help_text="A label to identify this server",
     )
     token = models.CharField(
         max_length=256,
-        help_text="Personal Access Token with repo scope",
+        help_text="Personal Access Token",
     )
     active = models.BooleanField(default=True)
     added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = "Forgejo servers"
+        verbose_name_plural = "Git servers"
 
 
 class RepoInfo(models.Model):

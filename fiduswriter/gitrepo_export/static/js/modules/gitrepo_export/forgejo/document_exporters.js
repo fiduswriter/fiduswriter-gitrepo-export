@@ -3,6 +3,7 @@ import {EpubExporter} from "../../exporter/epub"
 import {HTMLExporter} from "../../exporter/html"
 import {LatexExporter} from "../../exporter/latex"
 import {ODTExporter} from "../../exporter/odt"
+import {FidusDocGitExporter} from "../fidus_exporters"
 import {PandocDocGitExporter} from "../pandoc_document_exporter"
 
 export class EpubDocForgejoExporter extends EpubExporter {
@@ -106,5 +107,14 @@ export class PandocDocForgejoExporter extends PandocDocGitExporter {
                 filename: `${this.format}/${file.filename}`
             }))
         })
+    }
+}
+
+export class FidusDocForgejoExporter extends FidusDocGitExporter {
+    init() {
+        return super.init().then(blobMap => ({
+            filename: "document.fidus",
+            blob: blobMap["document.fidus"]
+        }))
     }
 }

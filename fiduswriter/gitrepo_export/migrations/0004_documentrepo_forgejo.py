@@ -35,9 +35,10 @@ class Migration(migrations.Migration):
                     models.CharField(
                         max_length=8,
                         choices=[
+                            ("forgejo", "Forgejo"),
+                            ("gitea", "Gitea"),
                             ("github", "GitHub"),
                             ("gitlab", "GitLab"),
-                            ("forgejo", "Forgejo"),
                         ],
                     ),
                 ),
@@ -46,7 +47,7 @@ class Migration(migrations.Migration):
             options={"verbose_name_plural": "Document repositories"},
         ),
         migrations.CreateModel(
-            name="ForgejoServer",
+            name="GitServer",
             fields=[
                 (
                     "id",
@@ -65,30 +66,44 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "server_type",
+                    models.CharField(
+                        max_length=8,
+                        choices=[
+                            ("forgejo", "Forgejo"),
+                            ("gitea", "Gitea"),
+                            ("github", "GitHub"),
+                            ("gitlab", "GitLab"),
+                        ],
+                        default="forgejo",
+                    ),
+                ),
+                (
                     "instance_url",
                     models.URLField(
-                        help_text="Base URL of the Forgejo instance (e.g. https://code.example.org)"
+                        blank=True,
+                        help_text="Base URL (e.g. https://code.example.org). Not needed for GitHub.com.",
                     ),
                 ),
                 (
                     "name",
                     models.CharField(
                         blank=True,
-                        help_text="A label to identify this instance",
+                        help_text="A label to identify this server",
                         max_length=128,
                     ),
                 ),
                 (
                     "token",
                     models.CharField(
-                        help_text="Personal Access Token with repo scope",
+                        help_text="Personal Access Token",
                         max_length=256,
                     ),
                 ),
                 ("active", models.BooleanField(default=True)),
                 ("added", models.DateTimeField(auto_now_add=True)),
             ],
-            options={"verbose_name_plural": "Forgejo servers"},
+            options={"verbose_name_plural": "Git servers"},
         ),
         migrations.AlterField(
             model_name="bookrepository",
@@ -96,9 +111,10 @@ class Migration(migrations.Migration):
             field=models.CharField(
                 max_length=8,
                 choices=[
+                    ("forgejo", "Forgejo"),
+                    ("gitea", "Gitea"),
                     ("github", "GitHub"),
                     ("gitlab", "GitLab"),
-                    ("forgejo", "Forgejo"),
                 ],
             ),
         ),

@@ -2,30 +2,30 @@ import json
 
 from django.conf import settings
 from httpx import AsyncClient, Request
-from allauth.socialaccount.models import SocialToken
-from allauth.socialaccount.providers.gitlab.views import GitLabOAuth2Adapter
 
 
-class URLTranslator(GitLabOAuth2Adapter):
-    def get_url(self, path):
-        return self._build_url("/api/v4/" + path)
+def get_headers(token):
+    return {
+        "Authorization": f"Bearer {token}",
+        "User-Agent": "Fidus Writer",
+        "Content-Type": "application/json",
+    }
+
+
+def _get_base_url(instance_url=None):
+    return instance_url or getattr(
+        settings, "GITLAB_API_URL", "https://gitlab.com"
+    )
 
 
 async def proxy(
-    request, path, user, query_string, body, method, content_type=None
+    token, instance_url, path, query_string, body, method, content_type=None
 ):
-    social_token = await SocialToken.objects.aget(
-        account__user=user, account__provider="gitlab"
-    )
-    headers = get_headers(social_token.token)
+    headers = get_headers(token)
     if content_type:
         headers["Content-Type"] = content_type
-    base_url = getattr(settings, "GITLAB_API_URL", None)
-    if base_url:
-        url = f"{base_url}/{path}"
-    else:
-        url_translator = URLTranslator(request)
-        url = url_translator.get_url(path)
+    base_url = _get_base_url(instance_url)
+    url = f"{base_url}/api/v4/{path}"
     if query_string:
         url += "?" + query_string
     if method == "GET":
@@ -38,41 +38,26 @@ async def proxy(
     return response
 
 
-def get_headers(token):
-    return {
-        "Authorization": f"Bearer {token}",
-        "User-Agent": "Fidus Writer",
-        "Content-Type": "application/json",
-    }
-
-
-async def get_repo(request, id, user):
-    social_token = await SocialToken.objects.aget(
-        account__user=user, account__provider="gitlab"
-    )
-    headers = get_headers(social_token.token)
+async def get_repo(id, token, instance_url=None):
+    headers = get_headers(token)
+    base_url = _get_base_url(instance_url)
     files = []
-    base_url = getattr(settings, "GITLAB_API_URL", None)
-    if base_url:
-        next_url = f"{base_url}/projects/{id}/repository/tree?recursive=true&per_page=4&pagination=keyset"
-    else:
-        url_translator = URLTranslator(request)
-        next_url = url_translator.get_url(
-            f"projects/{id}/repository/tree"
-            "?recursive=true&per_page=4&pagination=keyset"
-        )
+    next_url = f"{base_url}/api/v4/projects/{id}/repository/tree?recursive=true&per_page=4&pagination=keyset"
     while next_url:
         request = Request("GET", next_url, headers=headers)
         async with AsyncClient(
             timeout=88  # Firefox times out after 90 seconds, so we need to return before that.
         ) as client:
             response = await client.send(request)
+        response.raise_for_status()
         files += json.loads(response.text)
         next_url = False
-        for link_info in response.headers["Link"].split(", "):
-            link, rel = link_info.split("; ")
-            if rel == 'rel="next"':
-                next_url = link[1:-1]
+        link_header = response.headers.get("Link", "")
+        if link_header:
+            for link_info in link_header.split(", "):
+                link, rel = link_info.split("; ")
+                if rel == 'rel="next"':
+                    next_url = link[1:-1]
     return files
 
 
@@ -85,24 +70,17 @@ def gitlabrepo2repodata(gitlab_repo):
     }
 
 
-async def get_repos(request, gitlab_token):
-    # TODO: API documentation unclear on whether pagination is required.
-    headers = get_headers(gitlab_token)
-    repos = []
-    base_url = getattr(settings, "GITLAB_API_URL", None)
-    if base_url:
-        url = f"{base_url}/projects?min_access_level=30&simple=true"
-    else:
-        url_translator = URLTranslator(request)
-        url = url_translator.get_url(
-            "projects?min_access_level=30&simple=true"
-        )
+async def get_repos(token, instance_url=None):
+    headers = get_headers(token)
+    base_url = _get_base_url(instance_url)
+    url = f"{base_url}/api/v4/projects?min_access_level=30&simple=true"
     request = Request("GET", url, headers=headers)
     async with AsyncClient(
         timeout=88  # Firefox times out after 90 seconds, so we need to return before that.
     ) as client:
         response = await client.send(request)
     content = json.loads(response.text)
+    repos = []
     if isinstance(content, list):
         repos += map(gitlabrepo2repodata, content)
     return repos

@@ -1,9 +1,10 @@
 import {escapeText} from "../common"
 
 const REPO_TYPES = {
+    forgejo: "Forgejo",
+    gitea: "Gitea",
     github: "GitHub",
-    gitlab: "GitLab",
-    forgejo: "Forgejo"
+    gitlab: "GitLab"
 }
 
 function repoName(name, type, userReposMultitype) {
@@ -19,7 +20,7 @@ function noReposMessageTemplate() {
         <td colspan="2">
             <p class="no-repos-message">
                 ${gettext("No git repositories available.")}
-                ${gettext("Connect your GitHub or GitLab account in the user profile preferences, or add a Forgejo server using the button above.")}
+                ${gettext("Add a git server (Forgejo, Gitea, GitHub or GitLab) using the button above.")}
             </p>
         </td>
     </tr>`
@@ -64,7 +65,7 @@ export const repoSelectorTemplate = ({
             ${gettext("Reload")}
         </button>
         <button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small forgejo-servers">
-            ${gettext("Forgejo")}
+            ${gettext("Manage git repositories")}
         </button>
         </td>
     </tr>
@@ -76,20 +77,89 @@ function formatCheckboxRows(availableFormats, selectedTargets, item) {
     if (!availableFormats || !availableFormats.length) {
         return ""
     }
-    return availableFormats
-        .map(fmt => {
-            const checked = selectedTargets.includes(fmt.key)
-            const disabled =
-                (fmt.key === "odt" && !item.odt_template) ||
-                (fmt.key === "docx" && !item.docx_template)
-            return `<tr>
+    const isBook = item.chapters !== undefined
+    const exportTemplates = item.export_templates || []
+    const odtTemplates = exportTemplates.filter(t => t.file_type === "odt")
+    const docxTemplates = exportTemplates.filter(t => t.file_type === "docx")
+
+    let effectiveTargets = [...selectedTargets]
+    // Migrate old bare "odt"/"docx" targets to first matching template
+    if (!isBook) {
+        if (effectiveTargets.includes("odt") && odtTemplates.length) {
+            effectiveTargets = effectiveTargets.filter(t => t !== "odt")
+            if (!effectiveTargets.some(t => t.startsWith("odt-"))) {
+                effectiveTargets.push(`odt-${odtTemplates[0].id}`)
+            }
+        }
+        if (effectiveTargets.includes("docx") && docxTemplates.length) {
+            effectiveTargets = effectiveTargets.filter(t => t !== "docx")
+            if (!effectiveTargets.some(t => t.startsWith("docx-"))) {
+                effectiveTargets.push(`docx-${docxTemplates[0].id}`)
+            }
+        }
+    }
+
+    const staticFormats = availableFormats.filter(fmt => {
+        if (fmt.key === "fidus" && isBook) {
+            return false
+        }
+        if (fmt.key === "fidusbook" && !isBook) {
+            return false
+        }
+        if (fmt.key === "odt" || fmt.key === "docx") {
+            return false
+        }
+        return true
+    })
+
+    const rows = staticFormats.map(fmt => {
+        const checked = effectiveTargets.includes(fmt.key)
+        return `<tr>
             <th><h4 class="fw-tablerow-title">${escapeText(fmt.label)}</h4></th>
             <td><input type="checkbox" class="export-format"
-                data-key="${fmt.key}" ${checked ? "checked" : ""}
-                ${disabled ? "disabled" : ""}></td>
+                data-key="${fmt.key}" ${checked ? "checked" : ""}></td>
         </tr>`
+    })
+
+    if (isBook) {
+        if (item.odt_template) {
+            const checked = effectiveTargets.includes("odt")
+            rows.push(`<tr>
+                <th><h4 class="fw-tablerow-title">${escapeText("ODT")}</h4></th>
+                <td><input type="checkbox" class="export-format"
+                    data-key="odt" ${checked ? "checked" : ""}></td>
+            </tr>`)
+        }
+        if (item.docx_template) {
+            const checked = effectiveTargets.includes("docx")
+            rows.push(`<tr>
+                <th><h4 class="fw-tablerow-title">${escapeText("DOCX")}</h4></th>
+                <td><input type="checkbox" class="export-format"
+                    data-key="docx" ${checked ? "checked" : ""}></td>
+            </tr>`)
+        }
+    } else {
+        odtTemplates.forEach(t => {
+            const key = `odt-${t.id}`
+            const checked = effectiveTargets.includes(key)
+            rows.push(`<tr>
+                <th><h4 class="fw-tablerow-title">${escapeText(`ODT: ${t.title}`)}</h4></th>
+                <td><input type="checkbox" class="export-format"
+                    data-key="${key}" ${checked ? "checked" : ""}></td>
+            </tr>`)
         })
-        .join("")
+        docxTemplates.forEach(t => {
+            const key = `docx-${t.id}`
+            const checked = effectiveTargets.includes(key)
+            rows.push(`<tr>
+                <th><h4 class="fw-tablerow-title">${escapeText(`DOCX: ${t.title}`)}</h4></th>
+                <td><input type="checkbox" class="export-format"
+                    data-key="${key}" ${checked ? "checked" : ""}></td>
+            </tr>`)
+        })
+    }
+
+    return rows.join("")
 }
 
 export const docRepoSettingsTemplate = ({
@@ -131,7 +201,7 @@ export const docRepoSettingsTemplate = ({
                 ${gettext("Reload")}
             </button>
             <button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small forgejo-servers">
-                ${gettext("Forgejo")}
+                ${gettext("Manage git repositories")}
             </button>
             </td>
         </tr>

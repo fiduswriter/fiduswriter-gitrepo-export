@@ -3,7 +3,6 @@ import json
 
 from django.conf import settings
 from httpx import AsyncClient, Request
-from allauth.socialaccount.models import SocialToken
 
 ALLOWED_PATHS = [
     re.compile(r"^repos/([\w\.\-@_]+)/([\w\.\-@_]+)/contents/"),
@@ -20,13 +19,18 @@ ALLOWED_PATHS = [
 ]
 
 
-async def proxy(path, user, query_string, body, method, content_type=None):
+def get_headers(token):
+    return {
+        "Authorization": f"Bearer {token}",
+        "User-Agent": "Fidus Writer",
+        "Accept": "application/vnd.github.v3+json",
+    }
+
+
+async def proxy(path, token, query_string, body, method, content_type=None):
     if not any(regex.match(path) for regex in ALLOWED_PATHS):
         raise Exception("Path not permitted.")
-    social_token = await SocialToken.objects.aget(
-        account__user=user, account__provider="github"
-    )
-    headers = get_headers(social_token.token)
+    headers = get_headers(token)
     if content_type:
         headers["Content-Type"] = content_type
     base_url = getattr(settings, "GITHUB_API_URL", "https://api.github.com")
@@ -43,14 +47,6 @@ async def proxy(path, user, query_string, body, method, content_type=None):
     return response
 
 
-def get_headers(token):
-    return {
-        "Authorization": f"token {token}",
-        "User-Agent": "Fidus Writer",
-        "Accept": "application/vnd.github.v3+json",
-    }
-
-
 def githubrepo2repodata(github_repo):
     return {
         "type": "github",
@@ -60,9 +56,12 @@ def githubrepo2repodata(github_repo):
     }
 
 
-async def get_repos(github_token):
-    headers = get_headers(github_token)
-    base_url = getattr(settings, "GITHUB_API_URL", "https://api.github.com")
+async def get_repos(token, base_url=None):
+    if not base_url:
+        base_url = getattr(
+            settings, "GITHUB_API_URL", "https://api.github.com"
+        )
+    headers = get_headers(token)
     repos = []
     page = 1
     last_page = False

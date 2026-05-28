@@ -19,11 +19,11 @@ class DocumentRepositoryAdmin(admin.ModelAdmin):
 admin.site.register(models.DocumentRepository, DocumentRepositoryAdmin)
 
 
-class ForgejoServerAdmin(admin.ModelAdmin):
+class GitServerAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.register(models.ForgejoServer, ForgejoServerAdmin)
+admin.site.register(models.GitServer, GitServerAdmin)
 
 
 class RepoInfoAdmin(admin.ModelAdmin):

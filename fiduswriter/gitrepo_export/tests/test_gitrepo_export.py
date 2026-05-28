@@ -12,18 +12,20 @@ from testing.liveserver import ChannelsLiveServerTestCase
 from testing.selenium_helper import SeleniumHelper
 
 from django.conf import settings
-from django.contrib.sites.models import Site
-from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
-
-from allauth.socialaccount.providers import registry
-from allauth.socialaccount.providers.github.provider import GitHubProvider
-from allauth.socialaccount.providers.gitlab.provider import GitLabProvider
 from django.apps import apps
 from gitrepo_export import models
 
 books_installed = apps.is_installed("book")
 if books_installed:
     from book.models import Book
+
+
+def get_free_port():
+    s = socket.socket(socket.AF_INET, type=socket.SOCK_STREAM)
+    s.bind(("localhost", 0))
+    address, port = s.getsockname()
+    s.close()
+    return port
 
 
 class MockGitHubHandler(BaseHTTPRequestHandler):
@@ -88,14 +90,6 @@ class MockGitHubHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
 
-def get_free_port():
-    s = socket.socket(socket.AF_INET, type=socket.SOCK_STREAM)
-    s.bind(("localhost", 0))
-    address, port = s.getsockname()
-    s.close()
-    return port
-
-
 class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
     fixtures = [
         "initial_documenttemplates.json",
@@ -110,9 +104,6 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        # Register the GitHub provider with allauth so the configuration
-        # view can resolve social accounts for the logged-in user.
-        registry.register(GitHubProvider)
         # Start the mock GitHub server and set GITHUB_API_URL BEFORE
         # super().setUpClass() so the forked Daphne process inherits it.
         cls.server_port = get_free_port()
@@ -140,22 +131,25 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
         self.user = self.create_user(
             username="User1", email="user1@user.com", passtext="password"
         )
-        site = Site.objects.get_current()
-        social_app = SocialApp.objects.create(
-            provider="github",
-            name="GitHub",
-            client_id="mock-client-id",
-            secret="mock-secret",
-        )
-        social_app.sites.add(site)
-        social_account = SocialAccount.objects.create(
+        # Create a GitHub server entry with a PAT
+        self.github_server = models.GitServer.objects.create(
             user=self.user,
-            provider="github",
-            uid="12345",
-        )
-        SocialToken.objects.create(
-            account=social_account,
+            server_type="github",
+            instance_url="",
+            name="Mock GitHub",
             token="mock-github-token",
+        )
+        # Pre-populate cached repo info
+        models.RepoInfo.objects.create(
+            user=self.user,
+            content=[
+                {
+                    "type": "github",
+                    "name": "testuser/testrepo",
+                    "id": 123,
+                    "branch": "main",
+                }
+            ],
         )
 
     def create_document(self, title="Chapter 1"):
@@ -360,7 +354,9 @@ class MockGitLabHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(data).encode(encoding="utf_8"))
 
     def do_GET(self):
-        if self.path.startswith("/projects?min_access_level=30&simple=true"):
+        if self.path.startswith(
+            "/api/v4/projects?min_access_level=30&simple=true"
+        ):
             self._send_json(
                 [
                     {
@@ -371,7 +367,7 @@ class MockGitLabHandler(BaseHTTPRequestHandler):
                 ]
             )
             return
-        if self.path.startswith("/projects/456/repository/tree"):
+        if self.path.startswith("/api/v4/projects/456/repository/tree"):
             # Link header is required by gitlab.get_repo even for empty results
             self._send_json(
                 [],
@@ -384,7 +380,7 @@ class MockGitLabHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
-        if self.path == "/projects/456/repository/commits":
+        if self.path == "/api/v4/projects/456/repository/commits":
             self._send_json({"id": "commit123", "short_id": "commit123"})
             return
         self.send_response(404)
@@ -405,9 +401,6 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        # Register the GitLab provider with allauth so the configuration
-        # view can resolve social accounts for the logged-in user.
-        registry.register(GitLabProvider)
         # Start the mock GitLab server and set GITLAB_API_URL BEFORE
         # super().setUpClass() so the forked Daphne process inherits it.
         cls.server_port = get_free_port()
@@ -435,22 +428,25 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
         self.user = self.create_user(
             username="User1", email="user1@user.com", passtext="password"
         )
-        site = Site.objects.get_current()
-        social_app = SocialApp.objects.create(
-            provider="gitlab",
-            name="GitLab",
-            client_id="mock-client-id",
-            secret="mock-secret",
-        )
-        social_app.sites.add(site)
-        social_account = SocialAccount.objects.create(
+        # Create a GitLab server entry with a PAT
+        self.gitlab_server = models.GitServer.objects.create(
             user=self.user,
-            provider="gitlab",
-            uid="12345",
-        )
-        SocialToken.objects.create(
-            account=social_account,
+            server_type="gitlab",
+            instance_url=f"http://localhost:{self.server_port}",
+            name="Mock GitLab",
             token="mock-gitlab-token",
+        )
+        # Pre-populate cached repo info
+        models.RepoInfo.objects.create(
+            user=self.user,
+            content=[
+                {
+                    "type": "gitlab",
+                    "name": "testuser/testgitlabrepo",
+                    "id": 456,
+                    "branch": "main",
+                }
+            ],
         )
 
     def create_document(self, title="Chapter 1"):
@@ -624,17 +620,23 @@ class MockForgejoHandler(BaseHTTPRequestHandler):
                 ]
             )
             return
-        if self.path.startswith("/api/v1/repos/testuser/testforgejorepo/git/trees/main"):
+        if self.path.startswith(
+            "/api/v1/repos/testuser/testforgejorepo/git/trees/main"
+        ):
             self._send_json({"tree": []})
             return
-        if self.path.startswith("/api/v1/repos/testuser/testforgejorepo/contents/"):
+        if self.path.startswith(
+            "/api/v1/repos/testuser/testforgejorepo/contents/"
+        ):
             self._send_json({"sha": "abc123", "content": ""})
             return
         self.send_response(404)
         self.end_headers()
 
     def do_POST(self):
-        if self.path.startswith("/api/v1/repos/testuser/testforgejorepo/contents"):
+        if self.path.startswith(
+            "/api/v1/repos/testuser/testforgejorepo/contents"
+        ):
             self._send_json({"commit": {"id": "commit123"}})
             return
         self.send_response(404)
@@ -679,8 +681,9 @@ class ForgejoDocumentExportTest(SeleniumHelper, ChannelsLiveServerTestCase):
             username="User1", email="user1@user.com", passtext="password"
         )
         # Create a Forgejo server linked to the mock instance
-        self.forgejo_server = models.ForgejoServer.objects.create(
+        self.forgejo_server = models.GitServer.objects.create(
             user=self.user,
+            server_type="forgejo",
             instance_url=f"http://localhost:{self.server_port}",
             name="Mock Forgejo",
             token="mock-forgejo-token",
@@ -710,7 +713,9 @@ class ForgejoDocumentExportTest(SeleniumHelper, ChannelsLiveServerTestCase):
             EC.presence_of_element_located((By.CLASS_NAME, "editor-toolbar"))
         )
         self.driver.find_element(By.CSS_SELECTOR, ".doc-title").click()
-        self.driver.find_element(By.CSS_SELECTOR, ".doc-title").send_keys(title)
+        self.driver.find_element(By.CSS_SELECTOR, ".doc-title").send_keys(
+            title
+        )
         time.sleep(1)
 
     def test_forgejo_document_export(self):
@@ -734,13 +739,13 @@ class ForgejoDocumentExportTest(SeleniumHelper, ChannelsLiveServerTestCase):
 
         # Wait for the dialog to render
         WebDriverWait(self.driver, self.wait_time).until(
-            EC.presence_of_element_located(
-                (By.ID, "doc-settings-repository")
-            )
+            EC.presence_of_element_located((By.ID, "doc-settings-repository"))
         )
 
         # Select the mock Forgejo repository
-        repo_select = self.driver.find_element(By.ID, "doc-settings-repository")
+        repo_select = self.driver.find_element(
+            By.ID, "doc-settings-repository"
+        )
         self.driver.execute_script(
             'arguments[0].value = "forgejo-789"; arguments[0].dispatchEvent(new Event("change"));',
             repo_select,
@@ -764,7 +769,9 @@ class ForgejoDocumentExportTest(SeleniumHelper, ChannelsLiveServerTestCase):
         # Verify DocumentRepository was created
         doc = Document.objects.filter(owner=self.user).first()
         self.assertIsNotNone(doc)
-        doc_repo = models.DocumentRepository.objects.filter(document=doc).first()
+        doc_repo = models.DocumentRepository.objects.filter(
+            document=doc
+        ).first()
         self.assertIsNotNone(doc_repo)
         self.assertEqual(doc_repo.repo_id, 789)
         self.assertEqual(doc_repo.repo_name, "testuser/testforgejorepo")
@@ -801,7 +808,10 @@ class ForgejoDocumentExportTest(SeleniumHelper, ChannelsLiveServerTestCase):
                 By.CSS_SELECTOR, "body #alerts-outer-wrapper .alerts-info"
             )
             for alert in alerts:
-                if "Document published to repository successfully!" in alert.text:
+                if (
+                    "Document published to repository successfully!"
+                    in alert.text
+                ):
                     return alert
             return False
 

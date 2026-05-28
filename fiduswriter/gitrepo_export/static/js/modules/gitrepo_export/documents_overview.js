@@ -1,6 +1,6 @@
 import {addAlert, findTarget, getJson, post} from "../common"
 import {ForgejoDocumentProcessor} from "./forgejo"
-import {ForgejoServerManagerDialog} from "./forgejo_management"
+import {GitServerManagerDialog} from "./git_server_management"
 import {GithubDocumentProcessor} from "./github"
 import {GitlabDocumentProcessor} from "./gitlab"
 import {docRepoSettingsTemplate} from "./templates"
@@ -29,18 +29,18 @@ export class GitrepoExporterDocsOverview {
         window.document.body.addEventListener("click", event => {
             const el = {}
             switch (true) {
-                case findTarget(event, "tbody.gitrepo-repository .reload", el):
+                case findTarget(event, "#gitrepo-doc-settings .reload", el):
                     this.resetUserRepos()
                     break
                 case findTarget(event, ".forgejo-servers", el):
-                    this.manageForgejoServers()
+                    this.manageGitServers()
                     break
             }
         })
     }
 
-    manageForgejoServers() {
-        const manager = new ForgejoServerManagerDialog(() => {
+    manageGitServers() {
+        const manager = new GitServerManagerDialog(() => {
             this.resetUserRepos()
         })
         manager.open()
@@ -48,9 +48,15 @@ export class GitrepoExporterDocsOverview {
 
     resetUserRepos() {
         this.finishedLoading = false
-        Promise.all([this.getUserRepos(true), this.fetchFormats()]).then(() => {
-            this.finishedLoading = true
-        })
+        Promise.all([this.getUserRepos(true), this.fetchFormats()])
+            .then(() => {
+                this.finishedLoading = true
+                this.renderDocSettings()
+            })
+            .catch(() => {
+                this.finishedLoading = true
+                this.renderDocSettings()
+            })
     }
 
     fetchFormats() {
@@ -65,8 +71,12 @@ export class GitrepoExporterDocsOverview {
         if (reload) {
             this.userRepos = {}
             this.userReposMultitype = false
+            this._userReposPromise = null
         }
-        return getJson(
+        if (this._userReposPromise && !reload) {
+            return this._userReposPromise
+        }
+        this._userReposPromise = getJson(
             `/api/gitrepo_export/get_git_repos/${reload ? "reload/" : ""}`
         ).then(({repos}) => {
             const initialType = repos.length ? repos[0].type : ""
@@ -77,6 +87,7 @@ export class GitrepoExporterDocsOverview {
                 }
             })
         })
+        return this._userReposPromise
     }
 
     getDocRepos() {
@@ -188,6 +199,7 @@ export class GitrepoExporterDocsOverview {
                     this.availableFormats
                 )
             case "forgejo":
+            case "gitea":
                 return new ForgejoDocumentProcessor(
                     overview,
                     doc,

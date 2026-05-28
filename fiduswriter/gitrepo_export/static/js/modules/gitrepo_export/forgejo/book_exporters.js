@@ -3,8 +3,9 @@ import {EpubBookExporter} from "../../books/exporter/epub"
 import {HTMLBookExporter} from "../../books/exporter/html"
 import {LatexBookExporter} from "../../books/exporter/latex"
 import {ODTBookExporter} from "../../books/exporter/odt"
-import {commitFile, commitZipContents} from "./tools"
+import {FidusBookGitExporter} from "../fidus_exporters"
 import {PandocBookGitExporter} from "../pandoc_book_exporter"
+import {commitFile, commitZipContents} from "./tools"
 
 export class EpubBookForgejoExporter extends EpubBookExporter {
     constructor(schema, csl, bookStyles, book, user, docList, updated, repo) {
@@ -110,5 +111,20 @@ export class PandocBookForgejoExporter extends PandocBookGitExporter {
             `${this.format}/`,
             this.commitMessage
         )
+    }
+}
+
+export class FidusBookForgejoExporter extends FidusBookGitExporter {
+    init() {
+        return super
+            .init()
+            .then(blobMap =>
+                commitFile(
+                    this.repo,
+                    blobMap["book.fidusbook"],
+                    "book.fidusbook",
+                    this.commitMessage
+                )
+            )
     }
 }

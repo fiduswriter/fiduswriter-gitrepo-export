@@ -3,8 +3,9 @@ import {EpubBookExporter} from "../../books/exporter/epub"
 import {HTMLBookExporter} from "../../books/exporter/html"
 import {LatexBookExporter} from "../../books/exporter/latex"
 import {ODTBookExporter} from "../../books/exporter/odt"
-import {zipToBlobs} from "./tools"
+import {FidusBookGitExporter} from "../fidus_exporters"
 import {PandocBookGitExporter} from "../pandoc_book_exporter"
+import {zipToBlobs} from "./tools"
 
 export class EpubBookGitlabExporter extends EpubBookExporter {
     constructor(schema, csl, bookStyles, book, user, docList, updated, repo) {
@@ -170,11 +171,8 @@ export class ODTBookGitlabExporter extends ODTBookExporter {
 
 export class PandocBookGitlabExporter extends PandocBookGitExporter {
     returnFiles() {
-        return zipToBlobs(
-            this.textFiles,
-            this.httpFiles,
-            [],
-            `${this.format}/`
-        )
+        return zipToBlobs(this.textFiles, this.httpFiles, [], `${this.format}/`)
     }
 }
+
+export class FidusBookGitlabExporter extends FidusBookGitExporter {}

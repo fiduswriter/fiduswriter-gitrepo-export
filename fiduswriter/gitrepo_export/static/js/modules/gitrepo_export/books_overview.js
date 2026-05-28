@@ -1,6 +1,6 @@
 import {addAlert, findTarget, getJson, post} from "../common"
 import {ForgejoBookProcessor} from "./forgejo"
-import {ForgejoServerManagerDialog} from "./forgejo_management"
+import {GitServerManagerDialog} from "./git_server_management"
 import {GithubBookProcessor} from "./github"
 import {GitlabBookProcessor} from "./gitlab"
 import {repoSelectorTemplate} from "./templates"
@@ -33,14 +33,14 @@ export class GitrepoExporterBooksOverview {
                     this.resetUserRepos()
                     break
                 case findTarget(event, ".forgejo-servers", el):
-                    this.manageForgejoServers()
+                    this.manageGitServers()
                     break
             }
         })
     }
 
-    manageForgejoServers() {
-        const manager = new ForgejoServerManagerDialog(() => {
+    manageGitServers() {
+        const manager = new GitServerManagerDialog(() => {
             this.resetUserRepos()
         })
         manager.open()
@@ -53,7 +53,7 @@ export class GitrepoExporterBooksOverview {
             repoSelector.innerHTML =
                 '<tr><th></th><td><i class="fa fa-spinner fa-pulse"></i></td></tr>'
         }
-        Promise.all([this.getUserRepos(true), this.fetchFormats()]).then(() => {
+        const render = () => {
             this.finishedLoading = true
             const repoSelector = document.querySelector(
                 "tbody.gitrepo-repository"
@@ -67,7 +67,10 @@ export class GitrepoExporterBooksOverview {
                     availableFormats: this.availableFormats
                 })
             }
-        })
+        }
+        Promise.all([this.getUserRepos(true), this.fetchFormats()])
+            .then(render)
+            .catch(render)
     }
 
     fetchFormats() {
@@ -82,8 +85,12 @@ export class GitrepoExporterBooksOverview {
         if (reload) {
             this.userRepos = {}
             this.userReposMultitype = false
+            this._userReposPromise = null
         }
-        return getJson(
+        if (this._userReposPromise && !reload) {
+            return this._userReposPromise
+        }
+        this._userReposPromise = getJson(
             `/api/gitrepo_export/get_git_repos/${reload ? "reload/" : ""}`
         ).then(({repos}) => {
             const initialType = repos.length ? repos[0].type : ""
@@ -94,6 +101,7 @@ export class GitrepoExporterBooksOverview {
                 }
             })
         })
+        return this._userReposPromise
     }
 
     getBookRepos() {
@@ -241,6 +249,7 @@ export class GitrepoExporterBooksOverview {
                     this.availableFormats
                 )
             case "forgejo":
+            case "gitea":
                 return new ForgejoBookProcessor(
                     overview.app,
                     overview,

@@ -2,6 +2,7 @@ import {Dialog, addAlert, escapeText} from "../../common"
 import {
     DOCXBookGithubExporter,
     EpubBookGithubExporter,
+    FidusBookGithubExporter,
     HTMLBookGithubExporter,
     LatexBookGithubExporter,
     ODTBookGithubExporter,
@@ -12,6 +13,7 @@ import {
 import {commitTree, promiseChain} from "./tools"
 
 const EXPORTER_MAP = {
+    fidus: FidusBookGithubExporter,
     epub: EpubBookGithubExporter,
     unpacked_epub: UnpackedEpubBookGithubExporter,
     html: HTMLBookGithubExporter,
@@ -113,6 +115,15 @@ export class GithubBookProcessor {
                         )
                     }
                 } else if (targetKey === "latex") {
+                    exporter = new ExporterClass(
+                        this.booksOverview.schema,
+                        this.book,
+                        this.booksOverview.user,
+                        this.booksOverview.documentList,
+                        new Date(this.book.updated * 1000),
+                        this.userRepo
+                    )
+                } else if (targetKey === "fidus") {
                     exporter = new ExporterClass(
                         this.booksOverview.schema,
                         this.book,

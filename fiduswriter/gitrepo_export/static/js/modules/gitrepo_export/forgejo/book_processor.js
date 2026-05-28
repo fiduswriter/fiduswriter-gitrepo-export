@@ -2,6 +2,7 @@ import {Dialog, addAlert, escapeText} from "../../common"
 import {
     DOCXBookForgejoExporter,
     EpubBookForgejoExporter,
+    FidusBookForgejoExporter,
     HTMLBookForgejoExporter,
     LatexBookForgejoExporter,
     ODTBookForgejoExporter,
@@ -9,6 +10,7 @@ import {
 } from "./book_exporters"
 
 const EXPORTER_MAP = {
+    fidus: FidusBookForgejoExporter,
     epub: EpubBookForgejoExporter,
     html: HTMLBookForgejoExporter,
     latex: LatexBookForgejoExporter,
@@ -107,6 +109,15 @@ export class ForgejoBookProcessor {
                         )
                     }
                 } else if (targetKey === "latex") {
+                    exporter = new ExporterClass(
+                        this.booksOverview.schema,
+                        this.book,
+                        this.booksOverview.user,
+                        this.booksOverview.documentList,
+                        new Date(this.book.updated * 1000),
+                        this.userRepo
+                    )
+                } else if (targetKey === "fidus") {
                     exporter = new ExporterClass(
                         this.booksOverview.schema,
                         this.book,

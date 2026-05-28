@@ -3,6 +3,7 @@ import {getMissingDocumentListData} from "../../documents/tools"
 import {
     DOCXDocGithubExporter,
     EpubDocGithubExporter,
+    FidusDocGithubExporter,
     HTMLDocGithubExporter,
     LatexDocGithubExporter,
     ODTDocGithubExporter,
@@ -11,6 +12,7 @@ import {
 import {commitTree, promiseChain} from "./tools"
 
 const EXPORTER_MAP = {
+    fidus: FidusDocGithubExporter,
     epub: EpubDocGithubExporter,
     html: HTMLDocGithubExporter,
     latex: LatexDocGithubExporter,
@@ -70,13 +72,14 @@ export class GithubDocumentProcessor {
         })
     }
 
-    _getTemplateUrl(fileType) {
+    _getTemplateUrl(targetKey) {
+        const templateId = parseInt(targetKey.split("-")[1], 10)
         return postJson("/api/document/get_template_for_doc/", {
             id: this.doc.id
         })
             .then(({json}) => {
                 const template = json.export_templates.find(
-                    t => t.fields.file_type === fileType
+                    t => t.pk === templateId
                 )
                 return template ? template.fields.template_file : null
             })
@@ -84,6 +87,7 @@ export class GithubDocumentProcessor {
     }
 
     _createExporter(targetKey, templateUrl) {
+        const baseKey = targetKey.replace(/-\d+$/, "")
         const ExporterClass = this._getExporterClass(targetKey)
         if (!ExporterClass) {
             return null
@@ -94,14 +98,14 @@ export class GithubDocumentProcessor {
         const updated = new Date(this.doc.updated * 1000)
         const repo = this.userRepo
 
-        if (targetKey.startsWith("pandoc:")) {
+        if (baseKey.startsWith("pandoc:")) {
             const formatInfo = this.availableFormats.find(
                 f => f.key === targetKey
             )
             if (!formatInfo) {
                 return null
             }
-            const format = targetKey.slice(7)
+            const format = baseKey.slice(7)
             const options = {}
             if (format === "rtf") {
                 options.fullFileExport = true
@@ -122,7 +126,9 @@ export class GithubDocumentProcessor {
             )
         }
 
-        switch (targetKey) {
+        switch (baseKey) {
+            case "fidus":
+                return new ExporterClass(this.doc, bibDB, imageDB, repo)
             case "html":
             case "epub":
                 return new ExporterClass(
@@ -168,10 +174,10 @@ export class GithubDocumentProcessor {
         )
             .then(() => {
                 const nonTemplateTargets = targets.filter(
-                    t => t !== "docx" && t !== "odt"
+                    t => !t.startsWith("odt-") && !t.startsWith("docx-")
                 )
                 const templateTargets = targets.filter(
-                    t => t === "docx" || t === "odt"
+                    t => t.startsWith("odt-") || t.startsWith("docx-")
                 )
 
                 const nonTemplatePromises = nonTemplateTargets.map(
@@ -252,10 +258,11 @@ export class GithubDocumentProcessor {
     }
 
     _getExporterClass(targetKey) {
-        if (EXPORTER_MAP[targetKey]) {
-            return EXPORTER_MAP[targetKey]
+        const baseKey = targetKey.replace(/-\d+$/, "")
+        if (EXPORTER_MAP[baseKey]) {
+            return EXPORTER_MAP[baseKey]
         }
-        if (targetKey.startsWith("pandoc:")) {
+        if (baseKey.startsWith("pandoc:")) {
             return PandocDocGithubExporter
         }
         return null

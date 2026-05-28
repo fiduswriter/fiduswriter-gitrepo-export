@@ -1,4 +1,11 @@
 NATIVE_FORMATS = [
+    {"label": "Fidus", "key": "fidus", "ext": "fidus", "binary": True},
+    {
+        "label": "Fidusbook",
+        "key": "fidusbook",
+        "ext": "fidusbook",
+        "binary": True,
+    },
     {"label": "EPUB", "key": "epub", "ext": "epub", "binary": True},
     {
         "label": "Unpacked EPUB",

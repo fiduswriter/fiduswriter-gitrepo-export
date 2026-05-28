@@ -2,6 +2,7 @@ import {Dialog, addAlert, escapeText} from "../../common"
 import {
     DOCXBookGitlabExporter,
     EpubBookGitlabExporter,
+    FidusBookGitlabExporter,
     HTMLBookGitlabExporter,
     LatexBookGitlabExporter,
     ODTBookGitlabExporter,
@@ -12,6 +13,7 @@ import {
 import {commitFiles} from "./tools"
 
 const EXPORTER_MAP = {
+    fidus: FidusBookGitlabExporter,
     epub: EpubBookGitlabExporter,
     unpacked_epub: UnpackedEpubBookGitlabExporter,
     html: HTMLBookGitlabExporter,
@@ -121,6 +123,15 @@ export class GitlabBookProcessor {
                         new Date(this.book.updated * 1000),
                         this.userRepo
                     )
+                } else if (targetKey === "fidus") {
+                    exporter = new ExporterClass(
+                        this.booksOverview.schema,
+                        this.book,
+                        this.booksOverview.user,
+                        this.booksOverview.documentList,
+                        new Date(this.book.updated * 1000),
+                        this.userRepo
+                    )
                 } else {
                     exporter = new ExporterClass(
                         this.booksOverview.schema,
@@ -142,7 +153,7 @@ export class GitlabBookProcessor {
             .then(commitBlobs => {
                 const blobs = Object.assign({}, ...commitBlobs)
                 if (Object.keys(blobs).length) {
-                    return commitFiles(blobs, commitMessage, this.userRepo)
+                    return commitFiles(this.userRepo, commitMessage, blobs)
                 }
             })
             .then(result => {
