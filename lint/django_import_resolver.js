@@ -132,6 +132,74 @@ function getBooksPath() {
     return null
 }
 
+function getPandocPath() {
+    try {
+        // Try to find fiduswriter-pandoc via Python import
+        const pandocPathOutput = execSync(
+            'python -c "import fiduswriter; import json; print(json.dumps([str(p) for p in fiduswriter.__path__]))"',
+            {stdio: ["pipe", "pipe", "ignore"]}
+        )
+            .toString()
+            .trim()
+
+        const paths = JSON.parse(pandocPathOutput)
+        const pluginDir = path.resolve(__dirname, "..")
+
+        for (const testPath of paths) {
+            if (
+                typeof testPath !== "string" ||
+                testPath.startsWith("__editable__")
+            ) {
+                continue
+            }
+            const resolvedPath = fs.realpathSync(testPath)
+
+            // Skip the current plugin directory
+            if (
+                resolvedPath === pluginDir ||
+                resolvedPath.startsWith(pluginDir)
+            ) {
+                continue
+            }
+
+            // Skip fiduswriter core (has document or bibliography app)
+            if (
+                fs.existsSync(path.join(resolvedPath, "document")) ||
+                fs.existsSync(path.join(resolvedPath, "bibliography"))
+            ) {
+                continue
+            }
+
+            // Check if this namespace contribution contains the pandoc app
+            if (fs.existsSync(path.join(resolvedPath, "pandoc"))) {
+                return resolvedPath
+            }
+        }
+    } catch {
+        // Python import failed, try fallback
+    }
+
+    // Fallback: try to find fiduswriter-pandoc by looking in parent directories.
+    // Assumes fiduswriter-pandoc and fiduswriter-gitrepo-export are sibling directories.
+    const pluginDir = path.resolve(__dirname, "..")
+    const pluginParent = path.resolve(pluginDir, "..")
+    const candidate = path.join(
+        pluginParent,
+        "fiduswriter-pandoc",
+        "fiduswriter"
+    )
+    if (
+        fs.existsSync(candidate) &&
+        fs.statSync(candidate).isDirectory() &&
+        fs.existsSync(path.join(candidate, "pandoc"))
+    ) {
+        return candidate
+    }
+
+    // fiduswriter-pandoc is optional
+    return null
+}
+
 function isFile(file) {
     let stat
     try {
@@ -286,7 +354,14 @@ const fidusWriterAppsPaths = getAppsPaths(fidusWriterPath)
 const booksPath = getBooksPath()
 const booksAppsPaths = booksPath ? getAppsPaths(booksPath) : []
 
-const appsPaths = pluginAppsPaths.concat(fidusWriterAppsPaths, booksAppsPaths)
+const pandocPath = getPandocPath()
+const pandocAppsPaths = pandocPath ? getAppsPaths(pandocPath) : []
+
+const appsPaths = pluginAppsPaths.concat(
+    fidusWriterAppsPaths,
+    booksAppsPaths,
+    pandocAppsPaths
+)
 
 const files = process.argv.slice(2)
 files.forEach(file => checkImports(file, appsPaths))

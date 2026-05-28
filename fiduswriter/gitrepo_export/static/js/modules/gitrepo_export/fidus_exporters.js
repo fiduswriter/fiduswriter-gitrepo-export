@@ -1,9 +1,9 @@
+import {FIDUSBOOK_VERSION} from "../books/exporter/native"
+import {getMissingChapterData} from "../books/exporter/tools"
 import {addAlert} from "../common"
 import {ShrinkFidus} from "../exporter/native/shrink"
 import {ZipFidus} from "../exporter/native/zip"
 import {ZipFileCreator} from "../exporter/tools/zip"
-import {getMissingChapterData} from "../books/exporter/tools"
-import {FIDUSBOOK_VERSION} from "../books/exporter/native"
 
 /**
  * Document exporter that creates a .fidus file for git commit.
@@ -120,26 +120,33 @@ export class FidusBookGitExporter {
             )
             return shrinker
                 .init()
-                .then(({doc: shrunkDoc, shrunkImageDB, shrunkBibDB, httpIncludes}) => {
-                    httpIncludes.forEach(include => {
-                        include.filename = `chapters/${index}/${include.filename}`
-                    })
-                    textFiles.push(
-                        {
-                            filename: `chapters/${index}/document.json`,
-                            contents: JSON.stringify(shrunkDoc)
-                        },
-                        {
-                            filename: `chapters/${index}/images.json`,
-                            contents: JSON.stringify(shrunkImageDB)
-                        },
-                        {
-                            filename: `chapters/${index}/bibliography.json`,
-                            contents: JSON.stringify(shrunkBibDB)
-                        }
-                    )
-                    httpFiles.push(...httpIncludes)
-                })
+                .then(
+                    ({
+                        doc: shrunkDoc,
+                        shrunkImageDB,
+                        shrunkBibDB,
+                        httpIncludes
+                    }) => {
+                        httpIncludes.forEach(include => {
+                            include.filename = `chapters/${index}/${include.filename}`
+                        })
+                        textFiles.push(
+                            {
+                                filename: `chapters/${index}/document.json`,
+                                contents: JSON.stringify(shrunkDoc)
+                            },
+                            {
+                                filename: `chapters/${index}/images.json`,
+                                contents: JSON.stringify(shrunkImageDB)
+                            },
+                            {
+                                filename: `chapters/${index}/bibliography.json`,
+                                contents: JSON.stringify(shrunkBibDB)
+                            }
+                        )
+                        httpFiles.push(...httpIncludes)
+                    }
+                )
                 .then(() => processChapter(index + 1))
         }
 

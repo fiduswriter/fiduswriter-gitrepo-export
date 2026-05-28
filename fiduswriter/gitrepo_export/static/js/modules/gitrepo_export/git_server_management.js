@@ -4,14 +4,22 @@ const SERVER_TYPE_LABELS = {
     forgejo: "Forgejo",
     gitea: "Gitea",
     github: "GitHub",
-    gitlab: "GitLab",
+    gitlab: "GitLab"
 }
 
 const SCOPE_NOTES = {
-    github: gettext("Use a Classic Personal Access Token (Settings → Developer settings → Personal access tokens → Tokens (classic)). Fine-grained tokens are not supported. The token needs the 'repo' scope."),
-    gitlab: gettext("Use a Personal Access Token from your User Settings → Access Tokens. Project or Group tokens will not work. The token needs the 'api' scope."),
-    forgejo: gettext("The token needs the following scopes: 'repo' (to read and write repository contents) and 'read:user' (to list your repositories)."),
-    gitea: gettext("The token needs the following scopes: 'repo' (to read and write repository contents) and 'read:user' (to list your repositories).")
+    github: gettext(
+        "Use a Classic Personal Access Token (Settings → Developer settings → Personal access tokens → Tokens (classic)). Fine-grained tokens are not supported. The token needs the 'repo' scope."
+    ),
+    gitlab: gettext(
+        "Use a Personal Access Token from your User Settings → Access Tokens. Project or Group tokens will not work. The token needs the 'api' scope."
+    ),
+    forgejo: gettext(
+        "The token needs the following scopes: 'repo' (to read and write repository contents) and 'read:user' (to list your repositories)."
+    ),
+    gitea: gettext(
+        "The token needs the following scopes: 'repo' (to read and write repository contents) and 'read:user' (to list your repositories)."
+    )
 }
 
 export class GitServerManagerDialog {
@@ -131,7 +139,9 @@ export class GitServerManagerDialog {
         const typeSelect = dialog.dialogEl.querySelector("#git-server-type")
         typeSelect.addEventListener("change", () => {
             const type = typeSelect.value
-            const urlRow = dialog.dialogEl.querySelector("#git-instance-url-row")
+            const urlRow = dialog.dialogEl.querySelector(
+                "#git-instance-url-row"
+            )
             const scopeNote = dialog.dialogEl.querySelector("#git-scope-note")
             if (type === "github") {
                 urlRow.style.display = "none"
@@ -142,7 +152,9 @@ export class GitServerManagerDialog {
         })
         // Initialize visibility
         if (typeSelect.value === "github") {
-            dialog.dialogEl.querySelector("#git-instance-url-row").style.display = "none"
+            dialog.dialogEl.querySelector(
+                "#git-instance-url-row"
+            ).style.display = "none"
         }
 
         dialog.dialogEl
@@ -150,24 +162,21 @@ export class GitServerManagerDialog {
             .addEventListener("click", () => {
                 this.addServer(dialog)
             })
-        dialog.dialogEl
-            .querySelectorAll(".git-delete-server")
-            .forEach(btn => {
-                btn.addEventListener("click", () => {
-                    this.deleteServer(dialog, btn.dataset.serverId)
-                })
+        dialog.dialogEl.querySelectorAll(".git-delete-server").forEach(btn => {
+            btn.addEventListener("click", () => {
+                this.deleteServer(dialog, btn.dataset.serverId)
             })
+        })
     }
 
     addServer(dialog) {
-        const serverType = dialog.dialogEl.querySelector("#git-server-type").value
+        const serverType =
+            dialog.dialogEl.querySelector("#git-server-type").value
         const instanceUrl = dialog.dialogEl
             .querySelector("#git-instance-url")
             .value.trim()
         const name = dialog.dialogEl.querySelector("#git-name").value.trim()
-        const token = dialog.dialogEl
-            .querySelector("#git-token")
-            .value.trim()
+        const token = dialog.dialogEl.querySelector("#git-token").value.trim()
         if (serverType !== "github" && !instanceUrl) {
             addAlert(
                 "error",
