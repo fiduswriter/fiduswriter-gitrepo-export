@@ -1,4 +1,4 @@
-INSTALLED_APPS = ["book", "gitrepo_export"]
+INSTALLED_APPS = ["book", "gitrepo_export", "pandoc"]
 
 # Use plain StaticFilesStorage instead of CompressedManifestStaticFilesStorage
 # during CI tests.  The manifest storage requires a pre-built staticfiles.json
