@@ -442,6 +442,7 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
             content=[
                 {
                     "type": "gitlab",
+                    "server_id": self.gitlab_server.id,
                     "name": "testuser/testgitlabrepo",
                     "id": 456,
                     "branch": "main",
