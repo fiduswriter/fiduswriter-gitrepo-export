@@ -3,130 +3,378 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Fidus Writer Github Export\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 13:28+0000\n"
+"POT-Creation-Date: 2026-06-02 17:43+0000\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:118
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:120
 msgid "There is no git repository registered for the book:"
 msgstr "За книгата няма регистрирано git хранилище:"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:128
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:129
 msgid "You do not have access to the repository:"
 msgstr "Нямате достъп до хранилището:"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:139
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:174
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:181
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:209
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:154
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:114
 msgid "Export to Git Repository"
 msgstr "Експортиране в Git Repository"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:140
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:182
 msgid "Export selected to Git repository."
 msgstr "Експортирайте избраното в Git хранилище."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:175
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:210
 msgid "Export book to git repository."
 msgstr "Експортиране на книга в git хранилище."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:206
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:24
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:268
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:217
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:39
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:176
 msgid "Git repository"
 msgstr "Git хранилище"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:207
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:269
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:218
 msgid "Git repository related settings"
 msgstr "Настройки, свързани с хранилището на Git"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:32
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:32
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:106
+msgid "There is no git repository registered for the document:"
+msgstr "Няма регистрирано git хранилище за документа:"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:115
+msgid "You do not have access to the repository."
+msgstr "Нямате достъп до хранилището."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:155
+msgid "Export selected documents to Git repository."
+msgstr "Експортирайте избрани документи в Git хранилище."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:116
+msgid "Export the current document to the configured git repository."
+msgstr "Експортирайте текущия документ в конфигурираното git хранилище."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:133
+msgid "Git Repository"
+msgstr "Git хранилище"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:135
+msgid "Configure the git repository and export formats for this document."
+msgstr "Конфигурирайте git хранилището и експортните формати за този документ."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:151
+msgid ""
+"No git repository configured for this document. Configure it in Settings → "
+"Git Repository."
+msgstr ""
+"Няма конфигурирано git хранилище за този документ. Конфигурирайте го в "
+"Настройки → Git Repository."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:196
+msgid "Unknown repository type."
+msgstr "Неизвестен тип хранилище."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:234
+msgid "Git Repository Settings"
+msgstr "Настройки на хранилището на Git"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:240
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:48
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:46
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:46
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:46
 msgid "Submit"
 msgstr "Изпратете"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:37
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:37
+#: gitrepo_export/static/js/modules/gitrepo_export/fidus_exporters.js:62
+msgid "Book cannot be exported due to lack of chapters."
+msgstr "Книгата не може да бъде експортирана поради липса на глави."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:51
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:58
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:51
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:58
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:51
 msgid "Update from Fidus Writer"
 msgstr "Актуализация от Fidus Writer"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:52
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:52
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:72
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:72
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:65
 msgid "Commit message"
 msgstr "Съобщение за ангажиране"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:55
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:55
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:69
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:74
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:74
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:67
 msgid "Updating"
 msgstr "Актуализиране"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:57
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:57
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:70
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:75
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:75
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:68
 msgid "Enter commit message"
 msgstr "Въведете съобщение за ангажиране"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:67
-msgid "Book publishing to GitHub initiated."
-msgstr "Стартира публикуването на книги в GitHub."
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:78
+msgid "Book publishing to Forgejo initiated."
+msgstr "Стартира издаването на книги в Forgejo."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:170
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:184
-msgid "Book already up to date in repository."
-msgstr "Резервирайте вече актуално в хранилището."
-
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:175
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:190
-msgid "Could not publish book to repository."
-msgstr "Не можа да публикува книга в хранилището."
-
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:181
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:154
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:169
 msgid "Could not publish some parts of book to repository."
 msgstr "Не можах да публикувам някои части от книгата в хранилището."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:196
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:177
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:160
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:183
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:163
 msgid "Book published to repository successfully!"
 msgstr "Книгата е публикувана успешно в хранилището!"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:167
+msgid "Document publishing to Forgejo initiated."
+msgstr "Започна публикуването на документ в Forgejo."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:204
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:201
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:201
+#, javascript-format
+msgid "No %s export template found for document."
+msgstr "Не е намерен %s шаблон за експортиране за документ."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:296
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:231
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:235
+msgid "Could not publish document to repository."
+msgstr "Неуспешно публикуване на документа в хранилището."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:302
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:251
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:229
+msgid "Document published to repository successfully!"
+msgstr "Документът е публикуван в хранилището успешно!"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:12
+msgid ""
+"Use a Classic Personal Access Token (Settings → Developer settings → "
+"Personal access tokens → Tokens (classic)). Fine-grained tokens are not "
+"supported. The token needs the 'repo' scope."
+msgstr ""
+"Използвайте класически личен токен за достъп (Настройки → Настройки за "
+"разработчици → Лични токени за достъп → Токени (класически)). Фините токени "
+"не се поддържат. Токенът се нуждае от обхвата „repo“."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:15
+msgid ""
+"Use a Personal Access Token from your User Settings → Access Tokens. Project "
+"or Group tokens will not work. The token needs the 'api' scope."
+msgstr ""
+"Използвайте личен токен за достъп от вашите потребителски настройки → Токени "
+"за достъп. Токените за проект или група няма да работят. Токенът се нуждае "
+"от обхвата „api“."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:18
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:21
+msgid ""
+"The token needs the following scopes: 'repo' (to read and write repository "
+"contents) and 'read:user' (to list your repositories)."
+msgstr ""
+"Токенът се нуждае от следните обхвати: „repo“ (за четене и запис на "
+"съдържанието на хранилището) и „read:user“ (за изброяване на вашите "
+"хранилища)."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:42
+msgid "Close"
+msgstr "затвори"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:15
+msgid "Manage Git Servers"
+msgstr "Управление на Git сървъри"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:75
+msgid "Delete"
+msgstr "Изтриване"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:81
+msgid "No git servers configured."
+msgstr "Няма конфигурирани git сървъри."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:86
+msgid "Type"
+msgstr "Тип"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:87
+msgid "Name"
+msgstr "Име"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:88
+msgid "URL"
+msgstr "URL адрес"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:95
+msgid "Add Git Server"
+msgstr "Добавете Git сървър"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:98
+msgid "Server Type"
+msgstr "Тип сървър"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:109
+msgid "Instance URL"
+msgstr "URL адрес на екземпляр"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:113
+msgid "Name (label)"
+msgstr "Име (етикет)"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:114
+msgid "My Server"
+msgstr "Моят сървър"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:117
+msgid "PAT Token"
+msgstr "PAT токен"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:131
+msgid "Verify & Save"
+msgstr "Проверете и запазете"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:183
+msgid "Instance URL is required for this server type."
+msgstr "За този тип сървър се изисква URL адрес на екземпляр."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:188
+msgid "PAT token is required."
+msgstr "Изисква се PAT токен."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:198
+msgid "Git server added successfully."
+msgstr "Git сървърът е добавен успешно."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:209
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:217
+msgid "Could not verify server. Check the URL and token."
+msgstr "Сървърът не може да бъде потвърден. Проверете URL адреса и токена."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:240
+msgid "Git server deleted."
+msgstr "Git сървърът е изтрит."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:245
+msgid "Could not delete git server."
+msgstr "Git сървърът не можа да бъде изтрит."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:83
+msgid "Book publishing to GitHub initiated."
+msgstr "Стартира публикуването на книги в GitHub."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:158
+msgid "Book already up to date in repository."
+msgstr "Резервирайте вече актуално в хранилището."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:163
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:168
+msgid "Could not publish book to repository."
+msgstr "Не можа да публикува книга в хранилището."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:167
+msgid "Document publishing to GitHub initiated."
+msgstr "Започна публикуването на документ в GitHub."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:225
+msgid "Document already up to date in repository."
+msgstr "Документът вече е актуален в хранилището."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:237
+msgid "Could not publish some parts of document to repository."
+msgstr "Не можах да публикувам някои части от документа в хранилището."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:83
 msgid "Book publishing to GitLab initiated."
 msgstr "Стартира публикуването на книги в GitLab."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:29
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:167
+msgid "Document publishing to GitLab initiated."
+msgstr "Започна публикуването на документ в GitLab."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:11
+msgid "Git Repository Servers"
+msgstr "Сървъри Git Repository"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:13
+msgid ""
+"Manage git servers (GitHub, GitLab, Forgejo, Gitea) for exporting documents "
+"to Git repositories."
+msgstr ""
+"Управлявайте git сървъри (GitHub, GitLab, Forgejo, Gitea) за експортиране на "
+"документи в Git хранилища."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:22
+msgid "No git repositories available."
+msgstr "Няма налични git хранилища."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:23
+msgid ""
+"Add a git server (Forgejo, Gitea, GitHub or GitLab) using the button above."
+msgstr ""
+"Добавете git сървър (Forgejo, Gitea, GitHub или GitLab), като използвате "
+"бутона по-горе."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:43
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:180
 msgid "Select git repository to export to"
 msgstr "Изберете git хранилище, към което да експортирате"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:62
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:201
 msgid "Reload"
 msgstr "Презареди"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:69
-msgid "Export EPUB"
-msgstr "Експортиране на EPUB"
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:204
+msgid "Manage git repositories"
+msgstr "Управление на git хранилища"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:79
-msgid "Export unpacked EPUB"
-msgstr "Експортирайте разопакован EPUB"
+#~ msgid "Export EPUB"
+#~ msgstr "Експортиране на EPUB"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:89
-msgid "Export HTML"
-msgstr "Експортиране на HTML"
+#~ msgid "Export unpacked EPUB"
+#~ msgstr "Експортирайте разопакован EPUB"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:99
-msgid "Export Unified HTML"
-msgstr "Експортирайте Unified HTML"
+#~ msgid "Export HTML"
+#~ msgstr "Експортиране на HTML"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:109
-msgid "Export LaTeX"
-msgstr "Експортирайте LaTeX"
+#~ msgid "Export Unified HTML"
+#~ msgstr "Експортирайте Unified HTML"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:119
-msgid "Export ODT"
-msgstr "Експортирайте ODT"
+#~ msgid "Export LaTeX"
+#~ msgstr "Експортирайте LaTeX"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:131
-msgid "Export DOCX"
-msgstr "Експортирайте DOCX"
+#~ msgid "Export ODT"
+#~ msgstr "Експортирайте ODT"
+
+#~ msgid "Export DOCX"
+#~ msgstr "Експортирайте DOCX"
 
 #~ msgid "Book updated in repository successfully!"
 #~ msgstr "Книгата е актуализирана в хранилището успешно!"

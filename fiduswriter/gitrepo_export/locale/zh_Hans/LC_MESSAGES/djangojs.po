@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 09:55+0000\n"
+"POT-Creation-Date: 2026-06-02 17:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,120 +18,360 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:118
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:120
 msgid "There is no git repository registered for the book:"
 msgstr "没有为这本书注册 git 存储库："
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:128
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:129
 msgid "You do not have access to the repository:"
 msgstr "您无权访问存储库："
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:139
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:174
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:181
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:209
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:154
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:114
 msgid "Export to Git Repository"
 msgstr "导出到 Git 存储库"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:140
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:182
 msgid "Export selected to Git repository."
 msgstr "将所选内容导出到 Git 存储库。"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:175
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:210
 msgid "Export book to git repository."
 msgstr "将书籍导出到 git 存储库。"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:206
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:24
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:268
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:217
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:39
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:176
 msgid "Git repository"
 msgstr "Git 存储库"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:207
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:269
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:218
 msgid "Git repository related settings"
 msgstr "Git仓库相关设置"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:32
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:32
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:106
+msgid "There is no git repository registered for the document:"
+msgstr "没有为该文档注册 git 存储库："
+
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:115
+msgid "You do not have access to the repository."
+msgstr "您无权访问存储库。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:155
+msgid "Export selected documents to Git repository."
+msgstr "将选定的文档导出到 Git 存储库。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:116
+msgid "Export the current document to the configured git repository."
+msgstr "将当前文档导出到配置的 git 存储库。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:133
+msgid "Git Repository"
+msgstr "Git 存储库"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:135
+msgid "Configure the git repository and export formats for this document."
+msgstr "配置本文档的 git 存储库和导出格式。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:151
+msgid ""
+"No git repository configured for this document. Configure it in Settings → "
+"Git Repository."
+msgstr "没有为此文档配置 git 存储库。在“设置”→“Git 存储库”中配置它。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:196
+msgid "Unknown repository type."
+msgstr "未知的存储库类型。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:234
+msgid "Git Repository Settings"
+msgstr "Git 存储库设置"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:240
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:48
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:46
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:46
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:46
 msgid "Submit"
 msgstr "提交"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:37
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:37
+#: gitrepo_export/static/js/modules/gitrepo_export/fidus_exporters.js:62
+msgid "Book cannot be exported due to lack of chapters."
+msgstr "由于缺少章节，书籍无法导出。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:51
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:58
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:51
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:58
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:51
 msgid "Update from Fidus Writer"
 msgstr "Fidus 作家的更新"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:52
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:52
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:72
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:72
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:65
 msgid "Commit message"
 msgstr "提交消息"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:55
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:55
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:69
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:74
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:74
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:67
 msgid "Updating"
 msgstr "更新中"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:57
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:57
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:70
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:75
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:75
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:68
 msgid "Enter commit message"
 msgstr "输入提交消息"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:67
-msgid "Book publishing to GitHub initiated."
-msgstr "开始将书籍发布到 GitHub。"
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:78
+msgid "Book publishing to Forgejo initiated."
+msgstr "开始在 Forgejo 出版书籍。"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:170
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:184
-msgid "Book already up to date in repository."
-msgstr "预订已在存储库中更新。"
-
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:175
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:190
-msgid "Could not publish book to repository."
-msgstr "无法将书籍发布到存储库。"
-
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:181
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:154
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:169
 msgid "Could not publish some parts of book to repository."
 msgstr "无法将书籍的某些部分发布到存储库。"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:196
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:177
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:160
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:183
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:163
 msgid "Book published to repository successfully!"
 msgstr "书籍已成功发布到存储库！"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:167
+msgid "Document publishing to Forgejo initiated."
+msgstr "已启动向 Forgejo 发布文档。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:204
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:201
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:201
+#, javascript-format
+msgid "No %s export template found for document."
+msgstr "找不到文档的 %s 导出模板。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:296
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:231
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:235
+msgid "Could not publish document to repository."
+msgstr "无法将文档发布到存储库。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:302
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:251
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:229
+msgid "Document published to repository successfully!"
+msgstr "文档已成功发布到存储库！"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:12
+msgid ""
+"Use a Classic Personal Access Token (Settings → Developer settings → "
+"Personal access tokens → Tokens (classic)). Fine-grained tokens are not "
+"supported. The token needs the 'repo' scope."
+msgstr ""
+"使用经典个人访问令牌（设置 → 开发人员设置 → 个人访问令牌 → 令牌（经典））。不"
+"支持细粒度令牌。令牌需要“repo”范围。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:15
+msgid ""
+"Use a Personal Access Token from your User Settings → Access Tokens. Project "
+"or Group tokens will not work. The token needs the 'api' scope."
+msgstr ""
+"使用“用户设置”→“访问令牌”中的个人访问令牌。项目或组代币将不起作用。令牌需"
+"要“api”范围。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:18
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:21
+msgid ""
+"The token needs the following scopes: 'repo' (to read and write repository "
+"contents) and 'read:user' (to list your repositories)."
+msgstr ""
+"该令牌需要以下范围：“repo”（用于读取和写入存储库内容）和“read:user”（用于列出"
+"您的存储库）。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:42
+msgid "Close"
+msgstr "关闭"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:15
+msgid "Manage Git Servers"
+msgstr "管理 Git 服务器"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:75
+msgid "Delete"
+msgstr "删除"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:81
+msgid "No git servers configured."
+msgstr "没有配置 git 服务器。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:86
+msgid "Type"
+msgstr "类型"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:87
+msgid "Name"
+msgstr "姓名"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:88
+msgid "URL"
+msgstr "网址"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:95
+msgid "Add Git Server"
+msgstr "添加 Git 服务器"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:98
+msgid "Server Type"
+msgstr "服务器类型"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:109
+msgid "Instance URL"
+msgstr "实例网址"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:113
+msgid "Name (label)"
+msgstr "名称（标签）"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:114
+msgid "My Server"
+msgstr "我的服务器"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:117
+msgid "PAT Token"
+msgstr "PAT代币"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:131
+msgid "Verify & Save"
+msgstr "验证并保存"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:183
+msgid "Instance URL is required for this server type."
+msgstr "此服务器类型需要实例 URL。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:188
+msgid "PAT token is required."
+msgstr "需要 PAT 令牌。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:198
+msgid "Git server added successfully."
+msgstr "Git服务器添加成功。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:209
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:217
+msgid "Could not verify server. Check the URL and token."
+msgstr "无法验证服务器。检查 URL 和令牌。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:240
+msgid "Git server deleted."
+msgstr "Git 服务器已删除。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:245
+msgid "Could not delete git server."
+msgstr "无法删除 git 服务器。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:83
+msgid "Book publishing to GitHub initiated."
+msgstr "开始将书籍发布到 GitHub。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:158
+msgid "Book already up to date in repository."
+msgstr "预订已在存储库中更新。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:163
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:168
+msgid "Could not publish book to repository."
+msgstr "无法将书籍发布到存储库。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:167
+msgid "Document publishing to GitHub initiated."
+msgstr "已开始向 GitHub 发布文档。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:225
+msgid "Document already up to date in repository."
+msgstr "文档在存储库中已是最新的。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:237
+msgid "Could not publish some parts of document to repository."
+msgstr "无法将文档的某些部分发布到存储库。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:83
 msgid "Book publishing to GitLab initiated."
 msgstr "开始向 GitLab 出版图书。"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:29
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:167
+msgid "Document publishing to GitLab initiated."
+msgstr "已启动向 GitLab 发布文档。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:11
+msgid "Git Repository Servers"
+msgstr "Git 存储库服务器"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:13
+msgid ""
+"Manage git servers (GitHub, GitLab, Forgejo, Gitea) for exporting documents "
+"to Git repositories."
+msgstr ""
+"管理 git 服务器（GitHub、GitLab、Forgejo、Gitea）以将文档导出到 Git 存储库。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:22
+msgid "No git repositories available."
+msgstr "没有可用的 git 存储库。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:23
+msgid ""
+"Add a git server (Forgejo, Gitea, GitHub or GitLab) using the button above."
+msgstr "使用上面的按钮添加 git 服务器（Forgejo、Gitea、GitHub 或 GitLab）。"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:43
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:180
 msgid "Select git repository to export to"
 msgstr "选择要导出到的 git 存储库"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:62
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:201
 msgid "Reload"
 msgstr "重新加载"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:69
-msgid "Export EPUB"
-msgstr "导出EPUB"
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:204
+msgid "Manage git repositories"
+msgstr "管理 git 存储库"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:79
-msgid "Export unpacked EPUB"
-msgstr "导出未打包的 EPUB"
+#~ msgid "Export EPUB"
+#~ msgstr "导出EPUB"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:89
-msgid "Export HTML"
-msgstr "导出 HTML"
+#~ msgid "Export unpacked EPUB"
+#~ msgstr "导出未打包的 EPUB"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:99
-msgid "Export Unified HTML"
-msgstr "导出统一 HTML"
+#~ msgid "Export HTML"
+#~ msgstr "导出 HTML"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:109
-msgid "Export LaTeX"
-msgstr "导出乳胶"
+#~ msgid "Export Unified HTML"
+#~ msgstr "导出统一 HTML"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:119
-msgid "Export ODT"
-msgstr "出口ODT"
+#~ msgid "Export LaTeX"
+#~ msgstr "导出乳胶"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:131
-msgid "Export DOCX"
-msgstr "导出DOCX"
+#~ msgid "Export ODT"
+#~ msgstr "出口ODT"
+
+#~ msgid "Export DOCX"
+#~ msgstr "导出DOCX"

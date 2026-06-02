@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 09:56+0000\n"
+"POT-Creation-Date: 2026-06-02 17:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,120 +18,364 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:118
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:120
 msgid "There is no git repository registered for the book:"
 msgstr "책에 등록된 Git 저장소가 없습니다."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:128
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:129
 msgid "You do not have access to the repository:"
 msgstr "저장소에 액세스할 수 없습니다."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:139
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:174
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:181
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:209
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:154
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:114
 msgid "Export to Git Repository"
 msgstr "Git 저장소로 내보내기"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:140
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:182
 msgid "Export selected to Git repository."
 msgstr "선택한 항목을 Git 저장소로 내보냅니다."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:175
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:210
 msgid "Export book to git repository."
 msgstr "책을 git 저장소로 내보냅니다."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:206
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:24
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:268
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:217
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:39
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:176
 msgid "Git repository"
 msgstr "힘내 저장소"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:207
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:269
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:218
 msgid "Git repository related settings"
 msgstr "Git 저장소 관련 설정"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:32
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:32
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:106
+msgid "There is no git repository registered for the document:"
+msgstr "문서에 등록된 Git 저장소가 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:115
+msgid "You do not have access to the repository."
+msgstr "저장소에 대한 액세스 권한이 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:155
+msgid "Export selected documents to Git repository."
+msgstr "선택한 문서를 Git 저장소로 내보냅니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:116
+msgid "Export the current document to the configured git repository."
+msgstr "현재 문서를 구성된 Git 저장소로 내보냅니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:133
+msgid "Git Repository"
+msgstr "힘내 저장소"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:135
+msgid "Configure the git repository and export formats for this document."
+msgstr "이 문서의 git 저장소와 내보내기 형식을 구성합니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:151
+msgid ""
+"No git repository configured for this document. Configure it in Settings → "
+"Git Repository."
+msgstr ""
+"이 문서에 구성된 Git 저장소가 없습니다. 설정 → Git 리포지토리에서 구성하세요."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:196
+msgid "Unknown repository type."
+msgstr "알 수 없는 저장소 유형입니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:234
+msgid "Git Repository Settings"
+msgstr "Git 리포지토리 설정"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:240
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:48
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:46
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:46
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:46
 msgid "Submit"
 msgstr "제출하다"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:37
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:37
+#: gitrepo_export/static/js/modules/gitrepo_export/fidus_exporters.js:62
+msgid "Book cannot be exported due to lack of chapters."
+msgstr "장이 부족하여 책을 내보낼 수 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:51
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:58
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:51
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:58
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:51
 msgid "Update from Fidus Writer"
 msgstr "Fidus Writer의 업데이트"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:52
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:52
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:72
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:72
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:65
 msgid "Commit message"
 msgstr "커밋 메시지"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:55
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:55
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:69
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:74
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:74
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:67
 msgid "Updating"
 msgstr "업데이트 중"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:57
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:57
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:70
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:75
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:75
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:68
 msgid "Enter commit message"
 msgstr "커밋 메시지를 입력하세요"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:67
-msgid "Book publishing to GitHub initiated."
-msgstr "GitHub에 도서 출판이 시작되었습니다."
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:78
+msgid "Book publishing to Forgejo initiated."
+msgstr "Forgejo에 도서 출판이 시작되었습니다."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:170
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:184
-msgid "Book already up to date in repository."
-msgstr "책은 이미 저장소에 최신 상태입니다."
-
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:175
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:190
-msgid "Could not publish book to repository."
-msgstr "책을 저장소에 게시할 수 없습니다."
-
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:181
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:154
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:169
 msgid "Could not publish some parts of book to repository."
 msgstr "책의 일부를 저장소에 게시할 수 없습니다."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:196
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:177
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:160
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:183
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:163
 msgid "Book published to repository successfully!"
 msgstr "책이 저장소에 성공적으로 게시되었습니다!"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:167
+msgid "Document publishing to Forgejo initiated."
+msgstr "Forgejo에 문서 게시가 시작되었습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:204
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:201
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:201
+#, javascript-format
+msgid "No %s export template found for document."
+msgstr "문서에 대한 %s 내보내기 템플릿이 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:296
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:231
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:235
+msgid "Could not publish document to repository."
+msgstr "문서를 저장소에 게시할 수 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:302
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:251
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:229
+msgid "Document published to repository successfully!"
+msgstr "문서가 저장소에 성공적으로 게시되었습니다!"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:12
+msgid ""
+"Use a Classic Personal Access Token (Settings → Developer settings → "
+"Personal access tokens → Tokens (classic)). Fine-grained tokens are not "
+"supported. The token needs the 'repo' scope."
+msgstr ""
+"클래식 개인 액세스 토큰을 사용합니다(설정 → 개발자 설정 → 개인 액세스 토큰 → "
+"토큰(클래식)). 세분화된 토큰은 지원되지 않습니다. 토큰에는 'repo' 범위가 필요"
+"합니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:15
+msgid ""
+"Use a Personal Access Token from your User Settings → Access Tokens. Project "
+"or Group tokens will not work. The token needs the 'api' scope."
+msgstr ""
+"사용자 설정 → 액세스 토큰에서 개인 액세스 토큰을 사용하세요. 프로젝트 또는 그"
+"룹 토큰은 작동하지 않습니다. 토큰에는 'api' 범위가 필요합니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:18
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:21
+msgid ""
+"The token needs the following scopes: 'repo' (to read and write repository "
+"contents) and 'read:user' (to list your repositories)."
+msgstr ""
+"토큰에는 'repo'(저장소 콘텐츠 읽기 및 쓰기) 및 'read:user'(저장소 나열) 범위"
+"가 필요합니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:42
+msgid "Close"
+msgstr "닫다"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:15
+msgid "Manage Git Servers"
+msgstr "Git 서버 관리"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:75
+msgid "Delete"
+msgstr "삭제"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:81
+msgid "No git servers configured."
+msgstr "구성된 Git 서버가 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:86
+msgid "Type"
+msgstr "유형"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:87
+msgid "Name"
+msgstr "이름"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:88
+msgid "URL"
+msgstr "URL"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:95
+msgid "Add Git Server"
+msgstr "Git 서버 추가"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:98
+msgid "Server Type"
+msgstr "서버 유형"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:109
+msgid "Instance URL"
+msgstr "인스턴스 URL"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:113
+msgid "Name (label)"
+msgstr "이름(라벨)"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:114
+msgid "My Server"
+msgstr "내 서버"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:117
+msgid "PAT Token"
+msgstr "PAT 토큰"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:131
+msgid "Verify & Save"
+msgstr "확인 및 저장"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:183
+msgid "Instance URL is required for this server type."
+msgstr "이 서버 유형에는 인스턴스 URL이 필요합니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:188
+msgid "PAT token is required."
+msgstr "PAT 토큰이 필요합니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:198
+msgid "Git server added successfully."
+msgstr "Git 서버가 성공적으로 추가되었습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:209
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:217
+msgid "Could not verify server. Check the URL and token."
+msgstr "서버를 확인할 수 없습니다. URL과 토큰을 확인하세요."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:240
+msgid "Git server deleted."
+msgstr "Git 서버가 삭제되었습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:245
+msgid "Could not delete git server."
+msgstr "Git 서버를 삭제할 수 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:83
+msgid "Book publishing to GitHub initiated."
+msgstr "GitHub에 도서 출판이 시작되었습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:158
+msgid "Book already up to date in repository."
+msgstr "책은 이미 저장소에 최신 상태입니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:163
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:168
+msgid "Could not publish book to repository."
+msgstr "책을 저장소에 게시할 수 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:167
+msgid "Document publishing to GitHub initiated."
+msgstr "GitHub에 문서 게시가 시작되었습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:225
+msgid "Document already up to date in repository."
+msgstr "문서는 이미 저장소에 최신 상태입니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:237
+msgid "Could not publish some parts of document to repository."
+msgstr "문서의 일부를 저장소에 게시할 수 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:83
 msgid "Book publishing to GitLab initiated."
 msgstr "GitLab에 도서 출판이 시작되었습니다."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:29
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:167
+msgid "Document publishing to GitLab initiated."
+msgstr "GitLab에 문서 게시가 시작되었습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:11
+msgid "Git Repository Servers"
+msgstr "Git 리포지토리 서버"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:13
+msgid ""
+"Manage git servers (GitHub, GitLab, Forgejo, Gitea) for exporting documents "
+"to Git repositories."
+msgstr ""
+"문서를 Git 저장소로 내보내기 위해 Git 서버(GitHub, GitLab, Forgejo, Gitea)를 "
+"관리합니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:22
+msgid "No git repositories available."
+msgstr "사용 가능한 Git 저장소가 없습니다."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:23
+msgid ""
+"Add a git server (Forgejo, Gitea, GitHub or GitLab) using the button above."
+msgstr ""
+"위 버튼을 사용하여 Git 서버(Forgejo, Gitea, GitHub 또는 GitLab)를 추가하세요."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:43
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:180
 msgid "Select git repository to export to"
 msgstr "내보낼 Git ​​저장소를 선택하세요."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:62
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:201
 msgid "Reload"
 msgstr "새로고침"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:69
-msgid "Export EPUB"
-msgstr "EPUB 내보내기"
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:204
+msgid "Manage git repositories"
+msgstr "Git 저장소 관리"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:79
-msgid "Export unpacked EPUB"
-msgstr "압축을 푼 EPUB 내보내기"
+#~ msgid "Export EPUB"
+#~ msgstr "EPUB 내보내기"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:89
-msgid "Export HTML"
-msgstr "HTML 내보내기"
+#~ msgid "Export unpacked EPUB"
+#~ msgstr "압축을 푼 EPUB 내보내기"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:99
-msgid "Export Unified HTML"
-msgstr "통합 HTML 내보내기"
+#~ msgid "Export HTML"
+#~ msgstr "HTML 내보내기"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:109
-msgid "Export LaTeX"
-msgstr "LaTeX 내보내기"
+#~ msgid "Export Unified HTML"
+#~ msgstr "통합 HTML 내보내기"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:119
-msgid "Export ODT"
-msgstr "ODT 내보내기"
+#~ msgid "Export LaTeX"
+#~ msgstr "LaTeX 내보내기"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:131
-msgid "Export DOCX"
-msgstr "DOCX 내보내기"
+#~ msgid "Export ODT"
+#~ msgstr "ODT 내보내기"
+
+#~ msgid "Export DOCX"
+#~ msgstr "DOCX 내보내기"

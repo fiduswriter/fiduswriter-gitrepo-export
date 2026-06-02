@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 09:56+0000\n"
+"POT-Creation-Date: 2026-06-02 17:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,120 +18,370 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:118
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:120
 msgid "There is no git repository registered for the book:"
 msgstr "Er is geen git-repository geregistreerd voor het boek:"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:128
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:129
 msgid "You do not have access to the repository:"
 msgstr "U heeft geen toegang tot de repository:"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:139
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:174
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:181
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:209
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:154
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:114
 msgid "Export to Git Repository"
 msgstr "Exporteren naar Git-opslagplaats"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:140
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:182
 msgid "Export selected to Git repository."
 msgstr "Geselecteerde export naar Git-repository."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:175
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:210
 msgid "Export book to git repository."
 msgstr "Exporteer boek naar git-repository."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:206
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:24
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:268
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:217
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:39
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:176
 msgid "Git repository"
 msgstr "Git-opslagplaats"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:207
+#: gitrepo_export/static/js/modules/gitrepo_export/books_overview.js:269
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:218
 msgid "Git repository related settings"
 msgstr "Git-repository-gerelateerde instellingen"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:32
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:32
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:106
+msgid "There is no git repository registered for the document:"
+msgstr "Er is geen git-repository geregistreerd voor het document:"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:115
+msgid "You do not have access to the repository."
+msgstr "U heeft geen toegang tot de repository."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/documents_overview.js:155
+msgid "Export selected documents to Git repository."
+msgstr "Exporteer geselecteerde documenten naar Git-repository."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:116
+msgid "Export the current document to the configured git repository."
+msgstr "Exporteer het huidige document naar de geconfigureerde Git-repository."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:133
+msgid "Git Repository"
+msgstr "Git-opslagplaats"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:135
+msgid "Configure the git repository and export formats for this document."
+msgstr "Configureer de git-repository en exportformaten voor dit document."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:151
+msgid ""
+"No git repository configured for this document. Configure it in Settings → "
+"Git Repository."
+msgstr ""
+"Er is geen git-repository geconfigureerd voor dit document. Configureer het "
+"in Instellingen → Git Repository."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:196
+msgid "Unknown repository type."
+msgstr "Onbekend opslagplaatstype."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:234
+msgid "Git Repository Settings"
+msgstr "Git Repository-instellingen"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/editor.js:240
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:48
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:46
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:46
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:46
 msgid "Submit"
 msgstr "Indienen"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:37
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:37
+#: gitrepo_export/static/js/modules/gitrepo_export/fidus_exporters.js:62
+msgid "Book cannot be exported due to lack of chapters."
+msgstr "Boek kan niet worden geëxporteerd vanwege gebrek aan hoofdstukken."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:51
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:58
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:51
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:58
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:51
 msgid "Update from Fidus Writer"
 msgstr "Update van Fidus Schrijver"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:52
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:52
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:72
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:72
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:65
 msgid "Commit message"
 msgstr "Bericht vastleggen"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:55
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:55
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:69
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:74
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:74
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:67
 msgid "Updating"
 msgstr "Updaten"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:57
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:57
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:70
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:75
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:75
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:68
 msgid "Enter commit message"
 msgstr "Voer een commit-bericht in"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:67
-msgid "Book publishing to GitHub initiated."
-msgstr "Publicatie van boeken naar GitHub gestart."
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:78
+msgid "Book publishing to Forgejo initiated."
+msgstr "Het uitgeven van boeken aan Forgejo is gestart."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:170
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:184
-msgid "Book already up to date in repository."
-msgstr "Boek al up-to-date in de repository."
-
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:175
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:190
-msgid "Could not publish book to repository."
-msgstr "Kon het boek niet publiceren naar de repository."
-
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:181
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:154
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:169
 msgid "Could not publish some parts of book to repository."
 msgstr "Kan sommige delen van het boek niet naar de repository publiceren."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:196
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:177
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/book_processor.js:160
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:183
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:163
 msgid "Book published to repository successfully!"
 msgstr "Boek succesvol gepubliceerd in de repository!"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:67
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:167
+msgid "Document publishing to Forgejo initiated."
+msgstr "Documentpublicatie naar Forgejo gestart."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:204
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:201
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:201
+#, javascript-format
+msgid "No %s export template found for document."
+msgstr "Geen %s exportsjabloon gevonden voor document."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:296
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:231
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:235
+msgid "Could not publish document to repository."
+msgstr "Kan het document niet naar de repository publiceren."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/forgejo/document_processor.js:302
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:251
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:229
+msgid "Document published to repository successfully!"
+msgstr "Document met succes naar de repository gepubliceerd!"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:12
+msgid ""
+"Use a Classic Personal Access Token (Settings → Developer settings → "
+"Personal access tokens → Tokens (classic)). Fine-grained tokens are not "
+"supported. The token needs the 'repo' scope."
+msgstr ""
+"Gebruik een klassiek persoonlijk toegangstoken (Instellingen → "
+"Ontwikkelaarsinstellingen → Persoonlijke toegangstokens → Tokens "
+"(klassiek)). Fijnmazige tokens worden niet ondersteund. Het token heeft het "
+"bereik 'repository' nodig."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:15
+msgid ""
+"Use a Personal Access Token from your User Settings → Access Tokens. Project "
+"or Group tokens will not work. The token needs the 'api' scope."
+msgstr ""
+"Gebruik een persoonlijk toegangstoken via uw Gebruikersinstellingen → "
+"Toegangstokens. Project- of groepstokens werken niet. Het token heeft het "
+"'api'-bereik nodig."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:18
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:21
+msgid ""
+"The token needs the following scopes: 'repo' (to read and write repository "
+"contents) and 'read:user' (to list your repositories)."
+msgstr ""
+"Het token heeft de volgende bereiken nodig: 'repo' (om de inhoud van de "
+"repository te lezen en te schrijven) en 'read:user' (om uw repository's weer "
+"te geven)."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:42
+msgid "Close"
+msgstr "Dichtbij"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:53
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:15
+msgid "Manage Git Servers"
+msgstr "Beheer Git-servers"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:75
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:81
+msgid "No git servers configured."
+msgstr "Geen git-servers geconfigureerd."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:86
+msgid "Type"
+msgstr "Type"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:87
+msgid "Name"
+msgstr "Naam"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:88
+msgid "URL"
+msgstr "URL"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:95
+msgid "Add Git Server"
+msgstr "Voeg Git-server toe"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:98
+msgid "Server Type"
+msgstr "Servertype"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:109
+msgid "Instance URL"
+msgstr "Instantie-URL"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:113
+msgid "Name (label)"
+msgstr "Naam (label)"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:114
+msgid "My Server"
+msgstr "Mijn server"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:117
+msgid "PAT Token"
+msgstr "PAT-token"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:131
+msgid "Verify & Save"
+msgstr "Verifiëren en opslaan"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:183
+msgid "Instance URL is required for this server type."
+msgstr "Voor dit servertype is een instantie-URL vereist."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:188
+msgid "PAT token is required."
+msgstr "PAT-token is vereist."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:198
+msgid "Git server added successfully."
+msgstr "Git-server succesvol toegevoegd."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:209
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:217
+msgid "Could not verify server. Check the URL and token."
+msgstr "Kon de server niet verifiëren. Controleer de URL en het token."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:240
+msgid "Git server deleted."
+msgstr "Git-server verwijderd."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/git_server_management.js:245
+msgid "Could not delete git server."
+msgstr "Kan git-server niet verwijderen."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:83
+msgid "Book publishing to GitHub initiated."
+msgstr "Publicatie van boeken naar GitHub gestart."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:158
+msgid "Book already up to date in repository."
+msgstr "Boek al up-to-date in de repository."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/book_processor.js:163
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:168
+msgid "Could not publish book to repository."
+msgstr "Kon het boek niet publiceren naar de repository."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:167
+msgid "Document publishing to GitHub initiated."
+msgstr "Documentpublicatie naar GitHub gestart."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:225
+msgid "Document already up to date in repository."
+msgstr "Document al up-to-date in de repository."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/github/document_processor.js:237
+msgid "Could not publish some parts of document to repository."
+msgstr ""
+"Kan bepaalde delen van het document niet naar de repository publiceren."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/book_processor.js:83
 msgid "Book publishing to GitLab initiated."
 msgstr "Boekpublicatie naar GitLab gestart."
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:29
+#: gitrepo_export/static/js/modules/gitrepo_export/gitlab/document_processor.js:167
+msgid "Document publishing to GitLab initiated."
+msgstr "Documentpublicatie naar GitLab gestart."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:11
+msgid "Git Repository Servers"
+msgstr "Git-repositoryservers"
+
+#: gitrepo_export/static/js/modules/gitrepo_export/profile.js:13
+msgid ""
+"Manage git servers (GitHub, GitLab, Forgejo, Gitea) for exporting documents "
+"to Git repositories."
+msgstr ""
+"Beheer git-servers (GitHub, GitLab, Forgejo, Gitea) voor het exporteren van "
+"documenten naar Git-repository's."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:22
+msgid "No git repositories available."
+msgstr "Er zijn geen git-repository's beschikbaar."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:23
+msgid ""
+"Add a git server (Forgejo, Gitea, GitHub or GitLab) using the button above."
+msgstr ""
+"Voeg een git-server (Forgejo, Gitea, GitHub of GitLab) toe met behulp van de "
+"bovenstaande knop."
+
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:43
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:180
 msgid "Select git repository to export to"
 msgstr "Selecteer de git-repository waarnaar u wilt exporteren"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:62
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:65
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:201
 msgid "Reload"
 msgstr "Herladen"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:69
-msgid "Export EPUB"
-msgstr "EPUB exporteren"
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:68
+#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:204
+msgid "Manage git repositories"
+msgstr "Beheer git-repository's"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:79
-msgid "Export unpacked EPUB"
-msgstr "Exporteer onverpakte EPUB"
+#~ msgid "Export EPUB"
+#~ msgstr "EPUB exporteren"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:89
-msgid "Export HTML"
-msgstr "HTML exporteren"
+#~ msgid "Export unpacked EPUB"
+#~ msgstr "Exporteer onverpakte EPUB"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:99
-msgid "Export Unified HTML"
-msgstr "Exporteer uniforme HTML"
+#~ msgid "Export HTML"
+#~ msgstr "HTML exporteren"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:109
-msgid "Export LaTeX"
-msgstr "LaTeX exporteren"
+#~ msgid "Export Unified HTML"
+#~ msgstr "Exporteer uniforme HTML"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:119
-msgid "Export ODT"
-msgstr "ODT exporteren"
+#~ msgid "Export LaTeX"
+#~ msgstr "LaTeX exporteren"
 
-#: gitrepo_export/static/js/modules/gitrepo_export/templates.js:131
-msgid "Export DOCX"
-msgstr "DOCX exporteren"
+#~ msgid "Export ODT"
+#~ msgstr "ODT exporteren"
+
+#~ msgid "Export DOCX"
+#~ msgstr "DOCX exporteren"
