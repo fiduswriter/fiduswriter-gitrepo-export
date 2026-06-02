@@ -16,3 +16,4 @@ fiduswriter/configuration.py
 fiduswriter/fiduswriter.sql
 *.direnv
 .envrc
+node_modules/
