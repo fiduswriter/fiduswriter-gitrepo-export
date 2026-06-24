@@ -1,4 +1,4 @@
-import {getCookie, getJson} from "../../../common"
+import {getCookie, getJson} from "fwtoolkit"
 import {gitHashObject, readBlobPromise} from "../../tools"
 
 export function commitFiles(repo, commitMessage, fileBlobs) {

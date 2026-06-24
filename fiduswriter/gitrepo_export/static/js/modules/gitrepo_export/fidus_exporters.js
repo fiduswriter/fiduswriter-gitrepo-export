@@ -1,8 +1,8 @@
 import {ShrinkFidus} from "@fiduswriter/document/exporter/native/shrink"
 import {ZipFileCreator} from "@fiduswriter/document/exporter/tools/zip"
+import {addAlert} from "fwtoolkit"
 import {FIDUSBOOK_VERSION} from "../books/exporter/native"
 import {getMissingChapterData} from "../books/exporter/tools"
-import {addAlert} from "../common"
 import {ZipFidus} from "../exporter/native/zip"
 
 /**

@@ -1,4 +1,4 @@
-import {get, getCookie, getJson} from "../../../common"
+import {get, getCookie, getJson} from "fwtoolkit"
 import {readBlobPromise} from "../../tools"
 
 function getRepoFileShas(repo, branch = "main") {

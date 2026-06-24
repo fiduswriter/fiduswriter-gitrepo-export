@@ -5,7 +5,7 @@ import {
     findTarget,
     getJson,
     post
-} from "../common"
+} from "fwtoolkit"
 import {ForgejoDocumentProcessor} from "./forgejo/document_processor"
 import {GitServerManagerDialog} from "./git_server_management"
 import {GithubDocumentProcessor} from "./github/document_processor"

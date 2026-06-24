@@ -1,4 +1,4 @@
-import {get} from "../../../common"
+import {get} from "fwtoolkit"
 
 export function zipToBlobs(
     outputList,

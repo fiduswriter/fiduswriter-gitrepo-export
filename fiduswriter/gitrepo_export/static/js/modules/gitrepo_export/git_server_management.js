@@ -1,4 +1,4 @@
-import {Dialog, addAlert, escapeText, getCookie, getJson, post} from "../common"
+import {Dialog, addAlert, escapeText, getCookie, getJson, post} from "fwtoolkit"
 
 const SERVER_TYPE_LABELS = {
     forgejo: "Forgejo",

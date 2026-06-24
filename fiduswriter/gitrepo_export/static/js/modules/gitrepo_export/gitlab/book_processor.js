@@ -1,4 +1,4 @@
-import {Dialog, addAlert, escapeText} from "../../common"
+import {Dialog, addAlert, escapeText} from "fwtoolkit"
 import {
     DOCXBookGitlabExporter,
     EpubBookGitlabExporter,

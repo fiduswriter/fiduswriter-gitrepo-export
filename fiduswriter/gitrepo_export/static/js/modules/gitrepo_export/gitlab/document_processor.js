@@ -1,4 +1,4 @@
-import {Dialog, addAlert, escapeText, postJson} from "../../common"
+import {Dialog, addAlert, escapeText, postJson} from "fwtoolkit"
 import {getMissingDocumentListData} from "../../documents/tools"
 import {
     DOCXDocGitlabExporter,

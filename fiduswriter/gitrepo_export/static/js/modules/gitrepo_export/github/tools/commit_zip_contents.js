@@ -1,4 +1,4 @@
-import {get, getCookie} from "../../../common"
+import {get, getCookie} from "fwtoolkit"
 import {commitFile} from "./commit_file"
 import {promiseChain} from "./promise_chain"
 
