@@ -1,9 +1,9 @@
+import {ShrinkFidus} from "@fiduswriter/document/exporter/native/shrink"
+import {ZipFileCreator} from "@fiduswriter/document/exporter/tools/zip"
 import {FIDUSBOOK_VERSION} from "../books/exporter/native"
 import {getMissingChapterData} from "../books/exporter/tools"
 import {addAlert} from "../common"
-import {ShrinkFidus} from "../exporter/native/shrink"
 import {ZipFidus} from "../exporter/native/zip"
-import {ZipFileCreator} from "../exporter/tools/zip"
 
 /**
  * Document exporter that creates a .fidus file for git commit.
