@@ -4,6 +4,7 @@ import {
     escapeText,
     findTarget,
     getJson,
+    gettext,
     post
 } from "fwtoolkit"
 import {ForgejoDocumentProcessor} from "./forgejo/document_processor"

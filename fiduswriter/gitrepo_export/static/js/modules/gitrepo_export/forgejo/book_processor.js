@@ -1,4 +1,4 @@
-import {Dialog, addAlert, escapeText} from "fwtoolkit"
+import {Dialog, addAlert, escapeText, gettext} from "fwtoolkit"
 import {
     DOCXBookForgejoExporter,
     EpubBookForgejoExporter,

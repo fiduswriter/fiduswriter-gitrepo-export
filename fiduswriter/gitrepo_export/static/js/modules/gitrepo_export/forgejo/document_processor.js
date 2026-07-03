@@ -1,4 +1,12 @@
-import {Dialog, addAlert, escapeText, get, postJson} from "fwtoolkit"
+import {
+    Dialog,
+    addAlert,
+    escapeText,
+    get,
+    gettext,
+    interpolate,
+    postJson
+} from "fwtoolkit"
 import {getMissingDocumentListData} from "../../documents/tools"
 import {
     DOCXDocForgejoExporter,

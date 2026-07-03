@@ -1,3 +1,4 @@
+import {gettext} from "fwtoolkit"
 import {GitServerManagerDialog} from "./git_server_management"
 
 export class GitrepoExporterProfile {

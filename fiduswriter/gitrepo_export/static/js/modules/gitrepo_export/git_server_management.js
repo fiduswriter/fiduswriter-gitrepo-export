@@ -1,4 +1,12 @@
-import {Dialog, addAlert, escapeText, getCookie, getJson, post} from "fwtoolkit"
+import {
+    Dialog,
+    addAlert,
+    escapeText,
+    getCookie,
+    getJson,
+    gettext,
+    post
+} from "fwtoolkit"
 
 const SERVER_TYPE_LABELS = {
     forgejo: "Forgejo",
@@ -70,7 +78,7 @@ export class GitServerManagerDialog {
                     <td>${escapeText(s.url || "—")}</td>
                     <td>
                         <button type="button"
-                            class="git-delete-server ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small"
+                            class="git-delete-server fw-dialog-titlebar-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small"
                             data-server-id="${s.id}">
                             ${gettext("Delete")}
                         </button>
@@ -119,7 +127,7 @@ export class GitServerManagerDialog {
             </tr>
             <tr>
                 <td colspan="2">
-                    <p class="noteEl" id="git-scope-note">
+                    <p class="fw-note-el" id="git-scope-note">
                         ${SCOPE_NOTES.forgejo}
                     </p>
                 </td>
@@ -127,7 +135,7 @@ export class GitServerManagerDialog {
             <tr>
                 <td colspan="2">
                     <button type="button" id="git-add-server"
-                        class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark">
+                        class="fw-dialog-titlebar-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark">
                         ${gettext("Verify & Save")}
                     </button>
                 </td>

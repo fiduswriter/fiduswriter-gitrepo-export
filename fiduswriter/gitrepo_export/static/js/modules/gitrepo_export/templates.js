@@ -1,4 +1,4 @@
-import {escapeText} from "fwtoolkit"
+import {escapeText, gettext} from "fwtoolkit"
 
 const REPO_TYPES = {
     forgejo: "Forgejo",
@@ -61,10 +61,10 @@ export const repoSelectorTemplate = ({
             </div>
         </td>
         <td>
-        <button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small reload">
+        <button type="button" class="fw-dialog-titlebar-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small reload">
             ${gettext("Reload")}
         </button>
-        <button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small forgejo-servers">
+        <button type="button" class="fw-dialog-titlebar-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small forgejo-servers">
             ${gettext("Manage git repositories")}
         </button>
         </td>
@@ -197,10 +197,10 @@ export const docRepoSettingsTemplate = ({
                 </div>
             </td>
             <td>
-            <button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small reload">
+            <button type="button" class="fw-dialog-titlebar-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small reload">
                 ${gettext("Reload")}
             </button>
-            <button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small forgejo-servers">
+            <button type="button" class="fw-dialog-titlebar-button ui-widget ui-state-default ui-corner-all ui-button-text-only fw-button fw-dark fw-small forgejo-servers">
                 ${gettext("Manage git repositories")}
             </button>
             </td>

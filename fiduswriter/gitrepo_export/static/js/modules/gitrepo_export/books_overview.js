@@ -1,4 +1,4 @@
-import {addAlert, findTarget, getJson, post} from "fwtoolkit"
+import {addAlert, findTarget, getJson, gettext, post} from "fwtoolkit"
 import {ForgejoBookProcessor} from "./forgejo"
 import {GitServerManagerDialog} from "./git_server_management"
 import {GithubBookProcessor} from "./github"
