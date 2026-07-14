@@ -25,8 +25,40 @@ const BASE_PACKAGES = new Set([
     "@aaroon/workbox-rspack-plugin",
     "qrcode",
     "tokenfield",
-    "fix-utf8"
+    "fix-utf8",
+    "@lcdp/offline-plugin"
 ])
+
+// Common Fidus Writer app names. Used to identify cross-app imports when the
+// target plugin is not installed in a standalone pre-commit run.
+const KNOWN_FIDUSWRITER_APPS = new Set([
+    "base",
+    "bibliography",
+    "book",
+    "browser_check",
+    "document",
+    "feedback",
+    "fixturemedia",
+    "menu",
+    "user",
+    "user_template_manager",
+    "usermedia",
+    "citation_api_import",
+    "gitrepo_export",
+    "languagetool",
+    "llm",
+    "ojs",
+    "pandoc",
+    "payment",
+    "phplist",
+    "rust",
+    "tum",
+    "website"
+])
+
+function isKnownAppName(name) {
+    return KNOWN_FIDUSWRITER_APPS.has(name)
+}
 
 function getPackageName(source) {
     if (source.startsWith("@")) {
@@ -154,12 +186,38 @@ function getAppsPaths(rootDir) {
 }
 
 function resolveFilelocation(source, file, appsPaths) {
-    const returnValue = {found: false, path: null}
-    const fullPath = path.resolve(path.dirname(file), source)
+    const returnValue = {found: false, path: null, crossApp: false}
+    const resolvedFile = path.resolve(file)
+    const fullPath = path.resolve(path.dirname(resolvedFile), source)
 
     if (fullPath.includes("/plugins/")) {
         returnValue.found = true
         returnValue.path = null
+        return returnValue
+    }
+
+    const pluginAppsPaths = appsPaths.filter(appPath =>
+        resolvedFile.startsWith(appPath + path.sep)
+    )
+    const sourceApp = pluginAppsPaths[0]
+    const sourceSegments = source
+        .split("/")
+        .filter(segment => segment && segment !== "." && segment !== "..")
+    const targetAppName = sourceSegments[0]
+
+    // Cross-app imports are resolved at runtime by django-npm-mjs when all
+    // plugins are installed together, so we cannot verify them in a standalone
+    // plugin pre-commit run. We detect them when the target name is a known
+    // Fidus Writer app that differs from the source app.
+    if (
+        sourceApp &&
+        targetAppName &&
+        targetAppName !== path.basename(sourceApp) &&
+        isKnownAppName(targetAppName)
+    ) {
+        returnValue.found = true
+        returnValue.path = null
+        returnValue.crossApp = true
         return returnValue
     }
 
