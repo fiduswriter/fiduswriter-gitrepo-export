@@ -311,7 +311,7 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
                 EC.presence_of_element_located(
                     (
                         By.CSS_SELECTOR,
-                        "body #alerts-outer-wrapper .alerts-info",
+                        "body #fw-alerts-outer-wrapper .alerts-info",
                     )
                 )
             )
@@ -320,7 +320,7 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
             # success message specifically by polling text content.
             def success_alert_present(driver):
                 alerts = driver.find_elements(
-                    By.CSS_SELECTOR, "body #alerts-outer-wrapper .alerts-info"
+                    By.CSS_SELECTOR, "body #fw-alerts-outer-wrapper .alerts-info"
                 )
                 for alert in alerts:
                     if (
@@ -584,7 +584,7 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
         # success message specifically by polling text content.
         def success_alert_present(driver):
             alerts = driver.find_elements(
-                By.CSS_SELECTOR, "body #alerts-outer-wrapper .alerts-info"
+                By.CSS_SELECTOR, "body #fw-alerts-outer-wrapper .alerts-info"
             )
             for alert in alerts:
                 if "Book published to repository successfully!" in alert.text:
@@ -806,7 +806,7 @@ class ForgejoDocumentExportTest(SeleniumHelper, ChannelsLiveServerTestCase):
         # Wait for success alert
         def success_alert_present(driver):
             alerts = driver.find_elements(
-                By.CSS_SELECTOR, "body #alerts-outer-wrapper .alerts-info"
+                By.CSS_SELECTOR, "body #fw-alerts-outer-wrapper .alerts-info"
             )
             for alert in alerts:
                 if (
