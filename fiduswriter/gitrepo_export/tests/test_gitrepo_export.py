@@ -576,7 +576,7 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
             EC.presence_of_element_located(
                 (
                     By.CSS_SELECTOR,
-                    "body #alerts-outer-wrapper .alerts-info",
+                    "body #fw-alerts-outer-wrapper .alerts-info",
                 )
             )
         )
