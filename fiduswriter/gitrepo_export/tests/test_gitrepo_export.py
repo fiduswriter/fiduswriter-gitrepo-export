@@ -197,7 +197,7 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
                 By.CSS_SELECTOR, 'a[href="#optionTab1"]'
             ).click()
             self.driver.find_element(
-                By.CSS_SELECTOR, "#book-document-list .file .file-name"
+                By.CSS_SELECTOR, "#book-document-list .fw-file .fw-file-name"
             ).click()
             self.driver.find_element(By.ID, "add-chapter").click()
 
@@ -237,7 +237,7 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
                 EC.presence_of_element_located(
                     (
                         By.XPATH,
-                        '//*[contains(@class, "ui-button") and normalize-space()="Submit"]',
+                        '//*[contains(@class, "fw-button") and normalize-space()="Submit"]',
                     )
                 )
             )
@@ -302,7 +302,7 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
             ).send_keys("Test commit")
             submit_btn2 = self.driver.find_element(
                 By.XPATH,
-                '//*[contains(@class, "ui-button") and normalize-space()="Submit"]',
+                '//*[contains(@class, "fw-button") and normalize-space()="Submit"]',
             )
             self.driver.execute_script("arguments[0].click();", submit_btn2)
 
@@ -493,7 +493,7 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
             By.CSS_SELECTOR, 'a[href="#optionTab1"]'
         ).click()
         self.driver.find_element(
-            By.CSS_SELECTOR, "#book-document-list .file .file-name"
+            By.CSS_SELECTOR, "#book-document-list .fw-file .fw-file-name"
         ).click()
         self.driver.find_element(By.ID, "add-chapter").click()
 
@@ -524,7 +524,7 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
         # Save the book
         self.driver.find_element(
             By.XPATH,
-            '//*[contains(@class, "ui-button") and normalize-space()="Submit"]',
+            '//*[contains(@class, "fw-button") and normalize-space()="Submit"]',
         ).click()
         time.sleep(2)
 
@@ -567,7 +567,7 @@ class GitlabExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
         )
         self.driver.find_element(
             By.XPATH,
-            '//*[contains(@class, "ui-button") and normalize-space()="Submit"]',
+            '//*[contains(@class, "fw-button") and normalize-space()="Submit"]',
         ).click()
 
         # Wait for success alert (may take a while for EPUB generation + API calls)
@@ -762,7 +762,7 @@ class ForgejoDocumentExportTest(SeleniumHelper, ChannelsLiveServerTestCase):
         # Save the settings
         self.driver.find_element(
             By.XPATH,
-            '//*[contains(@class, "ui-button") and normalize-space()="Submit"]',
+            '//*[contains(@class, "fw-button") and normalize-space()="Submit"]',
         ).click()
 
         time.sleep(1)
@@ -800,7 +800,7 @@ class ForgejoDocumentExportTest(SeleniumHelper, ChannelsLiveServerTestCase):
         )
         self.driver.find_element(
             By.XPATH,
-            '//*[contains(@class, "ui-button") and normalize-space()="Submit"]',
+            '//*[contains(@class, "fw-button") and normalize-space()="Submit"]',
         ).click()
 
         # Wait for success alert
