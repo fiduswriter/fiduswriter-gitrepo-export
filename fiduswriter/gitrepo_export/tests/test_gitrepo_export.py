@@ -320,7 +320,8 @@ class GitrepoExportDummyTest(SeleniumHelper, ChannelsLiveServerTestCase):
             # success message specifically by polling text content.
             def success_alert_present(driver):
                 alerts = driver.find_elements(
-                    By.CSS_SELECTOR, "body #fw-alerts-outer-wrapper .alerts-info"
+                    By.CSS_SELECTOR,
+                    "body #fw-alerts-outer-wrapper .alerts-info",
                 )
                 for alert in alerts:
                     if (
