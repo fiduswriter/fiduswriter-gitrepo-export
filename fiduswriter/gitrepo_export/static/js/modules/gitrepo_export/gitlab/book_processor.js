@@ -1,5 +1,5 @@
-import {Dialog, addAlert, escapeText, gettext} from "fwtoolkit"
 import {getMissingChapterData} from "@fiduswriter/books-document/exporter/tools"
+import {Dialog, addAlert, escapeText, gettext} from "fwtoolkit"
 import {chapterLoader} from "../../books/adapters/chapter-loader"
 import {
     DOCXBookGitlabExporter,

@@ -52,6 +52,7 @@ const KNOWN_FIDUSWRITER_APPS = new Set([
     "base",
     "bibliography",
     "book",
+    "books",
     "browser_check",
     "document",
     "feedback",
