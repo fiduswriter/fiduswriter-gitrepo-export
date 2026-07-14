@@ -1,7 +1,6 @@
 {
     dependencies: {
         "@fiduswriter/books-document": "^0.1.7",
-        "@fiduswriter/document": "^0.2.20",
-        "fwtoolkit": "^0.1.9"
+        "@fiduswriter/document": "^0.2.20"
     }
 }
