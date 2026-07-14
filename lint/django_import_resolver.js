@@ -3,6 +3,65 @@ const fs = require("fs")
 const acorn = require("acorn")
 const {execSync} = require("child_process")
 
+const EXCEPTIONS = ["../../../mathlive/opf_includes"]
+
+// Packages provided by Fidus Writer core base apps. Plugins may import these
+// without re-declaring them in their own package.json5 files.
+const BASE_PACKAGES = new Set([
+    "fwtoolkit",
+    "downloadjs",
+    "bibliojson",
+    "cropperjs",
+    "browserslist-useragent-regexp",
+    "file-loader",
+    "diff-dom",
+    "@fortawesome/fontawesome-free",
+    "simple-datatables",
+    "@vivliostyle/print",
+    "w3c-keyname",
+    "source-map-loader",
+    "stacktrace-js",
+    "regenerator-runtime",
+    "@aaroon/workbox-rspack-plugin",
+    "qrcode",
+    "tokenfield",
+    "fix-utf8"
+])
+
+function getPackageName(source) {
+    if (source.startsWith("@")) {
+        const parts = source.split("/")
+        return `${parts[0]}/${parts[1]}`
+    }
+    return source.split("/")[0]
+}
+
+function loadPackageDeps(packageFile) {
+    try {
+        const output = execSync(
+            `python -c "from npm_mjs.json5_parser import load_json5; import json; data=load_json5('${packageFile}'); print(json.dumps(list(data.get('dependencies',{}).keys()) + list(data.get('peerDependencies',{}).keys())))"`,
+            {encoding: "utf-8", stdio: ["pipe", "pipe", "ignore"]}
+        )
+        return JSON.parse(output.trim())
+    } catch {
+        return []
+    }
+}
+
+function collectAllowedPackages(appsPaths) {
+    const allowed = new Set(BASE_PACKAGES)
+    appsPaths.forEach(appPath => {
+        for (const fileName of ["package.json5", "package.json"]) {
+            const packageFile = path.join(appPath, fileName)
+            if (isFile(packageFile)) {
+                loadPackageDeps(packageFile).forEach(dep => allowed.add(dep))
+                break
+            }
+        }
+    })
+    return allowed
+}
+
 function getFidusWriterPath() {
     try {
         // Get all paths from fiduswriter.__path__ (handles namespace packages and editable installs)
@@ -40,7 +99,7 @@ function getFidusWriterPath() {
         }
 
         // Fallback: try to find fiduswriter core by looking in parent directories
-        // Assumes fiduswriter and fiduswriter-pandoc are sibling directories
+        // Assumes fiduswriter and fiduswriter-gitrepo-export are sibling directories
         const pluginParent = path.resolve(pluginDir, "..")
         const fiduswriterCore = path.join(
             pluginParent,
@@ -62,142 +121,6 @@ function getFidusWriterPath() {
         )
         process.exit(1)
     }
-}
-
-function getBooksPath() {
-    try {
-        // Try to find fiduswriter-books via Python import
-        const booksPathOutput = execSync(
-            'python -c "import fiduswriter; import json; print(json.dumps([str(p) for p in fiduswriter.__path__]))"',
-            {stdio: ["pipe", "pipe", "ignore"]}
-        )
-            .toString()
-            .trim()
-
-        const paths = JSON.parse(booksPathOutput)
-        const pluginDir = path.resolve(__dirname, "..")
-
-        for (const testPath of paths) {
-            if (
-                typeof testPath !== "string" ||
-                testPath.startsWith("__editable__")
-            ) {
-                continue
-            }
-            const resolvedPath = fs.realpathSync(testPath)
-
-            // Skip the current plugin directory
-            if (
-                resolvedPath === pluginDir ||
-                resolvedPath.startsWith(pluginDir)
-            ) {
-                continue
-            }
-
-            // Skip fiduswriter core (has document or bibliography app)
-            if (
-                fs.existsSync(path.join(resolvedPath, "document")) ||
-                fs.existsSync(path.join(resolvedPath, "bibliography"))
-            ) {
-                continue
-            }
-
-            // Check if this namespace contribution contains the book app
-            if (fs.existsSync(path.join(resolvedPath, "book"))) {
-                return resolvedPath
-            }
-        }
-    } catch {
-        // Python import failed, try fallback
-    }
-
-    // Fallback: try to find fiduswriter-books by looking in parent directories.
-    // Assumes fiduswriter-books and fiduswriter-pandoc are sibling directories.
-    const pluginDir = path.resolve(__dirname, "..")
-    const pluginParent = path.resolve(pluginDir, "..")
-    const candidate = path.join(
-        pluginParent,
-        "fiduswriter-books",
-        "fiduswriter"
-    )
-    if (
-        fs.existsSync(candidate) &&
-        fs.statSync(candidate).isDirectory() &&
-        fs.existsSync(path.join(candidate, "book"))
-    ) {
-        return candidate
-    }
-
-    // fiduswriter-books is optional
-    return null
-}
-
-function getPandocPath() {
-    try {
-        // Try to find fiduswriter-pandoc via Python import
-        const pandocPathOutput = execSync(
-            'python -c "import fiduswriter; import json; print(json.dumps([str(p) for p in fiduswriter.__path__]))"',
-            {stdio: ["pipe", "pipe", "ignore"]}
-        )
-            .toString()
-            .trim()
-
-        const paths = JSON.parse(pandocPathOutput)
-        const pluginDir = path.resolve(__dirname, "..")
-
-        for (const testPath of paths) {
-            if (
-                typeof testPath !== "string" ||
-                testPath.startsWith("__editable__")
-            ) {
-                continue
-            }
-            const resolvedPath = fs.realpathSync(testPath)
-
-            // Skip the current plugin directory
-            if (
-                resolvedPath === pluginDir ||
-                resolvedPath.startsWith(pluginDir)
-            ) {
-                continue
-            }
-
-            // Skip fiduswriter core (has document or bibliography app)
-            if (
-                fs.existsSync(path.join(resolvedPath, "document")) ||
-                fs.existsSync(path.join(resolvedPath, "bibliography"))
-            ) {
-                continue
-            }
-
-            // Check if this namespace contribution contains the pandoc app
-            if (fs.existsSync(path.join(resolvedPath, "pandoc"))) {
-                return resolvedPath
-            }
-        }
-    } catch {
-        // Python import failed, try fallback
-    }
-
-    // Fallback: try to find fiduswriter-pandoc by looking in parent directories.
-    // Assumes fiduswriter-pandoc and fiduswriter-gitrepo-export are sibling directories.
-    const pluginDir = path.resolve(__dirname, "..")
-    const pluginParent = path.resolve(pluginDir, "..")
-    const candidate = path.join(
-        pluginParent,
-        "fiduswriter-pandoc",
-        "fiduswriter"
-    )
-    if (
-        fs.existsSync(candidate) &&
-        fs.statSync(candidate).isDirectory() &&
-        fs.existsSync(path.join(candidate, "pandoc"))
-    ) {
-        return candidate
-    }
-
-    // fiduswriter-pandoc is optional
-    return null
 }
 
 function isFile(file) {
@@ -305,15 +228,24 @@ function checkExports(filePath, importedNames, sourcePath) {
     })
 }
 
-function checkImports(file, appsPaths) {
+function checkImports(file, appsPaths, allowedPackages) {
     const content = fs.readFileSync(file, "utf-8")
     const importRegex =
         /import\s+(?:(\*\s+as\s+\w+)|(\w+)|(\{[^}]+\}))\s+from\s+['"](.*)['"]/g
     let match
     while ((match = importRegex.exec(content)) !== null) {
         const source = match[4]
-        // Skip non-relative imports
+        // Non-relative imports are allowed if they come from the plugin's own
+        // declared dependencies or from Fidus Writer core base packages.
         if (!source.startsWith(".") && !source.startsWith("..")) {
+            const packageName = getPackageName(source)
+            if (!allowedPackages.has(packageName)) {
+                console.error(`Unresolved import: ${source} in file ${file}`)
+                process.exit(1)
+            }
+            continue
+        }
+        if (EXCEPTIONS.includes(source)) {
             continue
         }
         const result = resolveFilelocation(source, file, appsPaths)
@@ -351,17 +283,9 @@ const pluginAppsPaths = getAppsPaths(pluginPath)
 const fidusWriterPath = getFidusWriterPath()
 const fidusWriterAppsPaths = getAppsPaths(fidusWriterPath)
 
-const booksPath = getBooksPath()
-const booksAppsPaths = booksPath ? getAppsPaths(booksPath) : []
+const appsPaths = pluginAppsPaths.concat(fidusWriterAppsPaths)
 
-const pandocPath = getPandocPath()
-const pandocAppsPaths = pandocPath ? getAppsPaths(pandocPath) : []
-
-const appsPaths = pluginAppsPaths.concat(
-    fidusWriterAppsPaths,
-    booksAppsPaths,
-    pandocAppsPaths
-)
+const allowedPackages = collectAllowedPackages(appsPaths)
 
 const files = process.argv.slice(2)
-files.forEach(file => checkImports(file, appsPaths))
+files.forEach(file => checkImports(file, appsPaths, allowedPackages))
