@@ -1,4 +1,6 @@
 import {Dialog, addAlert, escapeText, gettext} from "fwtoolkit"
+import {getMissingChapterData} from "@fiduswriter/books-document/exporter/tools"
+import {chapterLoader} from "../../books/adapters/chapter-loader"
 import {
     DOCXBookForgejoExporter,
     EpubBookForgejoExporter,
@@ -37,8 +39,17 @@ export class ForgejoBookProcessor {
 
     init() {
         return this.getCommitMessage()
-            .then(commitMessage => this.publishBook(commitMessage))
-            .catch(() => {})
+            .then(commitMessage =>
+                getMissingChapterData(
+                    this.book,
+                    this.booksOverview.documentList,
+                    this.booksOverview.schema,
+                    {loader: chapterLoader}
+                ).then(() => this.publishBook(commitMessage))
+            )
+            .catch(error => {
+                console.error("ForgejoBookProcessor error:", error)
+            })
     }
 
     getCommitMessage() {
