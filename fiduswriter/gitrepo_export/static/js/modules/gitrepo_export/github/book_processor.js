@@ -1,6 +1,6 @@
 import {getMissingChapterData} from "@fiduswriter/books-document/exporter/tools"
 import {Dialog, addAlert, escapeText, gettext} from "fwtoolkit"
-import {chapterLoader} from "../../books/adapters/chapter-loader"
+import {createChapterLoader} from "../../books/adapters/chapter-loader"
 import {
     DOCXBookGithubExporter,
     EpubBookGithubExporter,
@@ -49,7 +49,7 @@ export class GithubBookProcessor {
                     this.book,
                     this.booksOverview.documentList,
                     this.booksOverview.schema,
-                    {loader: chapterLoader}
+                    {loader: createChapterLoader(this.app)}
                 ).then(() => this.publishBook(commitMessage))
             )
             .catch(error => {
