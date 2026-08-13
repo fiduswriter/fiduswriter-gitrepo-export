@@ -1,3 +1,4 @@
+import {getMissingDocumentListData} from "@fiduswriter/frontend/documents/tools"
 import {
     Dialog,
     addAlert,
@@ -6,7 +7,6 @@ import {
     interpolate,
     postJson
 } from "fwtoolkit"
-import {getMissingDocumentListData} from "../../documents/tools"
 import {
     DOCXDocGithubExporter,
     EpubDocGithubExporter,
