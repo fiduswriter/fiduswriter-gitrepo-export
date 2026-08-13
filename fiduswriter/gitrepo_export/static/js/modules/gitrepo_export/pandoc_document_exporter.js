@@ -1,4 +1,4 @@
-import {PandocConversionExporter} from "../pandoc/exporter"
+import {PandocConversionExporter} from "@fiduswriter/pandoc/exporter"
 
 export class PandocDocGitExporter extends PandocConversionExporter {
     constructor(

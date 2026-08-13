@@ -1,5 +1,6 @@
 {
     dependencies: {
-        "@fiduswriter/books-document": "^0.1.8"
+        "@fiduswriter/books-document": "^0.1.8",
+        "@fiduswriter/pandoc": "^0.1.0"
     }
 }
