@@ -6,7 +6,7 @@ A plugin to export books to GitLab/GitHub.
 To install:
 -----------
 
-1. Make sure you have installed the `fiduswriter-books` plugin and you have updated both `fiduswriter` and `fiduswriter-books` to the latest patch release.
+1. Make sure you have installed the `fiduswriter-books-plugin` and you have updated both `fiduswriter` and `fiduswriter-books-plugin` to the latest patch release.
 
 2. Install this plugin (for example by running ``pip install fiduswriter-gitrepo-export``).
 
