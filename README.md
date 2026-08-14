@@ -1,4 +1,4 @@
-fiduswriter-gitrepo-export
+fiduswriter-gitrepo-export-plugin
 ==========================
 
 A plugin to export books to GitLab/GitHub.
