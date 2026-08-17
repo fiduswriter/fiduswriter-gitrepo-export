@@ -159,7 +159,7 @@ export class FidusBookGitExporter {
                 textFiles,
                 httpFiles,
                 [],
-                "application/fidusbook+zip",
+                "application/vnd.fiduswriter.book+zip",
                 this.updated
             )
             return zipper.init().then(blob => ({"book.fidusbook": blob}))
