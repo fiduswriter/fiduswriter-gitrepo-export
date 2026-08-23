@@ -24,14 +24,9 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pip --upgrade
-          if grep version pyproject.toml | grep -q "dev";
-            then pip install https://github.com/fiduswriter/fiduswriter-server-backend/archive/develop.zip;
-            else pip install https://github.com/fiduswriter/fiduswriter-server-backend/archive/main.zip;
-          fi
-          if grep version pyproject.toml | grep -q "dev";
-            then pip install https://github.com/fiduswriter/fiduswriter-books-plugin/archive/develop.zip;
-            else pip install https://github.com/fiduswriter/fiduswriter-books-plugin/archive/main.zip;
-          fi
+          pip install https://github.com/fiduswriter/fiduswriter-server-backend/archive/main.zip
+          pip install "https://github.com/fiduswriter/fiduswriter-books-plugin/archive/develop.zip" \
+            || pip install "https://github.com/fiduswriter/fiduswriter-books-plugin/archive/main.zip"
           if grep version pyproject.toml | grep -q "dev";
             then pip install https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/develop.zip;
             else pip install https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/main.zip;
@@ -56,14 +51,9 @@ jobs:
         run: |
           pip install wheel
           pip install pip --upgrade
-          if grep version pyproject.toml | grep -q "dev";
-            then pip install https://github.com/fiduswriter/fiduswriter-server-backend/archive/develop.zip;
-            else pip install https://github.com/fiduswriter/fiduswriter-server-backend/archive/main.zip;
-          fi
-          if grep version pyproject.toml | grep -q "dev";
-            then pip install https://github.com/fiduswriter/fiduswriter-books-plugin/archive/develop.zip;
-            else pip install https://github.com/fiduswriter/fiduswriter-books-plugin/archive/main.zip;
-          fi
+          pip install https://github.com/fiduswriter/fiduswriter-server-backend/archive/main.zip
+          pip install "https://github.com/fiduswriter/fiduswriter-books-plugin/archive/develop.zip" \
+            || pip install "https://github.com/fiduswriter/fiduswriter-books-plugin/archive/main.zip"
           if grep version pyproject.toml | grep -q "dev";
             then pip install https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/develop.zip;
             else pip install https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/main.zip;
