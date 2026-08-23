@@ -1,6 +1,7 @@
 include LICENSE
 include README.rst
 recursive-include fiduswriter/gitrepo_export/static *
+recursive-include fiduswriter/gitrepo_export/assets *
 recursive-include fiduswriter/gitrepo_export/fixtures *
 recursive-include fiduswriter/gitrepo_export/templates *
 recursive-include fiduswriter/gitrepo_export/locale *
