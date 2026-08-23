@@ -630,12 +630,26 @@ class MockForgejoHandler(BaseHTTPRequestHandler):
         if self.path.startswith(
             "/api/v1/repos/testuser/testforgejorepo/contents/"
         ):
-            self._send_json({"sha": "abc123", "content": ""})
+            # Fresh repository: the requested file does not exist yet.
+            # Returning 404 makes the client use the "create" (POST)
+            # operation instead of trying to update an existing blob.
+            self.send_response(404)
+            self.end_headers()
             return
         self.send_response(404)
         self.end_headers()
 
     def do_POST(self):
+        if self.path.startswith(
+            "/api/v1/repos/testuser/testforgejorepo/contents"
+        ):
+            self._send_json({"commit": {"id": "commit123"}})
+            return
+        self.send_response(404)
+        self.end_headers()
+
+    def do_PUT(self):
+        # Update of an existing file through the contents API.
         if self.path.startswith(
             "/api/v1/repos/testuser/testforgejorepo/contents"
         ):
