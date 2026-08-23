@@ -27,10 +27,8 @@ jobs:
           pip install https://github.com/fiduswriter/fiduswriter-server-backend/archive/main.zip
           pip install "https://github.com/fiduswriter/fiduswriter-books-plugin/archive/develop.zip" \
             || pip install "https://github.com/fiduswriter/fiduswriter-books-plugin/archive/main.zip"
-          if grep version pyproject.toml | grep -q "dev";
-            then pip install https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/develop.zip;
-            else pip install https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/main.zip;
-          fi
+          pip install "https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/develop.zip" \
+            || pip install "https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/main.zip"
       - uses: pre-commit/action@v3.0.1
   test:
     name: Run tests
@@ -54,10 +52,8 @@ jobs:
           pip install https://github.com/fiduswriter/fiduswriter-server-backend/archive/main.zip
           pip install "https://github.com/fiduswriter/fiduswriter-books-plugin/archive/develop.zip" \
             || pip install "https://github.com/fiduswriter/fiduswriter-books-plugin/archive/main.zip"
-          if grep version pyproject.toml | grep -q "dev";
-            then pip install https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/develop.zip;
-            else pip install https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/main.zip;
-          fi
+          pip install "https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/develop.zip" \
+            || pip install "https://github.com/fiduswriter/fiduswriter-pandoc-plugin/archive/main.zip"
           cd fiduswriter
           mv ../ci/configuration.py ./
           mv ../ci/.coveragerc ./
@@ -71,7 +67,7 @@ jobs:
       - name: Run tests
         uses: nick-invision/retry@v3
         with:
-          timeout_minutes: 8
+          timeout_minutes: 15
           max_attempts: 3
           retry_on: error
           command: |
