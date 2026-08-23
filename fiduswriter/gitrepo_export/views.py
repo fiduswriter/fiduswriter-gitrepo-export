@@ -179,9 +179,15 @@ async def get_git_repos(request, reload=False):
                     server.instance_url, server.token, server.id
                 )
         except HTTPError as e:
-            if e.response.status_code != 404:
-                # Skip failed servers rather than aborting entirely.
-                continue
+            # Transport errors have no response; skip failed servers
+            # rather than aborting entirely.
+            error_response = getattr(e, "response", None)
+            if (
+                error_response is not None
+                and error_response.status_code == 404
+            ):
+                pass
+            continue
         except Exception:
             continue
     repo_info, created = await models.RepoInfo.objects.aget_or_create(
@@ -211,10 +217,19 @@ async def proxy_github(request, path):
             request.content_type,
         )
     except HTTPError as e:
-        if e.response.status_code == 404:
+        error_response = getattr(e, "response", None)
+        if error_response is None:
+            # Network level problem (timeout, connection reset, ...):
+            # the instance could not be reached.
+            return HttpResponse(
+                "Could not reach the git server instance.", status=502
+            )
+        if error_response.status_code == 404:
             return HttpResponse("[]", status=200)
         else:
-            return HttpResponse(e.response.text, status=e.response.status_code)
+            return HttpResponse(
+                error_response.text, status=error_response.status_code
+            )
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
     else:
@@ -241,9 +256,18 @@ async def proxy_gitlab(request, server_id, path):
             request.content_type,
         )
     except HTTPError as e:
-        if e.response.status_code == 404 and request.method == "GET":
+        error_response = getattr(e, "response", None)
+        if error_response is None:
+            # Network level problem (timeout, connection reset, ...):
+            # the instance could not be reached.
+            return HttpResponse(
+                "Could not reach the git server instance.", status=502
+            )
+        if error_response.status_code == 404 and request.method == "GET":
             return HttpResponse("[]", status=200)
-        return HttpResponse(e.response.text, status=e.response.status_code)
+        return HttpResponse(
+            error_response.text, status=error_response.status_code
+        )
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
     else:
@@ -262,9 +286,18 @@ async def get_gitlab_repo(request, server_id, id):
     try:
         files = await gitlab.get_repo(id, server.token, server.instance_url)
     except HTTPError as e:
-        if e.response.status_code == 404:
+        error_response = getattr(e, "response", None)
+        if error_response is None:
+            # Network level problem (timeout, connection reset, ...):
+            # the instance could not be reached.
+            return HttpResponse(
+                "Could not reach the git server instance.", status=502
+            )
+        if error_response.status_code == 404:
             return JsonResponse({"files": []}, status=200)
-        return HttpResponse(e.response.text, status=e.response.status_code)
+        return HttpResponse(
+            error_response.text, status=error_response.status_code
+        )
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
     else:
@@ -402,10 +435,19 @@ async def proxy_forgejo(request, server_id, path):
             request.content_type,
         )
     except HTTPError as e:
-        if e.response.status_code == 404:
+        error_response = getattr(e, "response", None)
+        if error_response is None:
+            # Network level problem (timeout, connection reset, ...):
+            # the instance could not be reached.
+            return HttpResponse(
+                "Could not reach the git server instance.", status=502
+            )
+        if error_response.status_code == 404:
             return HttpResponse("[]", status=200)
         else:
-            return HttpResponse(e.response.text, status=e.response.status_code)
+            return HttpResponse(
+                error_response.text, status=error_response.status_code
+            )
     except Exception as e:
         return HttpResponse("Error: %s" % e, status=500)
     else:

@@ -39,11 +39,24 @@ class MockGitHubHandler(BaseHTTPRequestHandler):
         MockGitHubHandler.sha_counter += 1
         return f"sha{MockGitHubHandler.sha_counter:04d}"
 
+    def _read_body(self):
+        # Always drain the request body before responding. Closing the
+        # socket with unread data sends a TCP reset which kills the
+        # proxied response on the client side.
+        try:
+            length = int(self.headers.get("Content-Length", 0) or 0)
+        except ValueError:
+            length = 0
+        if length:
+            self.rfile.read(length)
+
     def _send_json(self, data, status=200):
+        body = json.dumps(data).encode(encoding="utf_8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
         self.end_headers()
-        self.wfile.write(json.dumps(data).encode(encoding="utf_8"))
+        self.wfile.write(body)
 
     def do_GET(self):
         if self.path.startswith("/user/repos"):
@@ -604,11 +617,24 @@ class MockForgejoHandler(BaseHTTPRequestHandler):
         with open("/tmp/mock_forgejo.log", "a") as f:
             f.write(f"{self.command} {self.path}\n")
 
+    def _read_body(self):
+        # Always drain the request body before responding. Closing the
+        # socket with unread data sends a TCP reset which kills the
+        # proxied response on the client side.
+        try:
+            length = int(self.headers.get("Content-Length", 0) or 0)
+        except ValueError:
+            length = 0
+        if length:
+            self.rfile.read(length)
+
     def _send_json(self, data, status=200):
+        body = json.dumps(data).encode(encoding="utf_8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
         self.end_headers()
-        self.wfile.write(json.dumps(data).encode(encoding="utf_8"))
+        self.wfile.write(body)
 
     def do_GET(self):
         if self.path.startswith("/api/v1/user/repos"):
@@ -640,6 +666,7 @@ class MockForgejoHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
+        self._read_body()
         if self.path.startswith(
             "/api/v1/repos/testuser/testforgejorepo/contents"
         ):
